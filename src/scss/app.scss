@@ -1,0 +1,199 @@
+$form-group-margin-bottom: 5px;
+@import 'bootstrap';
+
+
+
+//左侧固定宽度
+@mixin rt-left {
+  float: left;
+  width: 90px;
+  min-height: 1px;
+}
+
+//右侧适应宽度
+@mixin rt-right {
+  width: auto;
+  overflow-y: hidden;
+}
+
+//条纹
+@mixin striped($oddColor: inherit, $evenColor: #f3f3f3){
+  &:nth-child(odd){
+    background-color: $oddColor;
+  }
+  &:nth-child(even){
+    background-color: $evenColor;
+  }
+}
+
+//同行标签和控件
+.inline-label{
+  float: left;
+  min-width: 60px;
+  line-height: 34px;
+  margin-right: 5px;
+  margin-bottom: 0px;
+}
+.inline-control{
+  display: table-cell;
+  width: 1%;
+}
+
+.rt{
+  //顶侧日期栏
+  &-date {
+    &-container {
+      @include rt-right;
+      margin-left: 90px;
+      margin-bottom: 5px
+    }
+
+    &-row {
+      display: inline-block;
+      padding: 3px 0px;
+      background-color: $brand-primary;
+      white-space:nowrap;
+      color: white;
+      text-align: center;
+    }
+
+    &-item {
+      display: inline-block;
+      width: 90px;
+    }
+  }
+
+  //左侧房间栏
+  &-room {
+    &-col {
+      @include rt-left;
+      text-align: center;
+    }
+
+    &-item {
+      height: 90px;
+      padding-top: 30px;
+      
+      @include striped(auto, #f3f3f3);
+    }
+  } 
+  
+  //右侧具体信息
+  &-table{
+    &-content {
+      @include rt-right;
+    }
+
+    &-row{
+      display: inline-block;
+      white-space:nowrap; 
+      @include striped(auto, #f3f3f3);
+    }
+
+    &-item {
+      display: inline-block;
+      width: 90px;
+      height: 90px;
+      padding: 5px;
+      line-height: 20px;
+      border-radius: 4px;
+      
+      &:hover {
+        background-color: #c4c4c4;
+      }
+
+      &>div {
+        float: left;
+        width: 18px;
+        height: 18px;
+        margin: 1px;
+        line-height: 18px;
+        border-radius: 3px;
+        text-align: center;
+        font-size: 12px;
+      }
+    }
+  } 
+}
+
+//预约时间选择器
+.hourselect {
+  width: 120px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 10px;
+  margin-top: 5px;
+  line-height: 30px;
+  border-radius: 5px;
+
+  &>div {
+    float: left;
+    width: 26px;
+    height: 26px;
+    margin: 2px;
+    line-height: 26px;
+    border-radius: 4px;
+    text-align: center;
+  }
+}
+
+.note {
+  width: 230px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  &-row {
+    margin-bottom: 5px;
+  }
+
+  &-label, &-content{
+    display: table-cell;
+  }
+
+  &-hour{
+    display: inline-block;
+    width: 20px;
+    text-align: center;
+  }
+  &-legend{
+    display: inline-block;
+    padding: 1px 3px;
+    margin-right: 3px;
+    border-radius: 4px;
+  }
+}
+
+
+.z-rt{
+  &-free {
+    background: #93EBA5;
+    color: black;
+  }
+
+  &-ordered {
+    background: #F0C862;
+    color: white;
+  }
+
+  &-used {
+    background: #F37777;
+    color: white;
+  }
+
+  &-locked {
+    background: #D5D5D5;
+    color: black;
+  }
+
+  &-choosen {
+    background: #30971D;
+    color: white;
+  }
+}
+
+//登录框
+#login-panel {
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
