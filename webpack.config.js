@@ -8,15 +8,14 @@ module.exports = {
       'react-redux',
       'react-router',
       'redux',
-      'redux-router',
-      'redux-thunk',
-      'history' 
+      'redux-thunk'
     ],
     app: __dirname + '/src/js/index.js',
   },
   output: {
     path: __dirname + '/dist/js',
-    filename: '[name].js'
+    filename: '[name].js',
+    publicPath: "/js",
   },
   plugins: [
     new webpack.optimize.CommonsChunkPlugin({
@@ -26,6 +25,11 @@ module.exports = {
   ],
   module: {
     loaders: [
+      {
+        test: /\.jsx?$/,
+        exclude: /(node_modules|bower_components)/,
+        loader: 'react-hot',
+      },
       {
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/,

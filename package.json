@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "webpack-dev-server --content-base dist/ --hot --inline --colors --no-info --open",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "gulp",
     "webpack": "webpack",
@@ -13,12 +14,16 @@
   "author": "j3l11234",
   "license": "ISC",
   "dependencies": {
+    "babel-polyfill": "^6.6.1",
     "bootstrap-sass": "^3.3.6",
+    "isomorphic-fetch": "^2.2.1",
     "react": "^0.14.7",
+    "react-addons-pure-render-mixin": "^0.14.7",
+    "react-bootstrap": "^0.28.3",
     "react-dom": "^0.14.7",
     "react-redux": "^4.4.0",
-    "redux": "^3.3.1",
-    "redux-router": "^1.0.0-beta7"
+    "react-router-redux": "^4.0.0",
+    "redux": "^3.3.1"
   },
   "devDependencies": {
     "babel-core": "^6.5.2",
@@ -33,12 +38,14 @@
     "gulp-sequence": "^0.4.5",
     "gulp-sourcemaps": "^1.6.0",
     "history": "^2.0.0",
+    "react-hot-loader": "^1.3.0",
     "react-router": "^2.0.0",
     "redux-devtools": "^3.1.1",
     "redux-devtools-dock-monitor": "^1.1.0",
     "redux-devtools-log-monitor": "^1.0.4",
     "redux-thunk": "^1.0.3",
     "webpack": "^1.12.14",
+    "webpack-dev-server": "^1.14.1",
     "webpack-stream": "^3.1.0"
   }
 }

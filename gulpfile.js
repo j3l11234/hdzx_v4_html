@@ -39,16 +39,16 @@ gulp.task('sass', function() {
     .pipe(gulp.dest('dist/css'));
 });
 
-gulp.task('javascript', function(done) {
-  return gulp.src('src/js/entry.js')
-    .pipe(webpack(require('./webpack.config.js')))
-    .pipe(gulp.dest('dist/js'));
-});
+// gulp.task('javascript', function(done) {
+//   return gulp.src('src/js/entry.js')
+//     .pipe(webpack(require('./webpack.config.js')))
+//     .pipe(gulp.dest('dist/js'));
+// });
 
 
 //构建项目
 gulp.task('build', function(done) {
-  gulp_.sequence('clean', ['copy', 'sass', 'javascript'], done);
+  gulp_.sequence('clean', ['copy', 'sass'], done);
 });
 
 gulp.task('default', ['build']);
