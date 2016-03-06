@@ -3,7 +3,9 @@ import {shouldComponentUpdate} from 'react-addons-pure-render-mixin';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as AppActions from '../actions/AppActions';
+import * as ServerApi from '../helpers/ServerApi';
+import * as EntityActions from '../actions/EntityActions';
+import * as UserActions from '../actions/UserActions';
 import NavBar from './NavBar';
 
 class App extends Component {
@@ -14,8 +16,9 @@ class App extends Component {
 
 	componentDidMount() {
     const { dispatch } = this.props;
-    dispatch(AppActions.getInitData());
+    getInitData(dispatch);
   }
+  
   render() {
     const { children } = this.props;
     return (
@@ -26,5 +29,22 @@ class App extends Component {
     );
   }
 };
+
+function getInitData(dispatch) {
+  ServerApi.meta_getRooms(dispatch).then(data => {
+    const { roomList, rooms } = data;
+    dispatch(EntityActions.updateRoom(rooms));
+  },error => {});
+
+  ServerApi.meta_getDepts(dispatch).then(data => {
+    const { deptList, depts } = data;
+    dispatch(EntityActions.updateDept(depts));
+  },error => {});
+
+  ServerApi.user_getLogin(dispatch).then(data => {
+    const { user } = data;
+    dispatch(UserActions.login(user));
+  },error => {});
+}
 
 export default connect(state => ({}))(App);

@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Nav, Navbar, NavDropdown, NavItem, MenuItem } from 'react-bootstrap';
 
+import * as ServerApi from '../helpers/ServerApi';
 import * as UserActions from '../actions/UserActions';
 import NavUser from '../components/NavUser';
 
@@ -15,7 +16,13 @@ class Navbar_ extends Component {
   
   doLogout(callback) {
     const { dispatch } = this.props;
-    dispatch(UserActions.logout(callback));
+
+    ServerApi.user_logout(dispatch).then(data => {
+      dispatch(UserActions.logout());
+      callback && callback(true, data);
+    },error => {
+      callback && callback(false, error);
+    });
   }
 
   render() {
