@@ -2,20 +2,6 @@ $form-group-margin-bottom: 5px;
 @import 'bootstrap';
 
 
-
-//左侧固定宽度
-@mixin rt-left {
-  float: left;
-  width: 90px;
-  min-height: 1px;
-}
-
-//右侧适应宽度
-@mixin rt-right {
-  width: auto;
-  overflow-y: hidden;
-}
-
 //条纹
 @mixin striped($oddColor: inherit, $evenColor: #f3f3f3){
   &:nth-child(odd){
@@ -40,6 +26,19 @@ $form-group-margin-bottom: 5px;
 }
 
 .rt{
+  //左侧固定宽度
+  @mixin rt-left {
+    float: left;
+    width: 90px;
+    min-height: 1px;
+  }
+
+  //右侧适应宽度
+  @mixin rt-right {
+    width: auto;
+    overflow-y: hidden;
+  }
+
   //顶侧日期栏
   &-date {
     &-container {
@@ -85,7 +84,7 @@ $form-group-margin-bottom: 5px;
     }
 
     &-row{
-      display: inline-block;
+      height: 90px;
       white-space:nowrap; 
       @include striped(auto, #f3f3f3);
     }

@@ -9,6 +9,7 @@ export function meta_getDepts(dispatch){
   return fetchGet(dispatch, urls.base + urls.order.getdepts, false);
 }
 
+
 export function user_getLogin(dispatch){
   return fetchGet(dispatch, urls.base + urls.user.getlogin, false);
 };
@@ -25,7 +26,6 @@ export function user_logout(dispatch) {
     return fetchPost(dispatch, urls.base + urls.user.logout, null);
 };
 
-// data => {
-//       const { roomList, rooms } = data;
-//       dispatch({type: ENTITY_UPDATE_ROOM, payload: rooms});
-//     }
+export function order_getRoomTables(dispatch) {
+    return fetchGet(dispatch, urls.base + urls.order.getroomtables);
+};

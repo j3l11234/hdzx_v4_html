@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {shouldComponentUpdate} from 'react-addons-pure-render-mixin';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Nav, Navbar, NavDropdown, NavItem, MenuItem } from 'react-bootstrap';
 

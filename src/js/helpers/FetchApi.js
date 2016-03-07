@@ -9,6 +9,9 @@ export function fetchGet(dispatch, url, show = true) {
   return fetch(url, {
     credentials: 'include',
     method: 'GET',
+    headers: {
+      'x-requested-with': 'XMLHttpRequest'
+    }
   }).then(response => {
     ok = response.ok;
     return response.json();
@@ -36,7 +39,8 @@ export function fetchPost(dispatch, url, data, show = true) {
     method: 'POST',
     body: JSON.stringify(data),
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'x-requested-with': 'XMLHttpRequest'
     }
   }).then(response => {
     ok = response.ok;

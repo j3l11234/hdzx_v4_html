@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 import * as ServerApi from '../helpers/ServerApi';
 import * as EntityActions from '../actions/EntityActions';
+import * as RoomTableActions from '../actions/RoomTableActions';
 import * as UserActions from '../actions/UserActions';
 import NavBar from './NavBar';
 
@@ -18,7 +19,7 @@ class App extends Component {
     const { dispatch } = this.props;
     getInitData(dispatch);
   }
-  
+
   render() {
     const { children } = this.props;
     return (
@@ -34,6 +35,7 @@ function getInitData(dispatch) {
   ServerApi.meta_getRooms(dispatch).then(data => {
     const { roomList, rooms } = data;
     dispatch(EntityActions.updateRoom(rooms));
+    dispatch(RoomTableActions.updateRoomList(roomList));
   },error => {});
 
   ServerApi.meta_getDepts(dispatch).then(data => {
@@ -44,6 +46,12 @@ function getInitData(dispatch) {
   ServerApi.user_getLogin(dispatch).then(data => {
     const { user } = data;
     dispatch(UserActions.login(user));
+  },error => {});
+
+  ServerApi.order_getRoomTables(dispatch).then(data => {
+    const { dateList, roomTables } = data;
+    dispatch(RoomTableActions.updateRoomTables(roomTables));
+    dispatch(RoomTableActions.updateDateList(dateList));
   },error => {});
 }
 
