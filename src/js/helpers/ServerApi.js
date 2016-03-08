@@ -26,6 +26,11 @@ export function user_logout(dispatch) {
     return fetchPost(dispatch, urls.base + urls.user.logout, null);
 };
 
+
 export function order_getRoomTables(dispatch) {
     return fetchGet(dispatch, urls.base + urls.order.getroomtables);
+};
+
+export function order_submitOrder(dispatch, data) {
+    return fetchPost(dispatch, urls.base + urls.order.submitorder, data);
 };

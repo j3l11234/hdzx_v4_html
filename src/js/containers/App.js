@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 import * as ServerApi from '../helpers/ServerApi';
 import * as EntityActions from '../actions/EntityActions';
+import * as OrderActions from '../actions/OrderActions';
 import * as RoomTableActions from '../actions/RoomTableActions';
 import * as UserActions from '../actions/UserActions';
 import NavBar from './NavBar';
@@ -41,6 +42,7 @@ function getInitData(dispatch) {
   ServerApi.meta_getDepts(dispatch).then(data => {
     const { deptList, depts } = data;
     dispatch(EntityActions.updateDept(depts));
+    dispatch(OrderActions.updateDeptList(deptList));  
   },error => {});
 
   ServerApi.user_getLogin(dispatch).then(data => {
@@ -51,7 +53,7 @@ function getInitData(dispatch) {
   ServerApi.order_getRoomTables(dispatch).then(data => {
     const { dateList, roomTables } = data;
     dispatch(RoomTableActions.updateRoomTables(roomTables));
-    dispatch(RoomTableActions.updateDateList(dateList));
+    dispatch(RoomTableActions.updateDateList(dateList)); 
   },error => {});
 }
 

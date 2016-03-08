@@ -12,18 +12,20 @@ class RoomTableCell extends Component {
   }
 
   onClick(){
-    //this.props.onCellClick(this.props.room, this.props.date);
+    let {onCellClick, room, date} = this.props;
+    onCellClick(room, date);
   }
 
   getCellClass (hourTable, hour) {
-      let className = statusClass[hourTable[hour]]
-      if(className == undefined){
-        className = 'z-rt-free';
-      }
-      return className;
+    let className = statusClass[hourTable[hour]]
+    if(className == undefined){
+      className = 'z-rt-free';
     }
+    return className;
+  }
 
   render() {
+    console.log('render RoomTableCell');
     let { hourTable } = this.props;
     return !hourTable ? null : (
       <div className="rt-table-item" onClick={this.onClick.bind(this)}>

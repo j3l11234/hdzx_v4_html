@@ -55,6 +55,7 @@ class LoginForm extends Component {
     if(this.fv.validateAll()){
       let form = this.fv.getFormData();
 
+      this.setState({alert: null});
       this.setState({loading: true});
       this.props.doLogin(form.username, form.password, form.remember,(success,data) => {
         this.setState({loading: false});

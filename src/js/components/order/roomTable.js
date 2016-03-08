@@ -11,7 +11,7 @@ class RoomTable extends Component {
   }
 
   render () {
-    let {rooms} = this.props;
+    let {rooms, onCellClick} = this.props;
     let {dateList, roomList, roomTables} = this.props.roomTable;
 
     return (
@@ -38,7 +38,7 @@ class RoomTable extends Component {
                 dateList && dateList.map(date => {
                   let {hourTable, chksum} = roomTables[roomId][date];
                   return (
-                    <Cell key={roomId+'_'+date} chksum={chksum} date={date} room={roomId} hourTable={hourTable} onCellClick={null}/>
+                    <Cell key={roomId+'_'+date} chksum={chksum} date={date} room={roomId} hourTable={hourTable} onCellClick={onCellClick}/>
                   );
                 })
               }
