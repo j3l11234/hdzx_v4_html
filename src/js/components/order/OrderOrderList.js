@@ -2,10 +2,20 @@ import React, { Component } from 'react';
 import { shouldComponentUpdate } from 'react-addons-pure-render-mixin';
 import { Label, Table } from 'react-bootstrap';
 
+import { getListFormTable } from '../../helpers/Helpers';
+
 class OrderOrderList extends Component {
   constructor(props) {
     super(props);
-    this.shouldComponentUpdate = shouldComponentUpdate.bind(this);
+  }
+    
+
+  shouldComponentUpdate (nextProps, nextState) {
+    return (
+      this.props.chksum !== nextProps.chksum ||
+      this.props.orders !== nextProps.orders ||
+      this.props.depts !== nextProps.depts
+    );
   }
 
   render() {
@@ -25,8 +35,8 @@ class OrderOrderList extends Component {
       */
     }
 
-    let { depts, orders, orderList } = this.props;
-    
+    let { depts, orders, ordered, used } = this.props;
+    let orderList = getListFormTable(used).concat(getListFormTable(ordered));
     return (
       <Table condensed hover responsive>
         <thead>
@@ -52,8 +62,8 @@ class OrderOrderList extends Component {
               submit_time = (new Date(order.submit_time*1000)).Format('yyyy-MM-dd hh:mm:ss');
             }
             let hours = order.hours;
-            let startHour = parseInt(hours.get(0));
-            let endHour = parseInt(hours.get(-1))+1;
+            let startHour = parseInt(hours[0]);
+            let endHour = parseInt(hours[hours.length -1])+1;
 
             return (
               <tr key={orderId}>
@@ -63,14 +73,14 @@ class OrderOrderList extends Component {
                   <span>{startHour}时 - {endHour}时</span>
                 </td>
                 <td>
-                  <span>{order.get('title')}</span>
+                  <span>{order.title}</span>
                   <br />
-                  <span>{dept.get('name')}</span>
+                  <span>{dept.name}</span>
                 </td>
                 <td>
                   <span>{submit_time}</span>
                   <br />
-                  <span>{getStatusLabel(order.get('status'))}</span>
+                  <span>{getStatusLabel(order.status)}</span>
                 </td>
               </tr>
             );

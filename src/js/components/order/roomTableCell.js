@@ -8,7 +8,7 @@ class RoomTableCell extends Component {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    return this.props.chksum !== nextProps.chksum;
+    return (this.props.chksum !== nextProps.chksum || this.props.available !== nextProps.available);
   }
 
   onClick(){
@@ -26,9 +26,9 @@ class RoomTableCell extends Component {
 
   render() {
     console.log('render RoomTableCell');
-    let { hourTable } = this.props;
+    let { hourTable,available } = this.props;
     return !hourTable ? null : (
-      <div className="rt-table-item" onClick={this.onClick.bind(this)}>
+      <div className={'rt-table-item '+ (!available ? 'disabled' : '')} onClick={this.onClick.bind(this)}>
         <div className={this.getCellClass(hourTable, 8)}>8</div>
         <div className={this.getCellClass(hourTable, 9)}>9</div>
         <div className={this.getCellClass(hourTable, 10)}>10</div>

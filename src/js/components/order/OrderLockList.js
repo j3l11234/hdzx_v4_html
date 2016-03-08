@@ -2,14 +2,25 @@ import React, { Component } from 'react';
 import { shouldComponentUpdate } from 'react-addons-pure-render-mixin';
 import { Table } from 'react-bootstrap';
 
+import { getListFormTable } from '../../helpers/Helpers';
+
 class OrderLockList extends Component {
   constructor(props) {
     super(props);
     this.shouldComponentUpdate = shouldComponentUpdate.bind(this);
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    return (
+      this.props.chksum !== nextProps.chksum ||
+      this.props.locks !== nextProps.locks
+    );
+  }
+
   render() {
-    let { locks, lockList } = this.props;
+    let { locks, locked } = this.props;
+    let lockList = getListFormTable(locked);
+
     return (
       <Table condensed hover responsive>
         <thead>

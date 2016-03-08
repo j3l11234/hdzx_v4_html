@@ -5,7 +5,10 @@ import { connect } from 'react-redux';
 import Modal from '../components/order/OrderModal';
 import Query from '../components/order/RoomTableQuery';
 import RoomTable from '../components/order/RoomTable';
+import * as RoomTableActions from '../actions/RoomTableActions';
+import * as EntityActions from '../actions/EntityActions';
 import * as ServerApi from '../helpers/ServerApi';
+import { isEmptyObject } from '../helpers/Helpers';
 
 class OrderPage extends Component {
 	constructor(props) {
@@ -21,7 +24,7 @@ class OrderPage extends Component {
     this.refs.modal.showModal();
   }
 
-  doSubmitOrder(data, callback) {
+  doSubmitOrder (data, callback) {
     const { dispatch } = this.props;
 
     ServerApi.order_submitOrder(dispatch, data).then(data => {
@@ -31,7 +34,7 @@ class OrderPage extends Component {
     });
   }
 
-  doGetRoomTables(callback){
+  doGetRoomTables (callback){
     const { dispatch } = this.props;
     ServerApi.order_getRoomTables(dispatch).then(data => {
       const { dateList, roomTables } = data;
@@ -43,7 +46,20 @@ class OrderPage extends Component {
     });
   }
 
-
+  doGetRoomUse (room, date, callback){
+    const { dispatch } = this.props;
+    ServerApi.order_getRoomUse(dispatch, room, date).then(data => {
+      let {orders, locks, roomTable} = data;
+      !isEmptyObject(orders) && dispatch(EntityActions.updateOrder(orders));
+      !isEmptyObject(locks) && dispatch(EntityActions.updateLock(locks));
+      (this.props.roomTable.roomTables[room][date].chksum !== roomTable.chksum) &&
+        dispatch(RoomTableActions.updateOneRoomTable(room, date, roomTable));
+      callback && callback(true, data); 
+    },error => {
+      callback && callback(false, error);
+    });
+  }
+  
   render() {
     let { roomTable } = this.props;
     let { rooms, locks, depts, orders } = this.props.entities;
@@ -51,9 +67,9 @@ class OrderPage extends Component {
     
     return (
       <div>
-      	<Query />
-        <RoomTable rooms={rooms} roomTable={roomTable} onCellClick={this.showOrderModel.bind(this)} onQeuryClick={this.doGetRoomTables.bind(this)}/>
-        <Modal ref="modal" orders={orders} locks={locks} depts={depts} deptList={deptList} onSubmit={this.doSubmitOrder.bind(this)}/>
+      	<Query onQeuryClick={this.doGetRoomTables.bind(this)} />
+        <RoomTable rooms={rooms} roomTable={roomTable} onCellClick={this.showOrderModel.bind(this)} />
+        <Modal ref="modal" orders={orders} locks={locks} depts={depts} deptList={deptList} onSubmit={this.doSubmitOrder.bind(this)} onQueryUse={this.doGetRoomUse.bind(this)} />
       </div>
     );
   }

@@ -8,9 +8,9 @@ class RoomTableHeader extends Component {
   }
 
   render() {
-    let {dateList} = this.props;
+    let {dateList, onScroll} = this.props;
     return (
-      <div className="rt-date-container"> 
+      <div ref="container" className="rt-date-container" onScroll={onScroll}> 
         <div className="rt-date-row">
         {
           dateList && dateList.map(date => {

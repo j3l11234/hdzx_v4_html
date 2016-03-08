@@ -54,12 +54,10 @@ class OrderModal extends Component {
       date: this.state.date,
       hours: JSON.stringify(this.state.hours)
     });
-    console.log(formData);
 
     form.setState({alert: null});
     this.setState({loading: true});
     this.props.onSubmit(formData,(success,data) => {
-      console.log(success,data);
       if(data.status == 200){
         form.setState({
           alert: { style: 'success', text: data.message}
@@ -72,39 +70,17 @@ class OrderModal extends Component {
       }
     });
   }
-  // onSubmitClick(e) {
-  //   this.refs.form.submitOrder();
-  // }
-  
-  // onModelHide(){
-  //   let form = this.refs.form.getFormData();
-  //   this.props.onFormChange(form);
-  //   this.props.onHide();
-  // }
+
+  onEntered () {
+    let { room, date } = this.state;
+    this.props.onQueryUse(room.id, date);
+  }
 
   onChooseHours (startHour, endHour, hours) {
     this.setState({startHour, endHour, hours});
   }
 
-  getListFormTable (table, hours) {
-    var ids = {};
-    var idList = [];
-    for(var hour in table) {
-      if(!hours || hours.indexOf(parseInt(hour)) != -1) {
-        for(var key in table[hour]) {
-          ids[table[hour][key]] = true;
-        }
-      }
-    }
-    for(var id in ids) {
-      idList.push(id);
-    }
-    return idList;
-  }
-
   render () {
-    console.log(this.state);
-
     let { locks, depts, orders, deptList } = this.props;
     let { roomTable, room, date, startHour, endHour, loading } = this.state;
     roomTable = roomTable ? roomTable : {};
@@ -113,12 +89,10 @@ class OrderModal extends Component {
     let { max_hour } = room;
     let roomName = room.number+' - '+room.name;
 
-    let orderList = this.getListFormTable(roomTable.used);
-    orderList.concat(this.getListFormTable(roomTable.ordered));
-    let lockList = this.getListFormTable(roomTable.locked)
+    let {ordered, used, locked, chksum} = roomTable;
 
     return (
-      <Modal show={this.state.show} onHide={this.hideModal.bind(this)} backdrop={'static'}>
+      <Modal show={this.state.show} onHide={this.hideModal.bind(this)} onEntered={this.onEntered.bind(this)} backdrop={'static'}>
         <Modal.Body>
           <button type="button" className="close" aria-label="Close" onClick={this.hideModal.bind(this)}>
             <span aria-hidden="true">&times;</span>
@@ -137,8 +111,8 @@ class OrderModal extends Component {
               </div>
             </Tab>
             <Tab eventKey={2} title="使用情况">
-              <OrderList orders={orders} depts={depts} orderList={orderList} />
-              <LockList locks={locks} lockList={lockList} />
+              <OrderList orders={orders} depts={depts} ordered={ordered} locked={locked} chksum={chksum} />
+              <LockList locks={locks} locked={locked} chksum={chksum} />
             </Tab>
           </Tabs>
         </Modal.Body>

@@ -34,3 +34,7 @@ export function order_getRoomTables(dispatch) {
 export function order_submitOrder(dispatch, data) {
     return fetchPost(dispatch, urls.base + urls.order.submitorder, data);
 };
+
+export function order_getRoomUse(dispatch, room, date) {
+    return fetchGet(dispatch, urls.base + urls.order.getroomuse+'?room='+room+'&date='+date);
+};

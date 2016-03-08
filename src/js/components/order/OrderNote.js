@@ -22,7 +22,7 @@ class OrderNote extends Component {
         </div>
         <div className="note-row">
           <label className="note-label">时段：</label>
-          <div className="note-content">从<span className="note-hour">{startHour ? startHour : ''}</span>时到<span className="note-hour">{endHour ? endHour : ''}</span>时(最长<span>{maxHour}</span>小时)</div>
+          <div className="note-content">从<span className="note-hour">{startHour ? startHour : ''}</span>时到<span className="note-hour">{endHour ? endHour+1 : ''}</span>时(最长<span>{maxHour}</span>小时)</div>
         </div>
         <div className="note-row">
           <label className="note-label">图例：</label>

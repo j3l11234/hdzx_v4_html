@@ -91,12 +91,14 @@ $form-group-margin-bottom: 5px;
 
     &-item {
       display: inline-block;
-      width: 90px;
-      height: 90px;
-      padding: 5px;
+      width: 84px;
+      height: 84px;
+      padding: 2px;
+      margin: 3px;
       line-height: 20px;
       border-radius: 4px;
-      
+      cursor: pointer;
+
       &:hover {
         background-color: #c4c4c4;
       }
@@ -111,6 +113,15 @@ $form-group-margin-bottom: 5px;
         text-align: center;
         font-size: 12px;
       }
+
+      &.disabled{
+        background-color: #FBDEDE;
+      }
+
+      &.disabled:hover{
+        background-color: #c4c4c4;
+      }
+
     }
   } 
 }
@@ -133,6 +144,7 @@ $form-group-margin-bottom: 5px;
     line-height: 26px;
     border-radius: 4px;
     text-align: center;
+    cursor: pointer;
   }
 }
 
