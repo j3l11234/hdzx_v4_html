@@ -46,7 +46,7 @@ class ApprovePage extends Component {
       <div>
         <Query depts={depts} deptList={deptList} type={type} onQeuryClick={this.doGetApproveOrder.bind(this)} />
         <hr />
-      	<OrderList depts={depts} rooms={rooms} orders={orders} orderList={orderList} />
+      	<OrderList depts={depts} rooms={rooms} type={type} orders={orders} orderList={orderList} />
       </div>
     );
   }

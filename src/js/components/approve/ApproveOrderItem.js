@@ -3,7 +3,7 @@ import { shouldComponentUpdate } from 'react-addons-pure-render-mixin';
 import { Panel, Row, Col } from 'react-bootstrap';
 
 import Prop from '../PropGroup';
-
+import StatusLabel from '../StatusLabel';
 class ApproveOrderItem extends Component {
   constructor (props) {
     super(props);
@@ -30,7 +30,7 @@ class ApproveOrderItem extends Component {
   }
 
   render () {
-    let { depts, rooms, order } = this.props;
+    let { depts, rooms, type, order } = this.props;
     if (!order){
       return null;
     }
@@ -52,15 +52,31 @@ class ApproveOrderItem extends Component {
       </Row>
     );
     return (
-      <Panel header={header}>
-        <Prop groupClassName="col-sm-4" label="社团单位" content={dept.name} />
-        <Prop groupClassName="col-sm-4" label="联系方式" content={order.phone} />
-        <Prop groupClassName="col-sm-4" label="活动人数" content={order.number} />
-        <Prop groupClassName="col-sm-4" label="预约状态" content="ss" />
-        <Prop groupClassName="col-sm-8" label="提交时间" content={submit_time} />
-        <Prop groupClassName="col-sm-12" label="申请主题" content={order.title} />
-        <Prop groupClassName="col-sm-12" label="活动内容" content={order.content} />
-        <Prop groupClassName="col-sm-12" label="安保措施" content={order.secure} />
+      <Panel collapsible defaultExpanded header={header}>
+        <div className="row">
+          <Prop groupClassName="col-sm-4" label="社团单位" content={dept.name} />
+          <Prop groupClassName="col-sm-4" label="联系方式" content={order.phone} />
+          <Prop groupClassName="col-sm-4" label="活动人数" content={order.number} />
+          <Prop groupClassName="col-sm-4" label="预约状态" content={(<StatusLabel type={type} status={order.status} />)} />
+          <Prop groupClassName="col-sm-8" label="提交时间" content={submit_time} />
+          <Prop groupClassName="col-sm-12" label="申请主题" content={order.title} />
+          <Prop groupClassName="col-sm-12" label="活动内容" content={order.content} />
+          <Prop groupClassName="col-sm-12" label="安保措施" content={order.secure} />
+        </div>
+        {
+          order.opList.map(operation => {
+            let time = operation.time ? new Date(operation.time*1000).Format('yyyy-MM-dd hh:mm:ss') : '';
+            return (
+              <div className="row">
+                <hr className="small" />
+                <Prop groupClassName="col-sm-4" label="操作类型" content={operation.operator} />
+                <Prop groupClassName="col-sm-8" label="操作标注" content={operation.commemt} />
+                <Prop groupClassName="col-sm-4" label="操作人" content={operation.operator} />
+                <Prop groupClassName="col-sm-4" label="操作时间" content={time} />
+              </div>
+            );
+          })
+        }
       </Panel>
     );
 

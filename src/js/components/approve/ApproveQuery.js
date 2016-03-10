@@ -16,7 +16,7 @@ class ApproveQuery extends Component {
 
   render() {
     let { depts, deptList } = this.props;
-
+    
     return (
       <form>
         <div className="row">
