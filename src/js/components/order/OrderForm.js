@@ -3,6 +3,7 @@ import { shouldComponentUpdate } from 'react-addons-pure-render-mixin';
 import { Alert, Input } from 'react-bootstrap';
 
 import FormValidator from '../../helpers/FormValidator';
+import NumberMap from '../../constants/NumberMap';
 
 class OrderForm extends Component {
   constructor (props) {
@@ -81,6 +82,7 @@ class OrderForm extends Component {
   getFormData () {
     if(this.fv.validateAll()){
       let form = this.fv.getFormData();
+      form.number = NumberMap[form.number];
       return form;
     }else{
       this.setState({

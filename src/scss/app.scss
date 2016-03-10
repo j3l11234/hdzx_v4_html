@@ -25,6 +25,22 @@ $form-group-margin-bottom: 5px;
   width: 1%;
 }
 
+
+//同行属性
+.prop{
+  &-label{
+    float: left;
+    min-width: 60px;
+    margin-right: 10px;
+    margin-bottom: 0px;
+  }
+  
+  &-content{
+    display: table-cell;
+  }
+}
+
+
 .rt{
   //左侧固定宽度
   @mixin rt-left {
@@ -148,6 +164,7 @@ $form-group-margin-bottom: 5px;
   }
 }
 
+//小时指示
 .note {
   width: 230px;
   margin-left: auto;

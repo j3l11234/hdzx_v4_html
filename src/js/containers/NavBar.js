@@ -37,12 +37,10 @@ class Navbar_ extends Component {
           <Nav>
             <NavItem eventKey={1} href="#/order">房间预约</NavItem>
             <NavItem eventKey={2} href="#">预约查询</NavItem>
-            <NavDropdown eventKey={3} title="Dropdown" id="basic-nav-dropdown">
-              <MenuItem eventKey={3.1}>Action</MenuItem>
-              <MenuItem eventKey={3.2}>Another action</MenuItem>
-              <MenuItem eventKey={3.3}>Something else here</MenuItem>
-              <MenuItem divider />
-              <MenuItem eventKey={3.3}>Separated link</MenuItem>
+            <NavDropdown eventKey={3} title="预约审批" id="basic-nav-dropdown">
+              <MenuItem eventKey={3.1} href="#/approve/manager">负责人审批</MenuItem>
+              <MenuItem eventKey={3.1} href="#/approve/school">校级审批</MenuItem>
+              <MenuItem eventKey={3.3} href="#/approve/auto">自动审批</MenuItem>
             </NavDropdown>
           </Nav>
           <Nav pullRight>

@@ -15,7 +15,7 @@ export function user_getLogin(dispatch){
 };
 
 export function user_login(dispatch, username, password, remenber_me) {
-    return fetchPost(dispatch, urls.base + urls.user.login, {
+  return fetchPost(dispatch, urls.base + urls.user.login, {
       username,
       password,
       remenber_me
@@ -23,18 +23,31 @@ export function user_login(dispatch, username, password, remenber_me) {
 };
 
 export function user_logout(dispatch) {
-    return fetchPost(dispatch, urls.base + urls.user.logout, null);
+  return fetchPost(dispatch, urls.base + urls.user.logout, null);
 };
 
 
 export function order_getRoomTables(dispatch) {
-    return fetchGet(dispatch, urls.base + urls.order.getroomtables);
+  return fetchGet(dispatch, urls.base + urls.order.getroomtables);
 };
 
 export function order_submitOrder(dispatch, data) {
-    return fetchPost(dispatch, urls.base + urls.order.submitorder, data);
+  return fetchPost(dispatch, urls.base + urls.order.submitorder, data);
 };
 
 export function order_getRoomUse(dispatch, room, date) {
     return fetchGet(dispatch, urls.base + urls.order.getroomuse+'?room='+room+'&date='+date);
+};
+
+
+export function approve_getAutoOrder(dispatch) {
+  return fetchGet(dispatch, urls.base + urls.approve.getautoorder);
+};
+
+export function approve_getManagerOrder(dispatch) {
+    return fetchGet(dispatch, urls.base + urls.approve.getmanagerorder);
+};
+
+export function approve_getSchoolOrder(dispatch) {
+    return fetchGet(dispatch, urls.base + urls.approve.getschoolorder);
 };

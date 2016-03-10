@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ServerApi from '../helpers/ServerApi';
+import * as ApproveActions from '../actions/ApproveActions';
 import * as EntityActions from '../actions/EntityActions';
 import * as OrderActions from '../actions/OrderActions';
 import * as RoomTableActions from '../actions/RoomTableActions';
@@ -42,7 +43,8 @@ function getInitData(dispatch) {
   ServerApi.meta_getDepts(dispatch).then(data => {
     const { deptList, depts } = data;
     dispatch(EntityActions.updateDept(depts));
-    dispatch(OrderActions.updateDeptList(deptList));  
+    dispatch(OrderActions.updateDeptList(deptList));
+    dispatch(ApproveActions.updateDeptList(deptList));
   },error => {});
 
   ServerApi.user_getLogin(dispatch).then(data => {

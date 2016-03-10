@@ -11,6 +11,11 @@ let url = {
 		getlogin: '/user/getlogin',
 		login: '/user/login',
 		logout: '/user/logout'
+	},
+	approve: {
+		getautoorder: '/approve/getautoorder',
+		getmanagerorder: '/approve/getmanagerorder',
+		getschoolorder: '/approve/getschoolorder'
 	}
 };
 
