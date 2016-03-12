@@ -40,14 +40,10 @@ export function order_getRoomUse(dispatch, room, date) {
 };
 
 
-export function approve_getAutoOrder(dispatch) {
-  return fetchGet(dispatch, urls.base + urls.approve.getautoorder);
+export function approve_getOrder(dispatch, type) {
+    return fetchGet(dispatch, urls.base + urls.approve.getorder+'?type='+type);
 };
 
-export function approve_getManagerOrder(dispatch) {
-    return fetchGet(dispatch, urls.base + urls.approve.getmanagerorder);
-};
-
-export function approve_getSchoolOrder(dispatch) {
-    return fetchGet(dispatch, urls.base + urls.approve.getschoolorder);
+export function approve_approveOrder(dispatch, type) {
+    return fetchGet(dispatch, urls.base + urls.approve.approveorder+'?type='+type);
 };

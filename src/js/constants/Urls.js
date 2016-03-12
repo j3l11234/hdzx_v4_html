@@ -13,9 +13,8 @@ let url = {
 		logout: '/user/logout'
 	},
 	approve: {
-		getautoorder: '/approve/getautoorder',
-		getmanagerorder: '/approve/getmanagerorder',
-		getschoolorder: '/approve/getschoolorder'
+		getorder: '/approve/getorder',
+		approveorder: '/approve/approveorder',
 	}
 };
 

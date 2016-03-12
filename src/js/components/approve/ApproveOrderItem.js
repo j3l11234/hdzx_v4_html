@@ -61,7 +61,7 @@ class ApproveOrderItem extends Component {
       <Row className="show-grid">
         <Col md={4}>{dept.name+ ' - ' + order.name}</Col>
         <Col md={4}>{room.name + ' - ' + room.number}</Col>
-        <Col md={4}>{startHour + '时 - ' + endHour + '时'}</Col>
+        <Col md={4}>{order.date + ' ' +startHour + '时 - ' + endHour + '时'}</Col>
       </Row>
     );
     return (

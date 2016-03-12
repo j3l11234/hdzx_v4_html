@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {shouldComponentUpdate} from 'react-addons-pure-render-mixin';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 
 import * as ApproveActions from '../actions/ApproveActions';
 import * as EntityActions from '../actions/EntityActions';
@@ -14,24 +15,50 @@ class ApprovePage extends Component {
     super(props);
     this.shouldComponentUpdate = shouldComponentUpdate.bind(this);
   }
+  componentWillMount () {
+    this.checkType(this.props);
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if(nextProps.params.type !== this.props.params.type){
+      this.checkType(nextProps);
+    }
+  }
+
+  checkType(props){
+    console.log(props.params.type);
+    switch (props.params.type){
+      case 'auto':
+      break;
+      case 'manager':
+      break;
+      case 'school':
+      break;
+      default:
+        this.props.dispatch(push('/'))
+        break;
+    }
+  }
 
   doGetApproveOrder (type, callback) {
     const { dispatch } = this.props;
-    let promise = null;
-    if(type == 'auto'){
-      promise = ServerApi.approve_getAutoOrder(dispatch);
-    }else if (type == 'manager') {
-      promise = ServerApi.approve_getManagerOrder(dispatch);
-    }else if (type == 'school') {
-      promise = ServerApi.approve_getSchoolOrder(dispatch);
-    }else{
-      return;
-    }
+    let promise = ServerApi.approve_getOrder(dispatch, type);
+    
     promise.then(data => {
       const { orderList, orders } = data;
       !isEmptyObject(orders) && dispatch(EntityActions.updateOrder(orders));
       dispatch(ApproveActions.updateOrderList(orderList));  
       callback && callback(true, data); 
+    },error => {
+      callback && callback(false, error);
+    });
+  }
+
+  doSubmitOrder (type, data, callback) {
+    const { dispatch } = this.props;
+
+    ServerApi.order_submitOrder(dispatch, data).then(data => {
+      callback && callback(true, data);
     },error => {
       callback && callback(false, error);
     });

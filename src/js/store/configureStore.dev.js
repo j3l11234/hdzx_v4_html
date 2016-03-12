@@ -1,11 +1,15 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import { persistState } from 'redux-devtools';
 import thunk from 'redux-thunk';
+import { routerMiddleware } from 'react-router-redux';
+import { hashHistory } from 'react-router';
 
 import rootReducer from '../reducers';
 import DevTools from '../containers/DevTools';
 
 const enhancer = compose(
+
+  applyMiddleware(routerMiddleware(hashHistory)),
   applyMiddleware(thunk),
   DevTools.instrument(),
   persistState(
