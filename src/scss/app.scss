@@ -230,3 +230,17 @@ hr.small{
   margin-left: auto;
   margin-right: auto;
 }
+
+//堆叠时候留空
+.stacked-margin{
+  margin-bottom: 5px;
+}
+
+.form-group{
+  overflow: hidden;
+  _height: 1%;
+}
+
+.label {
+    padding: .1em .6em .2em;
+}

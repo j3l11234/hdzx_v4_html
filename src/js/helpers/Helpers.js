@@ -1,3 +1,5 @@
+import {STATUS} from '../constants/OrderStatus';
+
 export function getListFormTable (table, hours) {
   var ids = {};
   var idList = [];
@@ -41,6 +43,34 @@ export function isEmptyObject(obj){
   return true;
 }
 
+
+export function getAbstractStatus(status, type) {
+  if (type == 'auto') {
+    if (status == STATUS.AUTO_PENDING) {
+      return STATUS.STATUS_PENDING;
+    } else if (status == STATUS.AUTO_APPROVED) {
+      return STATUS.STATUS_APPROVED;
+    } else if (status == STATUS.AUTO_REJECTED) {
+      return STATUS.STATUS_REJECTED;
+    }
+  } else if (type == 'manager') {
+    if (status == STATUS.MANAGER_PENDING) {
+      return STATUS.STATUS_PENDING;
+    } else if (status == STATUS.MANAGER_APPROVED) {
+      return STATUS.STATUS_APPROVED;
+    } else if (status == STATUS.MANAGER_REJECTED) {
+      return STATUS.STATUS_REJECTED;
+    }
+  } else if (type == 'school') {
+    if (status == STATUS.SCHOOL_PENDING) {
+      return STATUS.STATUS_PENDING;
+    } else if (status == STATUS.SCHOOL_APPROVED) {
+      return STATUS.STATUS_APPROVED;
+    } else if (status == STATUS.SCHOOL_REJECTED) {
+      return STATUS.STATUS_REJECTED;
+    }
+  }
+}
 
 // 对Date的扩展，将 Date 转化为指定格式的String   
 // 月(M)、日(d)、小时(h)、分(m)、秒(s)、季度(q) 可以用 1-2 个占位符，   

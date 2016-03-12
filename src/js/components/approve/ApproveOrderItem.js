@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import { shouldComponentUpdate } from 'react-addons-pure-render-mixin';
-import { Panel, Row, Col } from 'react-bootstrap';
+import { Button, Panel, Row, Col } from 'react-bootstrap';
 
 import Prop from '../PropGroup';
 import StatusLabel from '../StatusLabel';
+import {STATUS} from '../../constants/OrderStatus';
+import {getAbstractStatus} from '../../helpers/Helpers';
+
+
 class ApproveOrderItem extends Component {
   constructor (props) {
     super(props);
@@ -29,6 +33,15 @@ class ApproveOrderItem extends Component {
     */
   }
 
+  getPanelStyle (status) {
+    if (status == STATUS.STATUS_PENDING) {
+      return 'info';
+    } else if (status == STATUS.STATUS_APPROVED) {
+      return 'success';
+    } else if (status == STATUS.STATUS_REJECTED) {
+      return 'danger';
+    }
+  }
   render () {
     let { depts, rooms, type, order } = this.props;
     if (!order){
@@ -37,24 +50,24 @@ class ApproveOrderItem extends Component {
     let dept = depts[order.dept_id];
     let room = rooms[order.room_id];
 
-    let name = order.student_no ? order.student_no + '-' + order.name : order.name;
+    let student_no = order.student_no ? order.student_no : ' ';
     let hours = order.hours;
     let startHour = parseInt(hours[0]);
     let endHour = parseInt(hours[hours.length -1])+1;
+    let submit_time = order.submit_time ? new Date(order.submit_time*1000).Format('yyyy-MM-dd hh:mm:ss') : ' '; 
+    let status = getAbstractStatus(order.status, type);
 
-    let submit_time = order.submit_time ? new Date(order.submit_time*1000).Format('yyyy-MM-dd hh:mm:ss') : '';
-    
     let header = (
       <Row className="show-grid">
-        <Col md={4}>{name}</Col>
+        <Col md={4}>{dept.name+ ' - ' + order.name}</Col>
         <Col md={4}>{room.name + ' - ' + room.number}</Col>
         <Col md={4}>{startHour + '时 - ' + endHour + '时'}</Col>
       </Row>
     );
     return (
-      <Panel collapsible defaultExpanded header={header}>
+      <Panel collapsible defaultExpanded header={header} bsStyle={this.getPanelStyle(status)}>
         <div className="row">
-          <Prop groupClassName="col-sm-4" label="社团单位" content={dept.name} />
+          <Prop groupClassName="col-sm-4" label="申请学号" content={student_no} />
           <Prop groupClassName="col-sm-4" label="联系方式" content={order.phone} />
           <Prop groupClassName="col-sm-4" label="活动人数" content={order.number} />
           <Prop groupClassName="col-sm-4" label="预约状态" content={(<StatusLabel type={type} status={order.status} />)} />
@@ -67,7 +80,7 @@ class ApproveOrderItem extends Component {
           order.opList.map(operation => {
             let time = operation.time ? new Date(operation.time*1000).Format('yyyy-MM-dd hh:mm:ss') : '';
             return (
-              <div className="row">
+              <div key={operation.id} className="row">
                 <hr className="small" />
                 <Prop groupClassName="col-sm-4" label="操作类型" content={operation.operator} />
                 <Prop groupClassName="col-sm-8" label="操作标注" content={operation.commemt} />
@@ -77,6 +90,17 @@ class ApproveOrderItem extends Component {
             );
           })
         }
+        <div className="row">
+          <div className="col-sm-4 stacked-margin">
+            <Button bsStyle="success" bsSize="small" block>审批通过</Button>
+          </div>
+          <div className="col-sm-4 stacked-margin">
+            <Button bsStyle="danger" bsSize="small" block>审批驳回</Button>
+          </div>
+          <div className="col-sm-4 stacked-margin">
+            <Button bsStyle="warning" bsSize="small" block>审批撤销</Button>
+          </div>
+        </div>
       </Panel>
     );
 
