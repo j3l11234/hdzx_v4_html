@@ -27,14 +27,14 @@ class ApproveOrderList extends Component {
         </p>
       */
     }
-    let { depts, rooms, orders, type, orderList } = this.props;
+    let { depts, rooms, orders, type, orderList, onOperateClick } = this.props;
     return (
       <div>
         {
           orderList.map(orderId => {
             let order = orders[orderId];
             return (
-              <Item key={orderId} depts={depts} rooms={rooms} type={type} order={order} chksum={order.chksum} />
+              <Item key={orderId} depts={depts} rooms={rooms} type={type} order={order} chksum={order.chksum} onOperateClick={onOperateClick}/>
             );
           })
         }

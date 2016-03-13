@@ -44,6 +44,23 @@ export function approve_getOrder(dispatch, type) {
     return fetchGet(dispatch, urls.base + urls.approve.getorder+'?type='+type);
 };
 
-export function approve_approveOrder(dispatch, type) {
-    return fetchGet(dispatch, urls.base + urls.approve.approveorder+'?type='+type);
+export function approve_approveOrder(dispatch, type, order_id, comment) {
+    return fetchPost(dispatch, urls.base + urls.approve.approveorder+'?type='+type, {
+      order_id,
+      comment
+    });
+};
+
+export function approve_rejectOrder(dispatch, type, order_id, comment) {
+    return fetchPost(dispatch, urls.base + urls.approve.rejectorder+'?type='+type, {
+      order_id,
+      comment
+    });
+};
+
+export function approve_revokeOrder(dispatch, type, order_id, comment) {
+    return fetchPost(dispatch, urls.base + urls.approve.revokeorder+'?type='+type, {
+      order_id,
+      comment
+    });
 };

@@ -15,6 +15,8 @@ let url = {
 	approve: {
 		getorder: '/approve/getorder',
 		approveorder: '/approve/approveorder',
+		rejectorder: '/approve/rejectorder',
+		revokeorder: '/approve/revokeorder',
 	}
 };
 

@@ -7,6 +7,7 @@ import * as ApproveActions from '../actions/ApproveActions';
 import * as EntityActions from '../actions/EntityActions';
 import Query from '../components/approve/ApproveQuery';
 import OrderList from '../components/approve/ApproveOrderList';
+import Modal from '../components/approve/ApproveModal';
 import * as ServerApi from '../helpers/ServerApi';
 import { isEmptyObject } from '../helpers/Helpers';
 
@@ -26,7 +27,6 @@ class ApprovePage extends Component {
   }
 
   checkType(props){
-    console.log(props.params.type);
     switch (props.params.type){
       case 'auto':
       break;
@@ -40,7 +40,7 @@ class ApprovePage extends Component {
     }
   }
 
-  doGetApproveOrder (type, callback) {
+  doGetOrder (type, callback) {
     const { dispatch } = this.props;
     let promise = ServerApi.approve_getOrder(dispatch, type);
     
@@ -54,10 +54,34 @@ class ApprovePage extends Component {
     });
   }
 
-  doSubmitOrder (type, data, callback) {
+  showApproveModel (order_id, type, operate){
+    let order = this.props.entities.orders[order_id];
+    let dept = this.props.entities.depts[order.dept_id];
+    let room = this.props.entities.rooms[order.room_id];
+
+    this.refs.modal.setState({room, order, type, operate, dept, loading:false});
+    this.refs.modal.showModal();
+  }
+
+  doOperateOrder (type, operate, order_id, comment, callback) {
+    console.log(type, operate, order_id, comment);
     const { dispatch } = this.props;
 
-    ServerApi.order_submitOrder(dispatch, data).then(data => {
+    let promise;
+    switch(operate) {
+      case 'approve':
+        promise = ServerApi.approve_approveOrder(dispatch, type, order_id, comment);
+        break;
+      case 'reject':
+        promise = ServerApi.approve_rejectOrder(dispatch, type, order_id, comment);
+        break;
+      case 'revoke':
+        promise = ServerApi.approve_revokeOrder(dispatch, type, order_id, comment);
+        break;
+      default:
+        return;
+    }
+    promise.then(data => {
       callback && callback(true, data);
     },error => {
       callback && callback(false, error);
@@ -71,9 +95,11 @@ class ApprovePage extends Component {
 
     return (
       <div>
-        <Query depts={depts} deptList={deptList} type={type} onQeuryClick={this.doGetApproveOrder.bind(this)} />
+        <Query depts={depts} deptList={deptList} type={type} onQeuryClick={this.doGetOrder.bind(this)} />
         <hr />
-      	<OrderList depts={depts} rooms={rooms} type={type} orders={orders} orderList={orderList} />
+      	<OrderList depts={depts} rooms={rooms} type={type} orders={orders} orderList={orderList} 
+        onOperateClick={this.showApproveModel.bind(this)}/>
+        <Modal ref="modal" onSubmit={this.doOperateOrder.bind(this)} />
       </div>
     );
   }

@@ -17,22 +17,6 @@ class ApproveOrderItem extends Component {
     return (this.props.chksum !== nextProps.chksum);
   }
 
-  getStatusLabel (status){
-    switch(status){
-      default:
-      return (<Label bsStyle="default">Default</Label>);
-    }
-    /*
-      <p bo-switch="order.status">
-        <span bo-switch-when="1" class="label label-info">负责人未审批</span>
-        <span bo-switch-when="2" class="label label-danger">负责人审批驳回</span>
-        <span bo-switch-when="3" class="label label-success">负责人审批通过</span>
-        <span bo-switch-when="4" class="label label-danger">校团委审批驳回</span>
-        <span bo-switch-when="5" class="label label-success">校团委审批通过</span>
-      </p>
-    */
-  }
-
   getPanelStyle (status) {
     if (status == STATUS.STATUS_PENDING) {
       return 'info';
@@ -42,6 +26,12 @@ class ApproveOrderItem extends Component {
       return 'danger';
     }
   }
+
+  onOperateClick (operate) {
+    let { type, order } = this.props;
+    this.props.onOperateClick(order.id, type, operate);
+  }
+
   render () {
     let { depts, rooms, type, order } = this.props;
     if (!order){
@@ -64,6 +54,16 @@ class ApproveOrderItem extends Component {
         <Col md={4}>{order.date + ' ' +startHour + '时 - ' + endHour + '时'}</Col>
       </Row>
     );
+
+    //审批按钮生成
+    let approveBtn,rejectBtn,revokeBtn;
+    if(status == STATUS.STATUS_PENDING){
+      approveBtn = (<Button bsStyle="success" bsSize="small" block onClick={this.onOperateClick.bind(this,"approve")}>审批通过</Button>);
+      rejectBtn = (<Button bsStyle="danger" bsSize="small" block onClick={this.onOperateClick.bind(this,"reject")}>审批驳回</Button>);
+    }else if(status == STATUS.STATUS_REJECTED || status == STATUS.STATUS_APPROVED){
+      revokeBtn = (<Button bsStyle="warning" bsSize="small" block onClick={this.onOperateClick.bind(this,"revoke")}>审批撤销</Button>)
+    }
+
     return (
       <Panel collapsible defaultExpanded header={header} bsStyle={this.getPanelStyle(status)}>
         <div className="row">
@@ -92,13 +92,13 @@ class ApproveOrderItem extends Component {
         }
         <div className="row">
           <div className="col-sm-4 stacked-margin">
-            <Button bsStyle="success" bsSize="small" block>审批通过</Button>
+            {approveBtn}
           </div>
           <div className="col-sm-4 stacked-margin">
-            <Button bsStyle="danger" bsSize="small" block>审批驳回</Button>
+            {rejectBtn}
           </div>
           <div className="col-sm-4 stacked-margin">
-            <Button bsStyle="warning" bsSize="small" block>审批撤销</Button>
+            {revokeBtn}
           </div>
         </div>
       </Panel>
