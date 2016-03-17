@@ -9,13 +9,14 @@ import Query from '../components/approve/ApproveQuery';
 import OrderList from '../components/approve/ApproveOrderList';
 import Modal from '../components/approve/ApproveModal';
 import * as ServerApi from '../helpers/ServerApi';
-import { isEmptyObject } from '../helpers/Helpers';
+import { isEmptyObject, getListFormTable } from '../helpers/Helpers';
 
 class ApprovePage extends Component {
 	constructor(props) {
     super(props);
     this.shouldComponentUpdate = shouldComponentUpdate.bind(this);
   }
+  
   componentWillMount () {
     this.checkType(this.props);
   }
@@ -45,7 +46,24 @@ class ApprovePage extends Component {
     let promise = ServerApi.approve_getOrder(dispatch, type);
     
     promise.then(data => {
-      const { orderList, orders } = data;
+      const { orderList, orders, roomTables } = data;
+      //分析冲突预约
+      for (var order_id in orders) {
+        let order = orders[order_id];
+        let roomTable = roomTables[order.room_id][order.date];
+        
+        let parallelOrders = getListFormTable(roomTable.ordered,order.hours).concat(getListFormTable(roomTable.used,order.hours));
+        let conflictOrders = [];
+        for(var i in parallelOrders) {
+          let order_id_ = parallelOrders[i];
+          if (!orders[order_id_]) {
+            continue;
+          }
+          conflictOrders.push(order_id_);
+        }
+        order.conflict = conflictOrders;
+      }
+      
       !isEmptyObject(orders) && dispatch(EntityActions.updateOrder(orders));
       dispatch(ApproveActions.updateOrderList(orderList));  
       callback && callback(true, data); 

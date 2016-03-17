@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { shouldComponentUpdate } from 'react-addons-pure-render-mixin';
-import { Button, Panel, Row, Col } from 'react-bootstrap';
+import { Button, Panel, Alert } from 'react-bootstrap';
 
 import Prop from '../PropGroup';
 import StatusLabel from '../StatusLabel';
 import {STATUS} from '../../constants/OrderStatus';
+import { typeNames } from '../../constants/OperationTypes';
 import {getAbstractStatus} from '../../helpers/Helpers';
 
 
@@ -14,12 +15,16 @@ class ApproveOrderItem extends Component {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    return (this.props.chksum !== nextProps.chksum);
+    return (this.props.chksum !== nextProps.chksum || this.props.type !== nextProps.type);
   }
 
-  getPanelStyle (status) {
+  getPanelStyle (status, conflict) {
     if (status == STATUS.STATUS_PENDING) {
-      return 'info';
+      if(conflict){
+        return 'warning';
+      }else{
+        return 'info';
+      }
     } else if (status == STATUS.STATUS_APPROVED) {
       return 'success';
     } else if (status == STATUS.STATUS_REJECTED) {
@@ -46,26 +51,40 @@ class ApproveOrderItem extends Component {
     let endHour = parseInt(hours[hours.length -1])+1;
     let submit_time = order.submit_time ? new Date(order.submit_time*1000).Format('yyyy-MM-dd hh:mm:ss') : ' '; 
     let status = getAbstractStatus(order.status, type);
+    let conflict = order.conflict.length > 1;
 
     let header = (
-      <Row className="show-grid">
-        <Col md={4}>{dept.name+ ' - ' + order.name}</Col>
-        <Col md={4}>{room.name + ' - ' + room.number}</Col>
-        <Col md={4}>{order.date + ' ' +startHour + '时 - ' + endHour + '时'}</Col>
-      </Row>
+      <div className="row">
+        <div className="col-sm-4">{dept.name+ ' - ' + order.name}</div>
+        <div className="col-sm-4">{room.name + ' - ' + room.number}</div>
+        <div className="col-sm-4">{order.date + ' ' +startHour + '时 - ' + endHour + '时'}</div>
+      </div>
     );
 
-    //审批按钮生成
-    let approveBtn,rejectBtn,revokeBtn;
+    //冲突提示
+    let alertNode;
+    if(conflict && status == STATUS.STATUS_PENDING){
+      alertNode = (<Alert bsStyle="danger">该预约和其他预约存在冲突！</Alert>);
+    }
+
+    //操作按钮生成
+    let operateBtns = [];
     if(status == STATUS.STATUS_PENDING){
-      approveBtn = (<Button bsStyle="success" bsSize="small" block onClick={this.onOperateClick.bind(this,"approve")}>审批通过</Button>);
-      rejectBtn = (<Button bsStyle="danger" bsSize="small" block onClick={this.onOperateClick.bind(this,"reject")}>审批驳回</Button>);
+      operateBtns.push((<Button bsStyle="success" bsSize="small" block onClick={this.onOperateClick.bind(this,"approve")}>审批通过</Button>));
+      operateBtns.push((<Button bsStyle="danger" bsSize="small" block onClick={this.onOperateClick.bind(this,"reject")}>审批驳回</Button>));
+      if(conflict){
+        operateBtns.push((<Button bsStyle="warning" bsSize="small" block onClick={this.onOperateClick.bind(this,"revoke")}>查看冲突预约</Button>));
+      }
     }else if(status == STATUS.STATUS_REJECTED || status == STATUS.STATUS_APPROVED){
-      revokeBtn = (<Button bsStyle="warning" bsSize="small" block onClick={this.onOperateClick.bind(this,"revoke")}>审批撤销</Button>)
+      operateBtns.push((<Button bsStyle="warning" bsSize="small" block onClick={this.onOperateClick.bind(this,"revoke")}>审批撤销</Button>));
+      operateBtns.push(null);
+      if(conflict){
+        operateBtns.push((<Button bsStyle="warning" bsSize="small" block onClick={this.onOperateClick.bind(this,"revoke")}>查看冲突预约</Button>));
+      }
     }
 
     return (
-      <Panel collapsible defaultExpanded header={header} bsStyle={this.getPanelStyle(status)}>
+      <Panel collapsible defaultExpanded header={header} bsStyle={this.getPanelStyle(status, conflict)}>
         <div className="row">
           <Prop groupClassName="col-sm-4" label="申请学号" content={student_no} />
           <Prop groupClassName="col-sm-4" label="联系方式" content={order.phone} />
@@ -82,7 +101,7 @@ class ApproveOrderItem extends Component {
             return (
               <div key={operation.id} className="row">
                 <hr className="small" />
-                <Prop groupClassName="col-sm-4" label="操作类型" content={operation.operator} />
+                <Prop groupClassName="col-sm-4" label="操作类型" content={typeNames[operation.type]} />
                 <Prop groupClassName="col-sm-8" label="操作标注" content={operation.commemt} />
                 <Prop groupClassName="col-sm-4" label="操作人" content={operation.operator} />
                 <Prop groupClassName="col-sm-4" label="操作时间" content={time} />
@@ -91,105 +110,20 @@ class ApproveOrderItem extends Component {
           })
         }
         <div className="row">
-          <div className="col-sm-4 stacked-margin">
-            {approveBtn}
-          </div>
-          <div className="col-sm-4 stacked-margin">
-            {rejectBtn}
-          </div>
-          <div className="col-sm-4 stacked-margin">
-            {revokeBtn}
-          </div>
+          <hr className="small" />
+          <div className="col-sm-12">{alertNode}</div>
+          {
+            operateBtns.map((operateBtn,i) => {
+              return (
+                <div key={i} className="col-sm-4 stacked-margin">
+                  {operateBtn}
+                </div>
+              );
+            })
+          }
         </div>
       </Panel>
     );
-
-    
-
-/*
-<div class="panel panel-info">
-  <div class="panel-heading">
-    <h4 class="panel-title">
-      <a data-toggle="collapse" href="#collapse-0" aria-expanded="true" class="">   
-        <div class="row">
-          <div class="col-sm-4 org-name">经管学院-付琪皓</div>
-          <div class="col-sm-4 room">团队讨论室4 - 403</div>
-          <div class="col-sm-4 date-time">2016-03-10  12点 - 14点</div>
-        </div>
-      </a>
-    </h4>
-  </div>
-  <div class="panel-collapse collapse in" id="collapse-0" aria-expanded="true">
-    <div class="panel-body">
-      <div class="row">
-        <div class="col-sm-4 form-group">
-          <label class="info-label">学号</label>
-          <span class="info-content orderer">15241154</span>
-        </div>
-        <div class="col-sm-4 form-group">
-          <label class="info-label">联系方式</label>
-          <span class="info-content contact">13011177171</span>
-        </div>
-        <div class="col-sm-4 form-group">
-          <label class="info-label">活动人数</label>
-          <span class="info-content number">&lt;5</span>
-        </div>
-        <div class="col-sm-4 form-group">
-          <label class="info-label">预约状态</label>
-          <span class="info-content status"><span class="label label-info ">负责人未审批</span></span>
-        </div>
-        <div class="col-sm-8 form-group">
-          <label class="info-label">提交时间</label>
-          <span class="info-content no-worp order_time">2016-03-09 18:43:15</span>
-        </div>  
-        <div class="col-sm-12 form-group">
-          <label class="info-label">申请主题</label>
-          <span class="info-content title">小组讨论</span>
-        </div>
-        <div class="col-sm-12 form-group">
-          <label class="info-label">活动内容</label>
-          <span class="info-content content">有关课程组织的论题讨论</span>
-        </div>
-        <div class="col-sm-12 form-group">
-          <label class="info-label">安保措施</label>
-          <span class="info-content secure">保证最基本安保措施</span>
-        </div>
-        <div class="col-sm-12 form-div">
-          <hr>
-        </div>
-        <div class="col-sm-4 form-group">
-          <label class="info-label">审批时间</label>
-          <span class="info-content no-worp approve-datetime"></span>
-        </div>
-        <div class="col-sm-4 form-group">
-          <label class="info-label">审批人员</label>
-          <span class="info-content approve-approver"></span>
-        </div>
-        <div class="col-sm-4 form-group">
-          <label class="info-label">审批结果</label>
-          <span class="info-content approve-status"><span class="label label-info">待负责人审批</span></span>
-        </div>
-        <div class="col-sm-12 form-group">
-          <label class="info-label">审批批注</label>
-          <span class="info-content approve-comment"></span>
-        </div>
-        <div class="col-sm-4 col-md-3 form-group">
-          
-        </div>
-        <div class="col-sm-4 col-md-4 col-md-offset-1 form-group">
-            <button type="button" class="btn btn-success btn-sm btn-block btn-pass" onclick="onApproveClick(this,1)">审批通过</button>
-          </div>
-          <div class="col-sm-4 col-md-4 form-group">
-            <button type="button" class="btn btn-danger btn-sm btn-block btn-reject" onclick="onApproveClick(this,2)">审批驳回</button>
-            
-          </div>        <div class="col-sm-12">
-          
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-*/
   }
 }
 

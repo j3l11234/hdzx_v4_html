@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { shouldComponentUpdate } from 'react-addons-pure-render-mixin';
-import { Button, Modal,Input } from 'react-bootstrap';
+import { Button, Modal, Input, Alert } from 'react-bootstrap';
 
 import Prop from '../PropGroup';
 
@@ -29,8 +29,19 @@ class ApproveModal extends Component {
   onSubmit() {
     let { type, operate, order } = this.state;
     let comment = this.refs.comment.getValue();
-    this.props.onSubmit(type, operate,order.id,comment, (success,data) => {
-      console.log(success,data);
+    
+    this.setState({loading: true});
+    this.props.onSubmit(type, operate, order.id, comment, (success,data) => {
+      if(data.status == 200){
+        this.setState({
+          alert: { style: 'success', text: data.message}
+        });
+      }else{
+        this.setState({loading: false});
+        this.setState({
+          alert: { style: 'danger', text: data.message}
+        });
+      }
     });
   }
 
@@ -66,6 +77,13 @@ class ApproveModal extends Component {
       default:
         break;
     }
+
+    let alertNode = null;
+    if(this.state.alert){
+      let {style, text} = this.state.alert;
+      alertNode = (<Alert bsStyle={style}>{text}</Alert>);
+    }
+
     return (
       <Modal show={show} onHide={this.hideModal.bind(this)} backdrop={'static'}>
         <Modal.Header closeButton>
@@ -82,6 +100,7 @@ class ApproveModal extends Component {
           <hr className="small" />
           <div className="row">
             <Input ref="comment" type="textarea" groupClassName="col-sm-12" label="审批批注" labelClassName="inline-label" placeholder="请填写安保措施" wrapperClassName="inline-control"/>
+            <div className="col-sm-12">{alertNode}</div>
           </div>
         </Modal.Body>
         <Modal.Footer>
