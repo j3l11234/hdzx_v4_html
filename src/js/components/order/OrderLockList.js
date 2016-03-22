@@ -4,6 +4,8 @@ import { Table } from 'react-bootstrap';
 
 import { getListFormTable } from '../../helpers/Helpers';
 
+const weekName = ['日','一','二','三','四','五','六'];
+
 class OrderLockList extends Component {
   constructor(props) {
     super(props);
@@ -37,16 +39,25 @@ class OrderLockList extends Component {
             if(!lock){
               return;
             }
-            let {hours, name} = lock;
-            let startHour = parseInt(hours.get(0));
-            let endHour = parseInt(hours.get(-1))+1;
+
+            let {hours, title, loop_type, loop_day} = lock;
+            let date;
+            if(loop_type == 1){
+              date = '每日';
+            }else if(loop_type == 2){
+              date = '每周'+weekName[loop_day]+'';
+            }else if(loop_type == 3){
+              date = '每月'+loop_day+'日';
+            }
+            let startHour = parseInt(hours[0]);
+            let endHour = parseInt(hours[hours.length -1])+1;
             return (
               <tr key={lockId}>
                 <td>
-                  <span>{name}</span>
+                  <span>{title}</span>
                 </td>
                 <td>
-                  <span></span>
+                  <span>{date}</span>
                 </td>
                 <td>
                   <span>{startHour}时 - {endHour}时</span>
