@@ -50,7 +50,7 @@ class OrderModal extends Component {
     }
     
     formData = Object.assign(formData, {
-      room: this.state.room.id,
+      room_id: this.state.room_id,
       date: this.state.date,
       hours: JSON.stringify(this.state.hours)
     });
@@ -58,22 +58,28 @@ class OrderModal extends Component {
     form.setState({alert: null});
     this.setState({loading: true});
     this.props.onSubmit(formData,(success,data) => {
-      if(data.status == 200){
+      if (data.status == 200) {
         form.setState({
           alert: { style: 'success', text: data.message}
         });
-      }else{
+      } else {
         this.setState({loading: false});
         form.setState({
           alert: { style: 'danger', text: data.message}
         });
+        if (data.status == 601) {
+          form.onCaptcha();
+        }
       }
     });
   }
 
   onEntered () {
-    let { room, date } = this.state;
-    this.props.onQueryUse(room.id, date);
+    setTimeout(()=>{
+      let { room_id, date } = this.state;
+      this.props.onQueryUse(room_id, date);
+      this.refs.form.onCaptcha();
+    },500);
   }
 
   onChooseHours (startHour, endHour, hours) {
@@ -81,10 +87,14 @@ class OrderModal extends Component {
   }
 
   render () {
-    let { locks, depts, orders, deptList } = this.props;
-    let { roomTable, room, date, startHour, endHour, loading } = this.state;
+    let { roomTables, rooms, locks, depts, orders, deptList } = this.props;
+    let { room_id, date, startHour, endHour, loading } = this.state;
+
+    let roomTable = roomTables ? roomTables[room_id][date] : {};
     roomTable = roomTable ? roomTable : {};
-    room = room ? room : {};
+    let room = rooms[room_id];
+    room = room ? room : {};  
+    
     let { hourTable } = roomTable;
     let { max_hour } = room;
     let roomName = room.number+' - '+room.name;
@@ -107,7 +117,7 @@ class OrderModal extends Component {
                   <Note ref="note" date={date} roomName={roomName} startHour={startHour} endHour={endHour} maxHour={max_hour}/>
                 </div>
                 <div className="clearfix"></div>
-                <Form ref="form" depts={depts} deptList={deptList} form={null} onSubmit={this.onSubmit.bind(this)} />
+                <Form ref="form" depts={depts} deptList={deptList} form={null} onSubmit={this.onSubmit.bind(this)} onCaptcha={this.props.onCaptcha} />
               </div>
             </Tab>
             <Tab eventKey={2} title="使用情况">

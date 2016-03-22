@@ -16,11 +16,8 @@ class OrderPage extends Component {
     this.shouldComponentUpdate = shouldComponentUpdate.bind(this);
   }
 
-  showOrderModel(roomId, date){
-    let roomTable = this.props.roomTable.roomTables[roomId][date];
-    let room = this.props.entities.rooms[roomId];
-
-    this.refs.modal.setState({room, date, roomTable, loading:false});
+  showOrderModel(room_id, date){
+    this.refs.modal.setState({room_id, date, loading:false});
     this.refs.modal.showModal();
   }
 
@@ -60,6 +57,15 @@ class OrderPage extends Component {
     });
   }
   
+  doGetCaptcha (callback) {
+    const { dispatch } = this.props;
+    ServerApi.order_captcha(dispatch).then(data => {
+      callback && callback(true, data); 
+    },error => {
+      callback && callback(false, error);
+    });
+  }
+
   render() {
     let { roomTable } = this.props;
     let { rooms, locks, depts, orders } = this.props.entities;
@@ -69,7 +75,7 @@ class OrderPage extends Component {
       <div>
       	<Query onQeuryClick={this.doGetRoomTables.bind(this)} />
         <RoomTable rooms={rooms} roomTable={roomTable} onCellClick={this.showOrderModel.bind(this)} />
-        <Modal ref="modal" orders={orders} locks={locks} depts={depts} deptList={deptList} onSubmit={this.doSubmitOrder.bind(this)} onQueryUse={this.doGetRoomUse.bind(this)} />
+        <Modal ref="modal" rooms={rooms} orders={orders} locks={locks} depts={depts} deptList={deptList} roomTables={roomTable.roomTables} onSubmit={this.doSubmitOrder.bind(this)} onQueryUse={this.doGetRoomUse.bind(this)} onCaptcha={this.doGetCaptcha.bind(this)}/>
       </div>
     );
   }

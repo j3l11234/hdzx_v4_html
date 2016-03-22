@@ -6,6 +6,7 @@ let url = {
 		getroomtables: '/order/getroomtables',
 		getroomuse: '/order/getroomuse',
 		submitorder: '/order/submitorder',
+		captcha: '/order/captcha'
 	},
 	user: {
 		getlogin: '/user/getlogin',
@@ -19,5 +20,7 @@ let url = {
 		revokeorder: '/approve/revokeorder',
 	}
 };
+
+url.host = 'http://localhost';
 
 export default url;

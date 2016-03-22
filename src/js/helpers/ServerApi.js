@@ -39,6 +39,10 @@ export function order_getRoomUse(dispatch, room, date) {
     return fetchGet(dispatch, urls.base + urls.order.getroomuse+'?room='+room+'&date='+date);
 };
 
+export function order_captcha(dispatch) {
+    return fetchGet(dispatch, urls.base + urls.order.captcha+'?refresh=1');
+};
+
 
 export function approve_getOrder(dispatch, type) {
     return fetchGet(dispatch, urls.base + urls.approve.getorder+'?type='+type);

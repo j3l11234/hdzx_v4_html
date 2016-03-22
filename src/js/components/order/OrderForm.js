@@ -4,6 +4,7 @@ import { Alert, Input } from 'react-bootstrap';
 
 import FormValidator from '../../helpers/FormValidator';
 import NumberMap from '../../constants/NumberMap';
+import urls from '../../constants/Urls';
 
 class OrderForm extends Component {
   constructor (props) {
@@ -11,7 +12,8 @@ class OrderForm extends Component {
     this.shouldComponentUpdate = shouldComponentUpdate.bind(this);
 
     this.state = {
-      alert: null
+      alert: null,
+      captchaUrl: null
     }
 
     this.fv = new FormValidator(this, {
@@ -71,8 +73,15 @@ class OrderForm extends Component {
           }
         }
       },
+      captcha: {
+        value: '',
+        validator: (value) => {
+          if(!value) {
+            return  '请输入验证码';
+          }
+        }
+      }
     });
-
   }
 
   handleChange (name, event) {
@@ -92,6 +101,17 @@ class OrderForm extends Component {
     }
   }
 
+  onCaptcha () {
+    this.props.onCaptcha((success, data) => {
+      if (success) {
+        this.setState({
+          captchaHash: data.hash2,
+          captchaUrl: urls.host+data.url
+        });
+      }
+    });
+  }
+
   getBsStyle (name) {
     if(!this.fv.getInputError(name)){
       return null;
@@ -99,49 +119,6 @@ class OrderForm extends Component {
       return 'error';
     }
   }
-
-  // submitOrder () {
-  //   let hasError = false;
-  //   let errorText = '';
-  //   let form = {};
-  //   ['name', 'phone', 'title', 'content', 'number', 'dept', 'secure'].map(name => {
-  //     let value = this.getInputValue(name);
-  //     form[name] = value;
-  //     let error = this.handleInput(name, value);
-  //     if (error && !hasError) {
-  //       hasError = true;
-  //       errorText = error;
-  //     }
-  //   });
-  //   if(this.props.form.get('hours').size < 1){
-  //     hasError = true;
-  //     errorText = '请选择时间';
-  //   }
-  //   form['room'] = this.props.form.get('room');
-  //   form['date'] = this.props.form.get('date');
-  //   form['hours'] = JSON.stringify(this.props.form.get('hours').toJSON());
-  //   if (hasError) {
-  //     this.setState({
-  //       alert: {
-  //         style: 'danger',
-  //         text: errorText
-  //       }
-  //     });
-  //   } else {
-  //     this.hasSubmit = true;
-  //     this.props.onSubmitOrder(form);
-  //     //this.props.doLogin(form.username, form.password, form.remember);
-  //   }
-  // }
-
-  // getFormData () {
-  //   let form = {};
-  //   ['name', 'phone', 'title', 'content', 'number', 'dept', 'secure'].map(name => {
-  //     let value = this.getInputValue(name);
-  //     form[name] = value;
-  //   });
-  //   return form;
-  // }
 
   render() {
     let alertNode = null;
@@ -184,6 +161,11 @@ class OrderForm extends Component {
         </Input>
         <Input type="textarea" groupClassName="col-sm-12" label="安保措施" labelClassName="inline-label" placeholder="请填写安保措施" wrapperClassName="inline-control"
           bsStyle={this.getBsStyle.call(this, 'secure')} onChange={this.handleChange.bind(this, 'secure')} value={this.fv.getInputValue('secure')} />
+        <Input type="text" groupClassName="col-sm-6" label="验证码" labelClassName="inline-label" placeholder="请填写验证码" wrapperClassName="inline-control" 
+          bsStyle={this.getBsStyle.call(this, 'captcha')} onChange={this.handleChange.bind(this, 'captcha')} />
+        <div className="col-sm-6">
+          {this.state.captchaUrl ? (<img src={this.state.captchaUrl} alt="验证码" onClick={this.onCaptcha.bind(this)}/>) : null}
+        </div>
         <div className="col-sm-12">{alertNode}</div>
       </form>
     );
