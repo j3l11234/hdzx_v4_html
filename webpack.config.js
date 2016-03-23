@@ -10,7 +10,8 @@ module.exports = {
       'redux',
       'redux-thunk'
     ],
-    app: __dirname + '/src/js/index.js',
+    home: __dirname + '/src/js/home/index.js',
+    admin: __dirname + '/src/js/admin/index.js'
   },
   output: {
     path: __dirname + '/dist/js',

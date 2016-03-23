@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack-dev-server --content-base dist/ --hot --inline --colors --no-info --open",
+    "dev": "webpack-dev-server --content-base dist/ --hot --inline --colors --quiet --open",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "gulp",
     "webpack": "webpack",
