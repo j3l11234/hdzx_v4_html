@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Nav, Navbar, NavDropdown, NavItem, MenuItem } from 'react-bootstrap';
 
 import * as ServerApi from '../../common/helpers/ServerApi';
-import * as UserActions from '../actions/UserActions';
+import * as UserActions from '../../common/actions/UserActions';
 import NavUser from '../components/NavUser';
 
 class Navbar_ extends Component {

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import * as ApproveActions from '../actions/ApproveActions';
-import * as EntityActions from '../actions/EntityActions';
+import * as EntityActions from '../../common/actions/EntityActions';
 import Query from '../components/approve/ApproveQuery';
 import OrderList from '../components/approve/ApproveOrderList';
 import Modal from '../components/approve/ApproveModal';

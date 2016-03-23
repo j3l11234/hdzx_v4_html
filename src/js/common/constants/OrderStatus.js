@@ -13,6 +13,6 @@ export const STATUS = {
   AUTO_REJECTED:      parseInt('0x32', 16), //自动驳回
 
   STATUS_PENDING:     1, //抽象待审批
-	STATUS_APPROVED:     2, //抽象通过
+	STATUS_APPROVED:    2, //抽象通过
 	STATUS_REJECTED:    3 //抽象驳回
 };

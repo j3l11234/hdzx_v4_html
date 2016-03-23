@@ -57,7 +57,7 @@ class OrderModal extends Component {
 
     form.setState({alert: null});
     this.setState({loading: true});
-    this.props.onSubmit(formData,(success,data) => {
+    this.props.onSubmit(formData, (success,data) => {
       if (data.status == 200) {
         form.setState({
           alert: { style: 'success', text: data.message}

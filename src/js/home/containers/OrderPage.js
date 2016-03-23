@@ -5,8 +5,8 @@ import { connect } from 'react-redux';
 import Modal from '../components/order/OrderModal';
 import Query from '../components/order/RoomTableQuery';
 import RoomTable from '../components/order/RoomTable';
-import * as RoomTableActions from '../actions/RoomTableActions';
-import * as EntityActions from '../actions/EntityActions';
+import * as EntityActions from '../../common/actions/EntityActions';
+import * as RoomTableActions from '../../common/actions/RoomTableActions';
 import * as ServerApi from '../../common/helpers/ServerApi';
 import { isEmptyObject } from '../../common/helpers/Helpers';
 
@@ -75,7 +75,8 @@ class OrderPage extends Component {
       <div>
       	<Query onQeuryClick={this.doGetRoomTables.bind(this)} />
         <RoomTable rooms={rooms} roomTable={roomTable} onCellClick={this.showOrderModel.bind(this)} />
-        <Modal ref="modal" rooms={rooms} orders={orders} locks={locks} depts={depts} deptList={deptList} roomTables={roomTable.roomTables} onSubmit={this.doSubmitOrder.bind(this)} onQueryUse={this.doGetRoomUse.bind(this)} onCaptcha={this.doGetCaptcha.bind(this)}/>
+        <Modal ref="modal" rooms={rooms} orders={orders} locks={locks} depts={depts} deptList={deptList} roomTables={roomTable.roomTables} 
+          onSubmit={this.doSubmitOrder.bind(this)} onQueryUse={this.doGetRoomUse.bind(this)} onCaptcha={this.doGetCaptcha.bind(this)}/>
       </div>
     );
   }

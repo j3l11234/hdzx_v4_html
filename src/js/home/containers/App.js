@@ -4,11 +4,12 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ServerApi from '../../common/helpers/ServerApi';
-import * as ApproveActions from '../actions/ApproveActions';
-import * as EntityActions from '../actions/EntityActions';
+import * as EntityActions from '../../common/actions/EntityActions';
+import * as RoomTableActions from '../../common/actions/RoomTableActions';
+import * as UserActions from '../../common/actions/UserActions';
 import * as OrderActions from '../actions/OrderActions';
-import * as RoomTableActions from '../actions/RoomTableActions';
-import * as UserActions from '../actions/UserActions';
+
+
 import NavBar from './NavBar';
 
 class App extends Component {
@@ -44,7 +45,6 @@ function getInitData(dispatch) {
     const { deptList, depts } = data;
     dispatch(EntityActions.updateDept(depts));
     dispatch(OrderActions.updateDeptList(deptList));
-    dispatch(ApproveActions.updateDeptList(deptList));
   },error => {});
 
   ServerApi.user_getLogin(dispatch).then(data => {

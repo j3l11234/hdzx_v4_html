@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Panel } from 'react-bootstrap';
 
 import * as ServerApi from '../../common/helpers/ServerApi';
-import * as UserActions from '../actions/UserActions';
+import * as UserActions from '../../common/actions/UserActions';
 import LoginForm from '../components/loginForm';
 
 class LoginPage extends Component {

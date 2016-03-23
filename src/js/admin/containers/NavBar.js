@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Nav, Navbar, NavDropdown, NavItem, MenuItem } from 'react-bootstrap';
 
 import * as ServerApi from '../../common/helpers/ServerApi';
-import * as UserActions from '../actions/UserActions';
+import * as UserActions from '../../common/actions/UserActions';
 import NavUser from '../components/NavUser';
 
 class Navbar_ extends Component {
@@ -29,16 +29,16 @@ class Navbar_ extends Component {
       <Navbar inverse fluid={true}>
         <Navbar.Header>
           <Navbar.Brand>
-          <a href="/">学活场地申请系统</a>
+          <a href="/">学活场地后台管理系统</a>
           </Navbar.Brand>
           <Navbar.Toggle />
         </Navbar.Header>
         <Navbar.Collapse>
           <Nav>
-            <NavDropdown eventKey={3} title="预约审批" id="basic-nav-dropdown">
-              <MenuItem eventKey={3.1} href="#/approve/manager">负责人审批</MenuItem>
-              <MenuItem eventKey={3.1} href="#/approve/school">校级审批</MenuItem>
-              <MenuItem eventKey={3.3} href="#/approve/auto">自动审批</MenuItem>
+            <NavDropdown eventKey={1} title="预约审批" id="basic-nav-dropdown">
+              <MenuItem eventKey={1.1} href="#/approve/manager">负责人审批</MenuItem>
+              <MenuItem eventKey={1.1} href="#/approve/school">校级审批</MenuItem>
+              <MenuItem eventKey={1.3} href="#/approve/auto">自动审批</MenuItem>
             </NavDropdown>
           </Nav>
           <Nav pullRight>
