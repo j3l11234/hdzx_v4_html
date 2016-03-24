@@ -9,15 +9,6 @@ class OrderOrderList extends Component {
   constructor(props) {
     super(props);
   }
-    
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return (
-      this.props.chksum !== nextProps.chksum ||
-      this.props.orders !== nextProps.orders ||
-      this.props.depts !== nextProps.depts
-    );
-  }
 
   render() {
     function getStatusLabel(status){
@@ -36,7 +27,7 @@ class OrderOrderList extends Component {
       */
     }
 
-    let { depts, orders, ordered, used } = this.props;
+    let { orders, ordered, used } = this.props;
     let orderList = getListFormTable(used).concat(getListFormTable(ordered));
     return (
       <Table condensed hover responsive>
@@ -55,7 +46,6 @@ class OrderOrderList extends Component {
               return null;
             }
 
-            let dept = depts[order.dept_id];
             let name = order.student_no ? order.student_no : order.name;
 
             let submit_time = new String();
@@ -76,7 +66,7 @@ class OrderOrderList extends Component {
                 <td>
                   <span>{order.title}</span>
                   <br />
-                  <span>{dept.name}</span>
+                  <span>{order.dept_name}</span>
                 </td>
                 <td>
                   <span>{submit_time}</span>

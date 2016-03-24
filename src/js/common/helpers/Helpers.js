@@ -20,20 +20,26 @@ export function getDateRange(max_before, min_before, by_week, now) {
   max_before = parseInt(max_before);
   min_before = parseInt(min_before);
 
-  now = now ? now : new Date();
-  now.setHours(0,0,0);
+  let today = now ? now : new Date();
+  today.setHours(0,0,0);
 
-  let day = now.getDate();
+  let day = today.getDate();
+  let limitStart = new Date(today);
+  limitStart.setDate(day + min_before);
+  let limitEnd = new Date(today);
+  limitEnd.setDate(day + max_before);
+
   if (by_week == 1){
-    let weekDay = now.getDay()
+    let weekDay = limitEnd.getDay()
     max_before += (7 - weekDay) % 7;  
+    limitEnd = new Date(today);
+    limitEnd.setDate(day + max_before);
   }
 
-  let start = new Date(now);
-  let end = new Date(now);
-  start.setDate(day + min_before);
-  end.setDate(day + max_before);
-  return {start: start.Format('yyyy-MM-dd'), end: end.Format('yyyy-MM-dd')};
+  return {
+    start: limitStart.Format('yyyy-MM-dd'),
+    end: limitEnd.Format('yyyy-MM-dd')
+  };
 }
 
 export function isEmptyObject(obj){

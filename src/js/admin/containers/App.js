@@ -24,7 +24,7 @@ class App extends Component {
   render() {
     const { children } = this.props;
     return (
-      <div className="container">
+      <div className="container-fluid">
         <NavBar />
         {children}
       </div>

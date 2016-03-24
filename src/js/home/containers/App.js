@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import * as ServerApi from '../../common/helpers/ServerApi';
 import * as EntityActions from '../../common/actions/EntityActions';
-import * as RoomTableActions from '../../common/actions/RoomTableActions';
+import * as RoomTableActions from '../actions/RoomTableActions';
 import * as UserActions from '../../common/actions/UserActions';
 import * as OrderActions from '../actions/OrderActions';
 
@@ -26,7 +26,7 @@ class App extends Component {
   render() {
     const { children } = this.props;
     return (
-      <div className="container">
+      <div className="container-fluid">
         <NavBar />
         {children}
       </div>

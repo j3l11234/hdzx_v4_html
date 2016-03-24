@@ -90,16 +90,21 @@ class OrderModal extends Component {
     let { roomTables, rooms, locks, depts, orders, deptList } = this.props;
     let { room_id, date, startHour, endHour, loading } = this.state;
 
-    let roomTable = roomTables ? roomTables[room_id][date] : {};
-    roomTable = roomTable ? roomTable : {};
-    let room = rooms[room_id];
-    room = room ? room : {};  
+    let roomTable;
+    let room;
+    if (roomTables && room_id && date) {
+      roomTable = roomTables ? roomTables[room_id][date] : {};
+      room = rooms[room_id]; 
+    }else{
+      roomTable = {};
+      room = {};
+    }
     
     let { hourTable } = roomTable;
     let { max_hour } = room;
     let roomName = room.number+' - '+room.name;
 
-    let {ordered, used, locked, chksum} = roomTable;
+    let {ordered, used, locked} = roomTable;
 
     return (
       <Modal show={this.state.show} onHide={this.hideModal.bind(this)} onEntered={this.onEntered.bind(this)} backdrop={'static'}>
@@ -121,8 +126,8 @@ class OrderModal extends Component {
               </div>
             </Tab>
             <Tab eventKey={2} title="使用情况">
-              <OrderList orders={orders} depts={depts} ordered={ordered} locked={locked} chksum={chksum} />
-              <LockList locks={locks} locked={locked} chksum={chksum} />
+              <OrderList orders={orders} ordered={ordered} used={used} />
+              <LockList locks={locks} locked={locked} />
             </Tab>
           </Tabs>
         </Modal.Body>

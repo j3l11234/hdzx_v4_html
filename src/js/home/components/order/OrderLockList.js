@@ -12,13 +12,6 @@ class OrderLockList extends Component {
     this.shouldComponentUpdate = shouldComponentUpdate.bind(this);
   }
 
-  shouldComponentUpdate (nextProps, nextState) {
-    return (
-      this.props.chksum !== nextProps.chksum ||
-      this.props.locks !== nextProps.locks
-    );
-  }
-
   render() {
     let { locks, locked } = this.props;
     let lockList = getListFormTable(locked);

@@ -45,12 +45,13 @@ class RoomTable extends Component {
             end = Date.parse(end);
 
             return (
-              <div className="rt-table-row" key={roomId}>
+              <div className="rt-table-row" key={roomId} style={{width:(dateList ? dateList.length : 0)*90+'px'}}>
               {
                 dateList && dateList.map(date => {
                   let ts = Date.parse(date);
                   let available = ts >= start && ts <= end;
-                  let {hourTable, chksum} = roomTables[roomId][date];
+                  let roomTable = roomTables[roomId][date] ? roomTables[roomId][date] : {};
+                  let {hourTable, chksum} = roomTable;
                   return (
                     <Cell key={roomId+'_'+date} chksum={chksum} date={date} room={roomId} hourTable={hourTable} available={available} onCellClick={onCellClick}/>
                   );

@@ -2,8 +2,27 @@ $form-group-margin-bottom: 5px;
 @import 'bootstrap';
 
 
+@media (min-width: 768px) {
+  .container-fluid {
+    padding-right: 30px;
+    padding-left: 30px;
+  }
+}
+@media (min-width: 992px) {
+  .container-fluid {
+    padding-right: 45px;
+    padding-left: 45px;
+  }
+}
+@media (min-width: 1200px) {
+  .container-fluid {
+    padding-right: 60px;
+    padding-left: 60px;
+  }
+}
+
 //条纹
-@mixin striped($oddColor: inherit, $evenColor: #f3f3f3){
+@mixin striped($oddColor: inherit, $evenColor: #eeeeee){
   &:nth-child(odd){
     background-color: $oddColor;
   }
@@ -214,7 +233,7 @@ hr.small{
   }
 
   &-locked {
-    background: #D5D5D5;
+    background: #CECECE;
     color: black;
   }
 

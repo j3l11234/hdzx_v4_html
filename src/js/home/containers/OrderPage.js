@@ -6,7 +6,7 @@ import Modal from '../components/order/OrderModal';
 import Query from '../components/order/RoomTableQuery';
 import RoomTable from '../components/order/RoomTable';
 import * as EntityActions from '../../common/actions/EntityActions';
-import * as RoomTableActions from '../../common/actions/RoomTableActions';
+import * as RoomTableActions from '../actions/RoomTableActions';
 import * as ServerApi from '../../common/helpers/ServerApi';
 import { isEmptyObject } from '../../common/helpers/Helpers';
 
@@ -49,8 +49,7 @@ class OrderPage extends Component {
       let {orders, locks, roomTable} = data;
       !isEmptyObject(orders) && dispatch(EntityActions.updateOrder(orders));
       !isEmptyObject(locks) && dispatch(EntityActions.updateLock(locks));
-      (this.props.roomTable.roomTables[room][date].chksum !== roomTable.chksum) &&
-        dispatch(RoomTableActions.updateOneRoomTable(room, date, roomTable));
+      dispatch(RoomTableActions.updateOneRoomTable(room, date, roomTable));
       callback && callback(true, data); 
     },error => {
       callback && callback(false, error);
@@ -74,6 +73,7 @@ class OrderPage extends Component {
     return (
       <div>
       	<Query onQeuryClick={this.doGetRoomTables.bind(this)} />
+        <hr />
         <RoomTable rooms={rooms} roomTable={roomTable} onCellClick={this.showOrderModel.bind(this)} />
         <Modal ref="modal" rooms={rooms} orders={orders} locks={locks} depts={depts} deptList={deptList} roomTables={roomTable.roomTables} 
           onSubmit={this.doSubmitOrder.bind(this)} onQueryUse={this.doGetRoomUse.bind(this)} onCaptcha={this.doGetCaptcha.bind(this)}/>
