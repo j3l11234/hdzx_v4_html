@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import {shouldComponentUpdate} from 'react-addons-pure-render-mixin';
-import { Alert, Input, ButtonInput } from 'react-bootstrap';
+import { Alert, Input, ButtonInput, Button } from 'react-bootstrap';
 
 import FormValidator from '../../common/helpers/FormValidator';
+import urls from '../../common/constants/Urls';
 
 class LoginForm extends Component {
   constructor (props) {
@@ -85,16 +86,27 @@ class LoginForm extends Component {
     }
     return (
       <form onSubmit={this.onSubmit.bind(this)}>
-        <Input type="text" label="学号/用户名" bsStyle={this.getBsStyle.call(this, 'username')} onChange={this.handleChange.bind(this, 'username')} value={this.fv.getInputValue('username')}/>
-        <Input type="password" label="密码" bsStyle={this.getBsStyle.call(this, 'password')} onChange={this.handleChange.bind(this, 'password')} value={this.fv.getInputValue('password')}/>
-        <Input type="checkbox" label="记住我" onChange={this.handleChange.bind(this, 'remember')} checked={this.fv.getInputValue('remember')} />
-        <ButtonInput disabled={this.state.loading} type="submit" bsStyle="primary" onClick={this.onSubmit.bind(this)} value="登录" />
+        <div className="row">
+          <Input type="text" label="学号/用户名" groupClassName="col-sm-12" bsStyle={this.getBsStyle.call(this, 'username')} onChange={this.handleChange.bind(this, 'username')} value={this.fv.getInputValue('username')}/>
+          <Input type="password" label="密码" groupClassName="col-sm-12" bsStyle={this.getBsStyle.call(this, 'password')} onChange={this.handleChange.bind(this, 'password')} value={this.fv.getInputValue('password')}/>
+          <Input type="checkbox" label="记住我" groupClassName="col-sm-6" onChange={this.handleChange.bind(this, 'remember')} checked={this.fv.getInputValue('remember')} />
+          <div className="form-group col-sm-6">
+            <div className="checkbox text-right">
+              <a href={urls.base+urls.user.requestpasswordreset} target="_blank">忘记密码？</a>
+            </div>
+          </div>
+          <div className="clearfix"></div>
+          <ButtonInput groupClassName="col-sm-6" disabled={this.state.loading} type="submit" bsStyle="primary" block onClick={this.onSubmit.bind(this)} value="登录" />
+          <div className="form-group col-sm-6">
+            <Button href={urls.base+urls.user.requestactiveuser} block target="_blank">激活新账户</Button>
+          </div>
+        </div>
+          
+        
         {alertNode}          
       </form>
     );
   }
 }
-
-
 
 export default LoginForm;

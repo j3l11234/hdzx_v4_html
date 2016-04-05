@@ -11,7 +11,9 @@ let url = {
 	user: {
 		getlogin: '/user/getlogin',
 		login: '/user/login',
-		logout: '/user/logout'
+		logout: '/user/logout',
+		requestpasswordreset: '/user/request-password-reset',
+		requestactiveuser: '/user/request-active-user',
 	},
 	approve: {
 		getorder: '/approve/getorder',

@@ -10,7 +10,8 @@ const types = {
   TYPE_SCHOOL_REVOKE:   22,
   TYPE_AUTO_APPROVE:    30,
   TYPE_AUTO_REJECT:     31,
-  TYPE_AUTO_REVOKE:     32
+  TYPE_AUTO_REVOKE:     32,
+  TYPE_ISSUE:           40
 };
 
 let typeNames = {};
@@ -26,5 +27,6 @@ typeNames[types.TYPE_SCHOOL_REVOKE] =   '校团委审批撤回';
 typeNames[types.TYPE_AUTO_APPROVE] =    '自动审批通过';
 typeNames[types.TYPE_AUTO_REJECT] =     '自动审批驳回';
 typeNames[types.TYPE_AUTO_REVOKE] =     '自动审批撤回';
+typeNames[types.TYPE_ISSUE] =           '发放开门条';
 
 export {types, typeNames};

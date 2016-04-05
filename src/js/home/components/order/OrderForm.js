@@ -104,11 +104,14 @@ class OrderForm extends Component {
   onCaptcha () {
     this.props.onCaptcha((success, data) => {
       if (success) {
-        this.setState({
-          captchaHash: data.hash2,
-          captchaUrl: urls.host+data.url
-        });
+        this.updateCaptcha();
       }
+    });
+  }
+
+  updateCaptcha () {
+    this.setState({
+      captchaUrl: urls.base + urls.order.captcha+'?r='+Math.random()
     });
   }
 

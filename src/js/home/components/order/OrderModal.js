@@ -67,9 +67,7 @@ class OrderModal extends Component {
         form.setState({
           alert: { style: 'danger', text: data.message}
         });
-        if (data.status == 601) {
-          form.onCaptcha();
-        }
+        form.updateCaptcha();
       }
     });
   }
@@ -78,7 +76,7 @@ class OrderModal extends Component {
     setTimeout(()=>{
       let { room_id, date } = this.state;
       this.props.onQueryUse(room_id, date);
-      this.refs.form.onCaptcha();
+      this.refs.form.updateCaptcha();
     },500);
   }
 
