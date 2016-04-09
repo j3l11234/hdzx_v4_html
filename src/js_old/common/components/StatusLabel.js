@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMixin';
+import {shouldComponentUpdate} from 'react-addons-pure-render-mixin';
+import { Label } from 'react-bootstrap';
 
 import { STATUS } from '../../common/constants/OrderStatus';
 
@@ -12,38 +13,38 @@ class StatusLabel extends Component {
   render () {
     let { status, type } = this.props;
     if (status == STATUS.INIT){
-      return (<span className="label label-primary">初始化</span>);
+      return (<Label bsStyle="primary">初始化</Label>);
     } else if (status == STATUS.PASSED || 
       status == STATUS.SCHOOL_APPROVED ||
       status == STATUS.AUTO_APPROVED) {
       if (type == 'manager' || type == 'school') {
-        return (<span className="label label-success">校团委审批通过</span>);
+        return (<Label bsStyle="success">校团委审批通过</Label>);
       } else if (type == 'auto') {
-        return (<span className="label label-success">自动审批通过</span>);
+        return (<Label bsStyle="success">自动审批通过</Label>);
       } else {
-        return (<span className="label label-success">审批通过</span>);
+        return (<Label bsStyle="success">审批通过</Label>);
       }
     } else if (status == STATUS.CANCELED) {
-      return (<span className="label label-default">已取消</span>);
+      return (<Label bsStyle="default">已取消</Label>);
     } else if (status == STATUS.MANAGER_PENDING) {
-      return (<span className="label label-info">待负责人审批</span>);
+      return (<Label bsStyle="info">待负责人审批</Label>);
     } else if (status == STATUS.MANAGER_APPROVED ||
       status == STATUS.SCHOOL_PENDING) {
       if (type == 'manager') {
-        return (<span className="label label-success">负责人审批通过</span>);
+        return (<Label bsStyle="success">负责人审批通过</Label>);
       } else if (type == 'school') {
-        return (<span className="label label-info">待校团委审批</span>);
+        return (<Label bsStyle="info">待校团委审批</Label>);
       } else {
-        return (<span className="label label-info">待校团委审批</span>);
+        return (<Label bsStyle="info">待校团委审批</Label>);
       }
     } else if (status == STATUS.MANAGER_REJECTED) {
-      return (<span className="label label-danger">负责人审批驳回</span>);
+      return (<Label bsStyle="danger">负责人审批驳回</Label>);
     } else if (status == STATUS.SCHOOL_REJECTED) {
-      return (<span className="label label-danger">校团委审批驳回</span>);
+      return (<Label bsStyle="danger">校团委审批驳回</Label>);
     } else if (status == STATUS.AUTO_PENDING) {
-      return (<span className="label label-info">待自动审批</span>);
+      return (<Label bsStyle="info">待自动审批</Label>);
     } else if (status == STATUS.AUTO_REJECTED) {
-      return (<span className="label label-danger">自动审批驳回</span>);
+      return (<Label bsStyle="danger">自动审批驳回</Label>);
     }
     return null;
   }

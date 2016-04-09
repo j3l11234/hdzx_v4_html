@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMixin';
+import {shouldComponentUpdate} from 'react-addons-pure-render-mixin';
+import { Alert, Input, ButtonInput } from 'react-bootstrap';
+
 
 class PropGroup extends Component {
   constructor (props) {
@@ -19,5 +21,7 @@ class PropGroup extends Component {
     );
   }
 }
+
+
 
 export default PropGroup;

@@ -1,26 +1,25 @@
 var webpack = require('webpack');
 
+const DIST_PATH = 'D:/xampp/htdocs/hdzx_v4/frontend/web/js';
+
 module.exports = {
     entry: {
-    lib: [
+    common: [
       'react',
-      'react-dom',
-      'react-redux',
-      'react-router',
-      'redux',
-      'redux-thunk'
+      'react/lib/ReactComponentWithPureRenderMixin.js'
     ],
-    home: __dirname + '/src/js/home/index.js',
-    admin: __dirname + '/src/js/admin/index.js'
+    login: __dirname + '/src/js/login/index.js',
+    myorder: __dirname + '/src/js/myorder/index.js',
+    order: __dirname + '/src/js/order/index.js'
   },
   output: {
-    path: __dirname + '/dist/js',
+    path: DIST_PATH,
     filename: '[name].js',
     publicPath: "/js",
   },
   plugins: [
     new webpack.optimize.CommonsChunkPlugin({
-      name: 'lib',
+      name: 'common',
       minChunks: Infinity
     })
   ],
@@ -29,14 +28,9 @@ module.exports = {
       {
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/,
-        loader: 'react-hot',
-      },
-      {
-        test: /\.jsx?$/,
-        exclude: /(node_modules|bower_components)/,
         loader: 'babel',
         query: {
-          presets: ['react', 'es2015', 'stage-3']
+          presets: ['react', 'es2015']
         }
       }
     ]

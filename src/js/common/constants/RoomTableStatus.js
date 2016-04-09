@@ -1,4 +1,4 @@
-const status = {
+const STATUS = {
     FREE: 1,
     ORDERED: 2,
     USED: 3,
@@ -6,9 +6,9 @@ const status = {
 };
 
 let statusClass = {};
-statusClass[status.FREE] = 'z-rt-free';
-statusClass[status.ORDERED] = 'z-rt-ordered';
-statusClass[status.USED] = 'z-rt-used';
-statusClass[status.LOCKED] = 'z-rt-locked';
+statusClass[STATUS.FREE] = 'z-rt-free';
+statusClass[STATUS.ORDERED] = 'z-rt-ordered';
+statusClass[STATUS.USED] = 'z-rt-used';
+statusClass[STATUS.LOCKED] = 'z-rt-locked';
 
-export {status, statusClass};
+export {STATUS, statusClass};

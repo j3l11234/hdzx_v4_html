@@ -1,4 +1,4 @@
-const types = {
+const TYPE = {
   TYPE_SUBMIT:          0,
   TYPE_CHANGE_HOUR:     1,
   TYPE_CANCEL:          2,
@@ -14,19 +14,19 @@ const types = {
   TYPE_ISSUE:           40
 };
 
-let typeNames = {};
-typeNames[types.TYPE_SUBMIT] =          '提交预约';
-typeNames[types.TYPE_CHANGE_HOUR] =     '修改预约时间';
-typeNames[types.TYPE_CANCEL] =          '取消预约';
-typeNames[types.TYPE_MANAGER_APPROVE] = '负责人审批通过';
-typeNames[types.TYPE_MANAGER_REJECT] =  '负责人审批驳回';
-typeNames[types.TYPE_MANAGER_REVOKE] =  '负责人审批撤回';
-typeNames[types.TYPE_SCHOOL_APPROVE] =  '校团委审批通过';
-typeNames[types.TYPE_SCHOOL_REJECT] =   '校团委审批驳回';
-typeNames[types.TYPE_SCHOOL_REVOKE] =   '校团委审批撤回';
-typeNames[types.TYPE_AUTO_APPROVE] =    '自动审批通过';
-typeNames[types.TYPE_AUTO_REJECT] =     '自动审批驳回';
-typeNames[types.TYPE_AUTO_REVOKE] =     '自动审批撤回';
-typeNames[types.TYPE_ISSUE] =           '发放开门条';
+let TYPE_NAME = {};
+TYPE_NAME[TYPE.TYPE_SUBMIT] =          '提交预约';
+TYPE_NAME[TYPE.TYPE_CHANGE_HOUR] =     '修改预约时间';
+TYPE_NAME[TYPE.TYPE_CANCEL] =          '取消预约';
+TYPE_NAME[TYPE.TYPE_MANAGER_APPROVE] = '负责人审批通过';
+TYPE_NAME[TYPE.TYPE_MANAGER_REJECT] =  '负责人审批驳回';
+TYPE_NAME[TYPE.TYPE_MANAGER_REVOKE] =  '负责人审批撤回';
+TYPE_NAME[TYPE.TYPE_SCHOOL_APPROVE] =  '校团委审批通过';
+TYPE_NAME[TYPE.TYPE_SCHOOL_REJECT] =   '校团委审批驳回';
+TYPE_NAME[TYPE.TYPE_SCHOOL_REVOKE] =   '校团委审批撤回';
+TYPE_NAME[TYPE.TYPE_AUTO_APPROVE] =    '自动审批通过';
+TYPE_NAME[TYPE.TYPE_AUTO_REJECT] =     '自动审批驳回';
+TYPE_NAME[TYPE.TYPE_AUTO_REVOKE] =     '自动审批撤回';
+TYPE_NAME[TYPE.TYPE_ISSUE] =           '发放开门条';
 
-export {types, typeNames};
+export {TYPE, TYPE_NAME};

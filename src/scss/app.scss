@@ -1,21 +1,40 @@
 $form-group-margin-bottom: 5px;
-@import 'bootstrap';
 
+//基本布局
+html,
+body {
+    height: 100%;
+}
+.wrap {
+    min-height: 100%;
+    height: auto;
+    margin: 0 auto -60px;
+    padding: 0 0 60px;
+}
+.wrap > .container-fluid {
+    padding-top: 70px;
+}
+.footer {
+    height: 60px;
+    background-color: #f5f5f5;
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+}
 
 @media (min-width: 768px) {
-  .container-fluid {
+  .wrap > .container-fluid {
     padding-right: 30px;
     padding-left: 30px;
   }
 }
 @media (min-width: 992px) {
-  .container-fluid {
+  .wrap > .container-fluid {
     padding-right: 45px;
     padding-left: 45px;
   }
 }
 @media (min-width: 1200px) {
-  .container-fluid {
+  .wrap > .container-fluid {
     padding-right: 60px;
     padding-left: 60px;
   }
@@ -79,6 +98,18 @@ hr.small{
     overflow-y: hidden;
   }
 
+  //图例
+  &-legend {
+    float: left;
+    width: 40px;
+    height: 30px;
+    margin: 2px;
+    border-radius: 4px;
+    text-align: center;
+    white-space: nowrap;
+    line-height: 30px;
+  }
+
   //顶侧日期栏
   &-date {
     &-container {
@@ -90,7 +121,7 @@ hr.small{
     &-row {
       display: inline-block;
       padding: 3px 0px;
-      background-color: $brand-primary;
+      background-color: #337ab7;
       white-space:nowrap;
       color: white;
       text-align: center;
@@ -215,7 +246,7 @@ hr.small{
   }
 }
 
-
+//时间表状态
 .z-rt{
   &-free {
     background: #93EBA5;
@@ -250,16 +281,24 @@ hr.small{
   margin-right: auto;
 }
 
-//堆叠时候留空
-.stacked-margin{
+.form-group {
   margin-bottom: 5px;
-}
-
-.form-group{
   overflow: hidden;
   _height: 1%;
 }
 
 .label {
-    padding: .1em .6em .2em;
+  padding: .1em .6em .2em;
+}
+
+.alert {
+  margin-bottom: 0px;
+}
+
+.pagination{
+     -moz-user-select:none;/*火狐*/
+  -webkit-user-select:none;/*webkit浏览器*/
+      -ms-user-select:none;/*IE10*/
+   -khtml-user-select:none;/*早期浏览器*/
+          user-select:none;
 }
