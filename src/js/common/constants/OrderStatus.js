@@ -14,5 +14,7 @@ export const STATUS = {
 
   STATUS_PENDING:     1, //抽象待审批
 	STATUS_APPROVED:    2, //抽象通过
-	STATUS_REJECTED:    3 //抽象驳回
+	STATUS_REJECTED:    3, //抽象驳回
+  STATUS_APPROVED_FIXED:    4, //抽象通过(固定)
+  STATUS_REJECTED_FIXED:    5 //抽象驳回(固定)
 };

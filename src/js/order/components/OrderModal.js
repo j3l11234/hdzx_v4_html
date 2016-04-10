@@ -8,38 +8,12 @@ import LockList from './OrderLockList';
 class OrderModal extends Component {
   constructor (props) {
     super(props);
+    this.shouldComponentUpdate = shouldComponentUpdate.bind(this);
 
     this.state = {
       show: false,
       loading: false
     }
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    if(!nextState.show){
-      return false;
-    }
-    return shouldComponentUpdate.call(this, nextProps, nextState);
-  }
-
-  componentDidMount() {
-    $(this.refs.modal).on('show.bs.modal', e => {
-      this.setState({ show: true });
-    });
-    $(this.refs.modal).on('hide.bs.modal', e => {
-      this.setState({ show: false });
-    });
-  }
-
-  componentDidUpdate() {
-    $(this.refs.modal).off('show.bs.modal');
-    $(this.refs.modal).off('hide.bs.modal');
-    $(this.refs.modal).on('show.bs.modal', e => {
-      this.setState({ show: true });
-    });
-    $(this.refs.modal).on('hide.bs.modal', e => {
-      this.setState({ show: false });
-    });
   }
 
   showModal() {

@@ -128,42 +128,6 @@ class OrderForm extends Component {
     this.updateCaptcha();
   }
 
-  onSubmit() {
-    let form = this.refs.form;
-    let formData = form.getFormData();
-    if(!formData){
-      return;
-    }
-    if (!this.state.hours) {
-      form.setState({
-        alert: { style: 'danger', text: '请选择预约时段'}
-      });
-      return;
-    }
-    
-    formData = Object.assign(formData, {
-      room_id: this.state.room_id,
-      date: this.state.date,
-      hours: JSON.stringify(this.state.hours)
-    });
-
-    form.setState({alert: null});
-    this.setState({loading: true});
-    this.props.onSubmit(formData, (success, data) => {
-      if (success) {
-        form.setState({
-          alert: { style: 'success', text: data.message}
-        });
-      } else {
-        this.setState({loading: false});
-        form.setState({
-          alert: { style: 'danger', text: data.message}
-        });
-        form.updateCaptcha();
-      }
-    });
-  }
-
   onSubmit(parent) {
     if (!this.fv.validateAll()) {
       this.setState({

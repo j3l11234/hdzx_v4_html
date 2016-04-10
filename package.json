@@ -5,12 +5,14 @@
   "main": "index.js",
   "scripts": {
     "dev": "webpack --display-modules --watch",
-    "sass": "sass"
+    "devb": "webpack --display-modules --watch --config webpack.config.backend.js",
+    "sass": "node sass.js"
   },
   "author": "j3l11234",
   "license": "ISC",
   "dependencies": {
     "bootstrap-sass": "^3.3.6",
+    "md5": "^2.1.0",
     "react": "^0.14.8",
     "react-dom": "^0.14.8"
   },

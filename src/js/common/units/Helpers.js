@@ -66,6 +66,10 @@ export function getAbstractStatus(status, type) {
       return STATUS.STATUS_APPROVED;
     } else if (status == STATUS.MANAGER_REJECTED) {
       return STATUS.STATUS_REJECTED;
+    } else if (status == STATUS.SCHOOL_APPROVED) {
+      return STATUS.STATUS_APPROVED_FIXED;
+    } else if (status == STATUS.SCHOOL_REJECTED) {
+      return STATUS.STATUS_REJECTED_FIXED;
     }
   } else if (type == 'school') {
     if (status == STATUS.SCHOOL_PENDING) {

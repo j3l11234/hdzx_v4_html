@@ -17,7 +17,8 @@ sass.render({
   else {
     fs.writeFile('D:/xampp/htdocs/hdzx_v4/frontend/web/css/app.css', result.css);
     fs.writeFile('D:/xampp/htdocs/hdzx_v4/frontend/web/css/app.css.map', result.map);
-
+    fs.writeFile('D:/xampp/htdocs/hdzx_v4/backend/web/css/app.css', result.css);
+    fs.writeFile('D:/xampp/htdocs/hdzx_v4/backend/web/css/app.css.map', result.map);
 
     console.log(result.stats);
 

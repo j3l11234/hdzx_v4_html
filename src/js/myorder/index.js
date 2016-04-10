@@ -31,16 +31,20 @@ class MyorderPage extends Component {
     ajaxGet('/order/getmyorders?start_date='+start_date+'&end_date='+end_date, (success, data) => {
       if (success) {
         let {orders, orderList} = data;
+
+        //计算chksum
+        for (var order_id in orders) {
+          let order = orders[order_id];
+          order.chksum = md5(JSON.stringify(order)).substr(0,6);
+        }
+
         this.store.entities = Object.assign({}, this.store.entities, { 
           orders: Object.assign({}, this.store.entities.orders, orders)
         });
         this.store.myorder = Object.assign({}, this.store.myorder, {
           orderList: orderList
         });
-        this.setState({
-          entities: this.store.entities,
-          myorder: this.store.myorder
-        });
+        this.setState(this.store);
       }
       callback && callback(success, data); 
     });
