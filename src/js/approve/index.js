@@ -42,6 +42,7 @@ class ApprovePage extends Component {
     });
 
     this.refs.query.onQeury();
+    this.refs.query.onFilterClick();
   }
 
   doGetMyOrders(start_date, end_date, callback) {

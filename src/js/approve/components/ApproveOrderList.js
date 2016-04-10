@@ -46,11 +46,10 @@ class OrderList extends Component {
           (filter.status == STATUS.STATUS_REJECTED && status != STATUS.STATUS_REJECTED && status != STATUS.STATUS_REJECTED_FIXED)){
           continue;
         }
-      }
-      if(filter.dept_id && orders.dept_id != 0 && filter.dept_id != orders.dept_id){
+      }  
+      if(filter.dept_id && filter.dept_id != 0 && filter.dept_id != order.dept_id){
         continue;
       }
-
       _orderList.push(order_id);
     }
     return _orderList;

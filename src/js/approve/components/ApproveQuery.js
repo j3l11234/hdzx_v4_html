@@ -12,6 +12,7 @@ class ApproveQuery extends Component {
 
     this.state = {
       alert: null,
+      loading: false
     }
 
     this.fv = new FormValidator(this, {
@@ -111,10 +112,10 @@ class ApproveQuery extends Component {
             <label className="control-label inline-label">预约状态</label>
             <div className="inline-control">
               <select ref="status" className="form-control" defaultValue="1">
+                <option value="0">全部</option>
                 <option value={STATUS.STATUS_PENDING}>待审批预约</option>
                 <option value={STATUS.STATUS_APPROVED}>已通过预约</option>
                 <option value={STATUS.STATUS_REJECTED}>已驳回预约</option>
-                <option value="0">全部</option>
               </select>
             </div>
           </div>
