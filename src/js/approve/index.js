@@ -87,7 +87,7 @@ class ApprovePage extends Component {
     this.refs.modal.showModal();
   }
 
-  doOperateOrder (operation, data, callback) {
+  doOperateOrder(operation, data, callback) {
     let url;
     switch(operation) {
       case 'approve':
@@ -107,6 +107,15 @@ class ApprovePage extends Component {
     });
   }
 
+  onFilter(status, perPage, dept_id) {
+    this.refs.list.setFilter({
+      status,
+      perPage,
+      dept_id,
+      curPage: 1
+    });
+  }
+
   render() {
     let { depts, orders } = this.state.entities;
     let { deptList, orderList, order_id, operation } = this.state.approve;
@@ -114,9 +123,9 @@ class ApprovePage extends Component {
     let order = orders[order_id];
     return (
       <div>
-        <Query ref="query" type={type} depts={depts} deptList={deptList} onQeury={this.doGetMyOrders.bind(this)} />
+        <Query ref="query" type={type} depts={depts} deptList={deptList} onQeury={this.doGetMyOrders.bind(this)} onFilter={this.onFilter.bind(this)} />
         <hr />
-        <List type={type} orders={orders} orderList={orderList} onOperationClick={this.onOperationClick.bind(this)}/>
+        <List ref="list" type={type} orders={orders} orderList={orderList} onOperationClick={this.onOperationClick.bind(this)}/>
         <Modal ref="modal" order={order} operation={operation} onSubmit={this.doOperateOrder.bind(this)} />
       </div>
     );

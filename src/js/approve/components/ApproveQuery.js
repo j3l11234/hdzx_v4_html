@@ -3,6 +3,7 @@ import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMix
 
 import FormAlert from '../../common/components/FormAlert';
 import FormValidator from '../../common/units/FormValidator';
+import { STATUS } from '../../common/constants/OrderStatus';
 
 class ApproveQuery extends Component {
   constructor (props) {
@@ -37,7 +38,7 @@ class ApproveQuery extends Component {
     this.fv.handleChange.call(this.fv, name, event);
   }
 
-  onQeury (e) {
+  onQeury(e) {
     e && e.preventDefault();
 
     if (this.fv.validateAll()) {
@@ -61,6 +62,13 @@ class ApproveQuery extends Component {
         alert: { style: 'danger', text: this.fv.errorText}
       });
     }
+  }
+
+  onFilterClick(e) {
+    let status = parseInt(this.refs.status.value);
+    let perPage = parseInt(this.refs.perPage.value);
+    let dept_id = parseInt(this.refs.dept_id.value);
+    this.props.onFilter(status, perPage, dept_id);
   }
 
   getBsStyle (name) {
@@ -102,10 +110,10 @@ class ApproveQuery extends Component {
           <div className="form-group col-sm-6 col-md-4">
             <label className="control-label inline-label">预约状态</label>
             <div className="inline-control">
-              <select className="form-control">
-                <option value="1">待审批预约</option>
-                <option value="2">已通过预约</option>
-                <option value="3">已驳回预约</option>
+              <select ref="status" className="form-control" defaultValue="1">
+                <option value={STATUS.STATUS_PENDING}>待审批预约</option>
+                <option value={STATUS.STATUS_APPROVED}>已通过预约</option>
+                <option value={STATUS.STATUS_REJECTED}>已驳回预约</option>
                 <option value="0">全部</option>
               </select>
             </div>
@@ -113,7 +121,7 @@ class ApproveQuery extends Component {
           <div className="form-group col-sm-6 col-md-4">
             <label className="control-label inline-label">社团单位</label>
             <div className="inline-control">
-              <select className="form-control">
+              <select ref="dept_id" className="form-control" defaultValue="0">
                 <option value="0">全部</option>
                 {
                   deptList && deptList.map(dept_id => {
@@ -129,11 +137,11 @@ class ApproveQuery extends Component {
           <div className="form-group col-sm-6 col-md-4">
             <label className="control-label inline-label">每页显示</label>
             <div className="inline-control">
-              <input type="text" placeholder="每页显示" className="form-control" />
+              <input ref="perPage" type="text" placeholder="每页显示" className="form-control" defaultValue="8" />
             </div>
           </div>
           <div className="form-group col-sm-6 col-md-4">
-            <button type="button" className="btn-block btn btn-success" >筛选</button>
+            <button type="button" className="btn-block btn btn-success" onClick={this.onFilterClick.bind(this)}>筛选</button>
           </div>
         </div>
       </form>

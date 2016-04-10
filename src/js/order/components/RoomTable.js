@@ -14,7 +14,7 @@ class RoomTable extends Component {
 
     this.state = {
       perPage: 5,
-      curPage: 1,
+      curPage: 1
     };
   }
 

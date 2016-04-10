@@ -36,6 +36,7 @@ class Pagination extends Component {
 
   render() {
     let { length, total, per, cur } = this.props;
+    per = (per == 0 ? 1 : per);
     let totalPage = Math.ceil(total/per);
     let {start, end} = this.getPageRange(totalPage, length, cur);
     let pageList = [];
