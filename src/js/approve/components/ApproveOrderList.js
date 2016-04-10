@@ -13,7 +13,7 @@ class OrderList extends Component {
 
     this.state = {
       filter: {
-        perPage: 2,
+        perPage: 8,
         curPage: 1
       }
     };
@@ -40,7 +40,6 @@ class OrderList extends Component {
       let order = orders[order_id];
       
       let status = getAbstractStatus(order.status, type);
-      console.log(filter);
       if (filter.status) {
         if ((filter.status == STATUS.STATUS_PENDING && status != STATUS.STATUS_PENDING) ||
           (filter.status == STATUS.STATUS_APPROVED && status != STATUS.STATUS_APPROVED && status != STATUS.STATUS_APPROVED_FIXED) ||
@@ -54,7 +53,6 @@ class OrderList extends Component {
 
       _orderList.push(order_id);
     }
-    console.log(_orderList);
     return _orderList;
   }
 

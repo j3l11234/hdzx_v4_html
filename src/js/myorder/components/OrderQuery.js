@@ -3,6 +3,7 @@ import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMix
 
 import FormAlert from '../../common/components/FormAlert';
 import FormValidator from '../../common/units/FormValidator';
+import { STATUS } from '../../common/constants/OrderStatus';
 
 class OrderQuery extends Component {
   constructor (props) {
@@ -63,6 +64,12 @@ class OrderQuery extends Component {
     }
   }
 
+  onFilterClick(e) {
+    let status = parseInt(this.refs.status.value);
+    let perPage = parseInt(this.refs.perPage.value);
+    this.props.onFilter(status, perPage);
+  }
+
   getBsStyle (name) {
     if(!this.fv.getInputError(name)){
       return null;
@@ -94,6 +101,29 @@ class OrderQuery extends Component {
           </div>
           <div className="col-md-12">
             {this.state.alert?(<FormAlert style={this.state.alert.style} text={this.state.alert.text}/>):null}
+          </div>
+          <div className="col-sm-12">
+            <hr className="small" />
+          </div> 
+          <div className="form-group col-sm-6 col-md-4">
+            <label className="control-label inline-label">预约状态</label>
+            <div className="inline-control">
+              <select ref="status" className="form-control" defaultValue="0">
+                <option value="0">全部</option>
+                <option value={STATUS.STATUS_PENDING}>待审批预约</option>
+                <option value={STATUS.STATUS_APPROVED}>已通过预约</option>
+                <option value={STATUS.STATUS_REJECTED}>已驳回预约</option> 
+              </select>
+            </div>
+          </div>
+          <div className="form-group col-sm-6 col-md-4">
+            <label className="control-label inline-label">每页显示</label>
+            <div className="inline-control">
+              <input ref="perPage" type="text" placeholder="每页显示" className="form-control" defaultValue="8" />
+            </div>
+          </div>
+          <div className="form-group col-sm-6 col-md-4">
+            <button type="button" className="btn-block btn btn-success" onClick={this.onFilterClick.bind(this)}>筛选</button>
           </div>
         </div>
       </form>

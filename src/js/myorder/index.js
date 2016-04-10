@@ -2,6 +2,7 @@ import '../common/Polyfills';
 import React, { Component } from 'react';
 import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMixin';
 import ReactDOM from 'react-dom';
+import md5 from 'md5';
 
 import OrderQuery from './components/OrderQuery';
 import OrderList from './components/OrderList';
@@ -50,15 +51,22 @@ class MyorderPage extends Component {
     });
   }
   
+  onFilter(status, perPage) {
+    this.refs.list.setFilter({
+      status,
+      perPage,
+      curPage: 1
+    });
+  }
 
   render() {
     let { orders } = this.state.entities;
     let { orderList } = this.state.myorder;
     return (
       <div>
-        <OrderQuery ref="query" onQeury={this.doGetMyOrders.bind(this)} />
+        <OrderQuery ref="query" onQeury={this.doGetMyOrders.bind(this)} onFilter={this.onFilter.bind(this)} />
         <hr />
-        <OrderList orders={orders} orderList={orderList} />
+        <OrderList ref="list" orders={orders} orderList={orderList} />
       </div>
     );
   }
