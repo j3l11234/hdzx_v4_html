@@ -105,9 +105,7 @@ class OrderForm extends Component {
 
   onCaptcha () {
     this.props.onCaptcha((success, data) => {
-      if (success) {
-        this.updateCaptcha();
-      }
+      this.updateCaptcha();
     });
   }
 
@@ -193,25 +191,25 @@ class OrderForm extends Component {
           <div className={'form-group col-sm-6 '+this.getBsStyle.call(this, 'name')}>
             <label className="control-label inline-label">姓名</label>
             <div className="inline-control">
-              <input type="text" placeholder="姓名" className="form-control" onChange={this.handleChange.bind(this, 'name')} value={this.fv.getInputValue('name')} />
+              <input type="text" placeholder="姓名" className="form-control" onBlur={this.handleChange.bind(this, 'name')} />
             </div>
           </div>
           <div className={'form-group col-sm-6 '+this.getBsStyle.call(this, 'phone')}>
             <label className="control-label inline-label">联系方式</label>
             <div className="inline-control">
-              <input type="text" placeholder="联系方式" className="form-control" onChange={this.handleChange.bind(this, 'phone')} value={this.fv.getInputValue('phone')} />
+              <input type="text" placeholder="联系方式" className="form-control" onBlur={this.handleChange.bind(this, 'phone')} defaultValue={this.fv.getInputValue('phone')} />
             </div>
           </div>
           <div className={'form-group col-sm-12 '+this.getBsStyle.call(this, 'title')}>
             <label className="control-label inline-label">活动主题</label>
             <div className="inline-control">
-              <input type="text" placeholder="请填写活动主题" className="form-control" onChange={this.handleChange.bind(this, 'title')} value={this.fv.getInputValue('title')} />
+              <input type="text" placeholder="请填写活动主题" className="form-control" onBlur={this.handleChange.bind(this, 'title')} />
             </div>
           </div>
           <div className={'form-group col-sm-12 '+this.getBsStyle.call(this, 'content')}>
             <label className="control-label inline-label">活动内容</label>
             <div className="inline-control">
-              <textarea placeholder="请填写活动内容" className="form-control" onChange={this.handleChange.bind(this, 'content')} value={this.fv.getInputValue('content')} />
+              <textarea placeholder="请填写活动内容" className="form-control" onBlur={this.handleChange.bind(this, 'content')} />
             </div>
           </div>
           <div className={'form-group col-sm-6 '+this.getBsStyle.call(this, 'number')}>
@@ -246,13 +244,13 @@ class OrderForm extends Component {
           <div className={'form-group col-sm-12 '+this.getBsStyle.call(this, 'secure')}>
             <label className="control-label inline-label">安保措施</label>
             <div className="inline-control">
-              <textarea placeholder="请填写安保措施" className="form-control" onChange={this.handleChange.bind(this, 'secure')} value={this.fv.getInputValue('secure')} />
+              <textarea placeholder="请填写安保措施" className="form-control" onBlur={this.handleChange.bind(this, 'secure')} />
             </div>
           </div>
           <div className={'form-group col-sm-6 '+this.getBsStyle.call(this, 'captcha')}>
             <label className="control-label inline-label">验证码</label>
             <div className="inline-control">
-              <input type="text" placeholder="验证码" className="form-control" onChange={this.handleChange.bind(this, 'captcha')} value={this.fv.getInputValue('captcha')} />
+              <input type="text" placeholder="验证码" className="form-control" onBlur={this.handleChange.bind(this, 'captcha')} />
             </div>
           </div>
           <div className="col-sm-6">
