@@ -47,7 +47,7 @@ class OrderPage extends Component {
       }
     });
 
-    this.doGetRoomTables();
+    this.refs.query.onQeury();
   }
 
   onCellClick(room_id, date) {
@@ -59,8 +59,8 @@ class OrderPage extends Component {
     this.refs.modal.showModal();
   }
 
-  doGetRoomTables (callback) {
-    ajaxGet('/order/getroomtables', (success, data) => {
+  doGetRoomTables (start_date, end_date, callback) {
+    ajaxGet('/order/getroomtables?start_date='+start_date+'&end_date='+end_date, (success, data) => {
       if (success) {
         let {dateList, roomTables} = data;
         this.store.roomTable = Object.assign({}, this.store.roomTable, { 
@@ -109,14 +109,21 @@ class OrderPage extends Component {
     });
   }
 
+  onFilter(perPage) {
+    this.refs.list.setFilter({
+      perPage,
+      curPage: 1
+    });
+  }
+
   render() {
     let { rooms, locks, depts, orders } = this.state.entities;
     let { room_id, date, deptList } = this.state.order;
     return(
       <div>
-        <RoomTableQuery onQeuryClick={this.doGetRoomTables.bind(this)} />
+        <RoomTableQuery ref="query" onQeury={this.doGetRoomTables.bind(this)} onFilter={this.onFilter.bind(this)} />
         <hr />
-        <RoomTable rooms={rooms} roomTable={this.state.roomTable} onCellClick={this.onCellClick.bind(this)}  />
+        <RoomTable ref="list" rooms={rooms} roomTable={this.state.roomTable} onCellClick={this.onCellClick.bind(this)}  />
         <OrderModal ref="modal" rooms={rooms} orders={orders} locks={locks} depts={depts} room_id={room_id} date={date} deptList={deptList} roomTables={this.state.roomTable.roomTables} 
           onSubmit={this.doSubmitOrder.bind(this)} onQueryUse={this.doGetRoomUse.bind(this)} onCaptcha={this.doGetCaptcha.bind(this)}/>
       </div>

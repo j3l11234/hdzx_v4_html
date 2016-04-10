@@ -13,8 +13,10 @@ class RoomTable extends Component {
     this.shouldComponentUpdate = shouldComponentUpdate.bind(this);
 
     this.state = {
-      perPage: 5,
-      curPage: 1
+      filter: {
+        perPage: 8,
+        curPage: 1
+      }
     };
   }
 
@@ -26,18 +28,26 @@ class RoomTable extends Component {
     }
   }
 
-  onScroll (e) {
+  onScroll(e) {
     this.refs.container.scrollLeft  = e.target.scrollLeft;
     this.refs.header.refs.container.scrollLeft  = e.target.scrollLeft;
   }
 
-  onPageClick (page) {
-    this.setState({curPage: page});
+  onPageClick(page) {
+    this.setFilter(Object.assign({}, this.state.filter, { 
+      curPage: page
+    }));
+  }
+  
+  setFilter(filter) {
+    this.setState({
+      filter
+    });
   }
 
   render () {
     let {rooms, onCellClick} = this.props;
-    let {perPage, curPage} = this.state;
+    let { curPage, perPage } = this.state.filter;
     let {dateList, roomList, roomTables} = this.props.roomTable;
 
     roomList = roomList ? roomList : [];

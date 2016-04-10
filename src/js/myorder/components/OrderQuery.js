@@ -12,6 +12,7 @@ class OrderQuery extends Component {
 
     this.state = {
       alert: null,
+      loading: false
     }
 
     this.fv = new FormValidator(this, {
