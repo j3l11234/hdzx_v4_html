@@ -21,8 +21,8 @@ class OrderPage extends Component {
     this.state = Object.assign({}, this.store);
   }
 
-  componentDidMount() {
-    ajaxGet('/order/getrooms', (success, data) => {
+  componentWillMount() {
+    ajaxGet('/data/getrooms', (success, data) => {
       if (success) {
         let {rooms, roomList} = data;
         this.store.entities = Object.assign({}, this.store.entities, { 
@@ -34,7 +34,7 @@ class OrderPage extends Component {
         this.setState(this.store);
       }
     });
-    ajaxGet('/order/getdepts', (success, data) => {
+    ajaxGet('/data/getdepts', (success, data) => {
       if (success) {
         let {depts, deptList} = data;
         this.store.entities = Object.assign({}, this.store.entities, { 
@@ -46,7 +46,9 @@ class OrderPage extends Component {
         this.setState(this.store);
       }
     });
+  }
 
+  componentDidMount() {
     this.refs.query.onQeury();
   }
 

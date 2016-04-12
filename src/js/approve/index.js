@@ -27,8 +27,8 @@ class ApprovePage extends Component {
     this.state = Object.assign({}, this.store);
   }
 
-  componentDidMount() {
-    ajaxGet('/approve/getdepts', (success, data) => {
+  componentWillMount() {
+    ajaxGet('/data/getdepts', (success, data) => {
       if (success) {
         let {depts, deptList} = data;
         this.store.entities = Object.assign({}, this.store.entities, { 
@@ -40,7 +40,9 @@ class ApprovePage extends Component {
         this.setState(this.store);
       }
     });
+  }
 
+  componentDidMount() {
     this.refs.query.onQeury();
     this.refs.query.onFilterClick();
   }
