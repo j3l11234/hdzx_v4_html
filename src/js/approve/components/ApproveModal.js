@@ -11,7 +11,7 @@ class ApproveModal extends Component {
     this.shouldComponentUpdate = shouldComponentUpdate.bind(this);
 
     this.state = {
-      show: false,
+      alert: null,
       loading: false,
     }
 
@@ -30,7 +30,10 @@ class ApproveModal extends Component {
   }
 
   showModal() {
-    this.setState({ loading: false });
+    this.setState({
+      alert: null,
+      loading: false,
+    });
     $(this.refs.modal).modal('show');
   }
 

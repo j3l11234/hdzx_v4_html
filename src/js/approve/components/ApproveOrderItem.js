@@ -39,7 +39,7 @@ class ApproveOrderItem extends Component {
   }
 
   render () {
-    let { depts, rooms, type, order } = this.props;
+    let { type, order } = this.props;
     if (!order){
       return null;
     }
