@@ -51,14 +51,14 @@ class RoomTable extends Component {
     let {dateList, roomList, roomTables} = this.props.roomTable;
 
     roomList = roomList ? roomList : [];
-    let {start, end} = Pagination.getLimit(curPage, roomList.length, perPage);
+    let pageRange = Pagination.getLimit(curPage, roomList.length, perPage);
     
     return (
       <div className="roomtable">
         <Header ref="header" dateList={dateList} onScroll={this.onScroll.bind(this)}/>
         <div className="rt-room-col">
         {
-          roomList.slice(start, end).map(roomId => {
+          roomList.slice(pageRange.start, pageRange.end).map(roomId => {
             let room = rooms[roomId];
             
             return !room ? null : (
@@ -71,18 +71,17 @@ class RoomTable extends Component {
         </div>
         <div ref="container" className="rt-table-content" onScroll={this.onScroll.bind(this)}>
         {
-          roomList.slice(start, end).map(roomId => {
+          roomList.slice(pageRange.start, pageRange.end).map(roomId => {
             let room = rooms[roomId];
-            let {start, end} = getDateRange(room.max_before, room.min_before, room.by_week);
-            start = Date.parse(start);
-            end = Date.parse(end);
-
+            let dateRange = getDateRange(room.max_before, room.min_before, room.by_week);
+            dateRange.start = Date.parse(dateRange.start);
+            dateRange.end = Date.parse(dateRange.end);
             return (
               <div className="rt-table-row" key={roomId} style={{width:(dateList ? dateList.length : 0)*90+'px'}}>
               {
                 dateList && dateList.map(date => {
                   let ts = Date.parse(date);
-                  let available = ts >= start && ts <= end;
+                  let available = ts >= dateRange.start && ts <= dateRange.end;
                   let roomTable = roomTables[roomId][date] ? roomTables[roomId][date] : {};
                   let {hourTable, chksum} = roomTable;
                   return (

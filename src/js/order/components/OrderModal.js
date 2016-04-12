@@ -11,7 +11,6 @@ class OrderModal extends Component {
     this.shouldComponentUpdate = shouldComponentUpdate.bind(this);
 
     this.state = {
-      show: false,
       loading: false
     }
   }
@@ -47,10 +46,10 @@ class OrderModal extends Component {
     let {ordered, used, locked} = roomTable;
 
     return (
-      <div className="modal fade" ref="modal" data-backdrop="static">
+      <div className="modal" ref="modal" data-backdrop="static">
         <div className="modal-dialog">
           <div className="modal-content">
-            <div className="modal-header">
+            <div className="modal-body">
               <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
               <ul className="nav nav-tabs" role="tablist">
                 <li role="presentation" className="active">
@@ -60,8 +59,6 @@ class OrderModal extends Component {
                   <a href="#model-use" aria-controls="model-use" role="tab" data-toggle="tab">使用情况</a>
                 </li>
               </ul>
-            </div>
-            <div className="modal-body">
               <div className="tab-content">
                 <div role="tabpanel" className="tab-pane active" id="model-order">
                   <Form ref="form" depts={depts} deptList={deptList} room_id={room_id} date={date} room={room} hourTable={roomTable.hourTable} onSubmit={this.props.onSubmit} onCaptcha={this.props.onCaptcha} />
