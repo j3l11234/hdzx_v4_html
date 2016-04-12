@@ -11,6 +11,7 @@ module.exports = {
       'react/lib/ReactComponentWithPureRenderMixin.js'
     ],
     approve: __dirname + '/src/js/approve/index.js',
+    lock: __dirname + '/src/js/lock/index.js',
   },
   output: {
     path: DIST_PATH,

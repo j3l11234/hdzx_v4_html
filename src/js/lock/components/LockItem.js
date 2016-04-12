@@ -1,0 +1,134 @@
+import React, { Component } from 'react';
+import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMixin';
+
+import Prop from '../../common/components/PropGroup';
+import StatusLabel from '../../common/components/StatusLabel';
+import { STATUS } from '../../common/constants/OrderStatus';
+import { TYPE_NAME } from '../../common/constants/OperationTypes';
+import { getAbstractStatus } from '../../common/units/Helpers';
+
+
+class LockItem extends Component {
+  constructor (props) {
+    super(props);
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    return (this.props.chksum !== nextProps.chksum);
+  }
+
+  onOperationClick (operation) {
+    let { order } = this.props;
+    this.props.onOperationClick(order.id, operation);
+  }
+
+  onConflictClick (e) {
+    let { type, order } = this.props;
+    this.props.onConflictClick(order.id, type, operation);
+  }
+
+
+  getPanelStyle (status, conflict) {
+    if (status == STATUS.STATUS_PENDING) {
+      return conflict ? 'panel-warning' : 'panel-info';
+    } else if (status == STATUS.STATUS_APPROVED || STATUS.STATUS_APPROVED_FIXED) {
+      return 'panel-success';
+    } else if (status == STATUS.STATUS_REJECTED || STATUS_REJECTED_FIXED) {
+      return 'panel-danger';
+    }
+  }
+
+  render () {
+    let { rooms, lock } = this.props;
+    if (!lock){
+      return null;
+    }
+
+    let student_no = order.student_no ? order.student_no : ' ';
+    let hours = order.hours;
+    let startHour = parseInt(hours[0]);
+    let endHour = parseInt(hours[hours.length -1])+1;
+    let submit_time = order.submit_time ? new Date(order.submit_time*1000).Format('yyyy-MM-dd hh:mm:ss') : ' ';
+    let issue_time = order.issue_time ? new Date(order.issue_time*1000).Format('yyyy-MM-dd hh:mm:ss') : '未发放'; 
+    let status = getAbstractStatus(order.status, type);
+    let conflict = order.conflict ? order.conflict.length > 0 : false;
+
+    //操作按钮生成
+    let operationBtns = [];
+    if(status == STATUS.STATUS_PENDING){
+      operationBtns.push((<button type="button" className="btn btn-block btn-success btn-sm" onClick={this.onOperationClick.bind(this,"approve")}>审批通过</button>));
+      operationBtns.push((<button type="button" className="btn btn-block btn-danger btn-sm" onClick={this.onOperationClick.bind(this,"reject")}>审批驳回</button>));
+      conflict && operationBtns.push((<button type="button" className="btn btn-block btn-warning btn-sm" onClick={this.onConflictClick.bind(this)}>查看冲突预约</button>));
+    }else if(status == STATUS.STATUS_REJECTED || status == STATUS.STATUS_APPROVED){
+      operationBtns.push((<button type="button" className="btn btn-block btn-warning btn-sm" onClick={this.onOperationClick.bind(this,"revoke")}>审批撤销</button>));
+      operationBtns.push(null);
+      conflict && operationBtns.push((<button type="button" className="btn btn-block btn-warning btn-sm" onClick={this.onConflictClick.bind(this)}>查看冲突预约</button>));
+    }
+
+    return (
+      <div className={'panel ' + this.getPanelStyle(status,conflict)}>
+        <div className="panel-heading">
+          <h4 className="panel-title">
+            <a data-toggle="collapse" href={'#collapse-order-'+order.id}>
+              <div className="row">
+                <div className="col-sm-4">{order.dept_name+ ' - ' + order.name}</div>
+                <div className="col-sm-4">{order.room_name}</div>
+                <div className="col-sm-4">{order.date + ' ' +startHour + '时 - ' + endHour + '时'}</div>
+              </div>
+            </a>
+          </h4>
+        </div>
+        <div className="panel-collapse collapse in" id={'collapse-order-'+order.id}>
+          <div className="panel-body">
+            <div className="row">
+              <Prop groupClassName="col-sm-4" label="申请学号" content={student_no} />
+              <Prop groupClassName="col-sm-4" label="联系方式" content={order.phone} />
+              <Prop groupClassName="col-sm-4" label="活动人数" content={order.number} />
+              <Prop groupClassName="col-sm-4" label="预约状态" content={(<StatusLabel status={order.status} />)} />
+              <Prop groupClassName="col-sm-4" label="提交时间" content={submit_time} />
+              <Prop groupClassName="col-sm-4" label="开门条发放" content={issue_time} />
+              <Prop groupClassName="col-sm-12" label="申请主题" content={order.title} />
+              <Prop groupClassName="col-sm-12" label="活动内容" content={order.content} />
+              <Prop groupClassName="col-sm-12" label="安保措施" content={order.secure} />
+            </div>
+            {
+              order.opList.map(operation => {
+                let time = operation.time ? new Date(operation.time*1000).Format('yyyy-MM-dd hh:mm:ss') : '';
+                return (
+                  <div key={operation.id} className="row">
+                    <hr className="small" />
+                    <Prop groupClassName="col-sm-4" label="操作类型" content={TYPE_NAME[operation.type]} />
+                    <Prop groupClassName="col-sm-8" label="操作标注" content={operation.commemt} />
+                    <Prop groupClassName="col-sm-4" label="操作人" content={operation.operator} />
+                    <Prop groupClassName="col-sm-4" label="操作时间" content={time} />
+                  </div>
+                );
+              })
+            }
+            <div className="row">
+              <hr className="small" />
+              {
+                conflict && status == STATUS.STATUS_PENDING ? (
+                  <div className="col-sm-12 form-group">
+                    <div className="alert alert-danger" role="alert">该预约和其他预约存在冲突！</div>
+                  </div>
+                ) : null
+              }
+              {
+                operationBtns.map((operationBtn,i) => {
+                  return (
+                    <div key={i} className="col-sm-4 form-group">
+                      {operationBtn}
+                    </div>
+                  );
+                })
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
+export default LockItem;
