@@ -17,12 +17,24 @@ class OrderModal extends Component {
 
   showModal() {
     setTimeout(()=>{
-      let { room_id, date } = this.props;
+      let { room_id, date} = this.props;
       this.props.onQueryUse(room_id, date);
     }, 500);
+
     this.setState({ loading: false });
     this.refs.form.reset();
-    $(this.refs.modal).modal('show');
+    
+    setTimeout(()=>{
+      let {dateAvail, privAvail } = this.props;
+      $(this.refs.modal).modal('show');
+      if (dateAvail && privAvail) {
+        $(this.refs.label_order).show();
+        $(this.refs.label_order).tab('show');
+      } else {
+        $(this.refs.label_order).hide();
+        $(this.refs.label_use).tab('show');
+      }
+    }, 0);
   }
 
   onSubmitClick() {
@@ -30,13 +42,13 @@ class OrderModal extends Component {
   }
 
   render () {
-    let { roomTables, rooms, locks, depts, orders, deptList, room_id, date } = this.props;
+    let { roomTables, rooms, locks, orders, room_id, date, dateAvail, privAvail} = this.props;
     let { loading } = this.state;
 
     let roomTable;
     let room;
     if (roomTables && room_id && date) {
-      roomTable = roomTables ? roomTables[room_id][date] : {};
+      roomTable = roomTables[room_id+'_'+date];
       room = rooms[room_id]; 
     }else{
       roomTable = {};
@@ -52,16 +64,16 @@ class OrderModal extends Component {
             <div className="modal-body">
               <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
               <ul className="nav nav-tabs" role="tablist">
-                <li role="presentation" className="active">
-                  <a href="#model-order" aria-controls="model-order" role="tab" data-toggle="tab">房间预约</a>
+                <li role="presentation">
+                  <a ref="label_order" href="#model-order" aria-controls="model-order" role="tab" data-toggle="tab">房间预约</a>
                 </li>
                 <li role="presentation">
-                  <a href="#model-use" aria-controls="model-use" role="tab" data-toggle="tab">使用情况</a>
+                  <a ref="label_use" href="#model-use" aria-controls="model-use" role="tab" data-toggle="tab">使用情况</a>
                 </li>
               </ul>
               <div className="tab-content">
-                <div role="tabpanel" className="tab-pane active" id="model-order">
-                  <Form ref="form" depts={depts} deptList={deptList} room_id={room_id} date={date} room={room} hourTable={roomTable.hourTable} onSubmit={this.props.onSubmit} onCaptcha={this.props.onCaptcha} />
+                <div role="tabpanel" className="tab-pane" id="model-order">
+                  <Form ref="form" room_id={room_id} date={date} room={room} hourTable={roomTable.hourTable} onSubmit={this.props.onSubmit} onCaptcha={this.props.onCaptcha} />
                 </div>
                 <div role="tabpanel" className="tab-pane" id="model-use">
                   <OrderList orders={orders} ordered={ordered} used={used} />

@@ -16,7 +16,8 @@ class OrderPage extends Component {
     this.store = {
       entities: {},
       roomTable: {},
-      order: {}
+      user: {},
+      modal: {},
     };
     this.state = Object.assign({}, this.store);
   }
@@ -25,23 +26,24 @@ class OrderPage extends Component {
     ajaxGet('/data/getrooms', (success, data) => {
       if (success) {
         let {rooms, roomList} = data;
-        this.store.entities = Object.assign({}, this.store.entities, { 
-          rooms: Object.assign({}, this.store.entities.rooms, rooms)
+        let entities = Object.assign({}, this.store.entities, { 
+          rooms,
         });
-        this.store.roomTable = Object.assign({}, this.store.roomTable, {
-          roomList: roomList
+        let roomTable = Object.assign({}, this.store.roomTable, {
+          roomList,
+        });
+        this.store = Object.assign({}, this.store, {
+          entities,
+          roomTable,
         });
         this.setState(this.store);
       }
     });
-    ajaxGet('/data/getdepts', (success, data) => {
+    ajaxGet('/user/getlogin', (success, data) => {
       if (success) {
-        let {depts, deptList} = data;
-        this.store.entities = Object.assign({}, this.store.entities, { 
-          depts: Object.assign({}, this.store.entities.depts, depts)
-        });
-        this.store.order = Object.assign({}, this.store.order, {
-          deptList: deptList
+        let { user } = data;
+        this.store = Object.assign({}, this.store, {
+          user,
         }); 
         this.setState(this.store);
       }
@@ -52,11 +54,16 @@ class OrderPage extends Component {
     this.refs.query.onQeury();
   }
 
-  onCellClick(room_id, date) {
-    this.store.order = Object.assign({}, this.store.order, {
-      room_id: room_id,
-      date: date
-    }); 
+  onCellClick(room_id, date, dateAvail, privAvail) {
+    let modal = Object.assign({}, this.store.modal, {
+      room_id,
+      date,
+      dateAvail,
+      privAvail,
+    });
+    this.store = Object.assign({}, this.store, {
+      modal,
+    });
     this.setState(this.store);
     this.refs.modal.showModal();
   }
@@ -78,21 +85,22 @@ class OrderPage extends Component {
   doGetRoomUse (room, date, callback) {
     ajaxGet('/order/getroomuse?room='+room+'&date='+date, (success, data) => {
       if (success) {
-        let {orders, locks, roomTable} = data;
-        this.store.entities = isEmptyObject(orders) ? this.store.entities : Object.assign({}, this.store.entities, { 
-          orders: Object.assign({}, this.store.entities.orders, orders)
+        let { orders, locks, roomTable } = data;
+        let entities = Object.assign({}, this.store.entities);
+        if(!isEmptyObject(orders)){
+          entities.orders = Object.assign({}, entities.orders, orders);
+        }
+        if(!isEmptyObject(locks)){
+          entities.locks = Object.assign({}, entities.locks, locks);
+        }
+        let roomTables = Object.assign({}, this.store.roomTable.roomTables);
+        roomTables[room+'_'+date] = roomTable;
+        this.store = Object.assign({}, this.store, {
+          entities,
+          roomTable: Object.assign({}, this.store.roomTable, {
+            roomTables
+          }),
         });
-        this.store.entities = isEmptyObject(locks) ? this.store.entities : Object.assign({}, this.store.entities, { 
-          locks: Object.assign({}, this.store.entities.locks, locks)
-        });
-        let newRoom = {};
-        newRoom[date] = roomTable;
-        newRoom = Object.assign({}, this.store.roomTable.roomTables[room], newRoom);
-        let newRoomTables = {};
-        newRoomTables[room] = newRoom;
-        this.store.roomTable = Object.assign({}, this.store.roomTable, {
-          roomTables: Object.assign({}, this.store.roomTable.roomTables, newRoomTables)
-        }) 
         this.setState(this.store);
       }
       callback && callback(success, data); 
@@ -119,14 +127,14 @@ class OrderPage extends Component {
   }
 
   render() {
-    let { rooms, locks, depts, orders } = this.state.entities;
-    let { room_id, date, deptList } = this.state.order;
+    let { rooms, locks, orders } = this.state.entities;
+    let { modal, user, roomTable } = this.state;
     return(
       <div>
         <RoomTableQuery ref="query" onQeury={this.doGetRoomTables.bind(this)} onFilter={this.onFilter.bind(this)} />
         <hr />
-        <RoomTable ref="list" rooms={rooms} roomTable={this.state.roomTable} onCellClick={this.onCellClick.bind(this)}  />
-        <OrderModal ref="modal" rooms={rooms} orders={orders} locks={locks} depts={depts} room_id={room_id} date={date} deptList={deptList} roomTables={this.state.roomTable.roomTables} 
+        <RoomTable ref="list" rooms={rooms} roomTable={roomTable} user={user} onCellClick={this.onCellClick.bind(this)}  />
+        <OrderModal ref="modal" rooms={rooms} orders={orders} locks={locks} room_id={modal.room_id} date={modal.date} dateAvail={modal.dateAvail} privAvail={modal.privAvail} roomTables={roomTable.roomTables} 
           onSubmit={this.doSubmitOrder.bind(this)} onQueryUse={this.doGetRoomUse.bind(this)} onCaptcha={this.doGetCaptcha.bind(this)}/>
       </div>
     );

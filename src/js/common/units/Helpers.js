@@ -49,6 +49,11 @@ export function isEmptyObject(obj){
   return true;
 }
 
+export function checkPrivilege(userPriv, priv){
+  return (userPriv & priv) == priv;
+}
+
+
 
 export function getAbstractStatus(status, type) {
   if (type == 'auto') {

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMixin';
 
 import FormAlert from '../../common/components/FormAlert';
-import { STATUS } from '../../common/constants/OrderStatus';
+import { STATUS } from '../../common/constants/LockStatus';
 
 class LockQuery extends Component {
   constructor (props) {
@@ -35,11 +35,12 @@ class LockQuery extends Component {
   }
 
   onFilterClick(e) {
-    let start_date = parseInt(this.refs.start_date.value);
-    let end_date = parseInt(this.refs.end_date.value);
+    let start_date = this.refs.start_date.value;
+    let end_date = this.refs.end_date.value;
     let status = parseInt(this.refs.status.value);
     let perPage = parseInt(this.refs.perPage.value);
     let room_id = parseInt(this.refs.room_id.value);
+
     this.props.onFilter({
       start_date,
       end_date,
@@ -47,6 +48,10 @@ class LockQuery extends Component {
       perPage,
       room_id
     });
+  }
+
+  onAddClick(e){
+    this.props.onAddClick();
   }
 
   getBsStyle (name) {
@@ -64,6 +69,9 @@ class LockQuery extends Component {
         <div className="row">
           <div className="form-group col-sm-6 col-md-4">
             <button type="submit" className="btn-block btn btn-primary" disabled={this.state.loading}>查找</button>
+          </div>
+          <div className="form-group col-sm-6 col-md-4">
+            <button type="button" className="btn-block btn btn-success" onClick={this.onAddClick.bind(this)}>新增房间锁</button>
           </div>
           <div className="col-md-12">
             {this.state.alert?(<FormAlert style={this.state.alert.style} text={this.state.alert.text}/>):null}
@@ -90,8 +98,8 @@ class LockQuery extends Component {
             <div className="inline-control">
               <select ref="status" className="form-control" defaultValue="0">
                 <option value="0">全部</option>
-                <option value={1}>启用</option>
-                <option value={2}>未启用</option>
+                <option value={STATUS.ENABLE}>启用</option>
+                <option value={STATUS.DISABLE}>未启用</option>
               </select>
             </div>
           </div>
@@ -104,7 +112,7 @@ class LockQuery extends Component {
                   roomList && roomList.map(room_id => {
                     let room = rooms[room_id];
                     return (
-                      <option key={room_id} value={room}>{room.name+'('+room.number+')'}</option>
+                      <option key={room_id} value={room_id}>{room.name+'('+room.number+')'}</option>
                     );
                   })
                 }

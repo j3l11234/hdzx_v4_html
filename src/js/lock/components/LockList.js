@@ -3,8 +3,6 @@ import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMix
 
 import Item from './LockItem';
 import Pagination from '../../common/components/Pagination';
-import { getAbstractStatus } from '../../common/units/Helpers';
-import { STATUS } from '../../common/constants/OrderStatus';
 
 class LockList extends Component {
   constructor (props) {
@@ -37,16 +35,26 @@ class LockList extends Component {
       let lock_id = lockList[index];
       let lock = locks[lock_id];
       
-      if(filter.status && filter.status != 0 && filter.status != order.status){
+      if(filter.status && filter.status != 0 && filter.status != lock.status){
         continue;
       }
+      if(filter.room_id && filter.room_id != 0 && lock.rooms.indexOf(filter.room_id) == -1){
+        continue;
+      }
+      if(filter.start_date && Date.parse(filter.start_date) > Date.parse(lock.end_date)){
+        continue;
+      }
+      if(filter.end_date && Date.parse(filter.end_date) < Date.parse(lock.start_date)){
+        continue;
+      }
+      
       _lockList.push(lock_id);
     }
     return _lockList;
   }
 
   render() {
-    let { rooms, locks } = this.props;
+    let { rooms, locks, type } = this.props;
     let { curPage, perPage } = this.state.filter;
 
     let lockList = this.getFilteredList();
@@ -58,7 +66,7 @@ class LockList extends Component {
         lockList.slice(start, end).map(lock_id => {
           let lock = locks[lock_id];
           return (
-            <Item key={lock_id} rooms={rooms} lock={lock} chksum={lock.chksum} onOperationClick={this.props.onOperationClick} />
+            <Item key={lock_id} type={type} rooms={rooms} lock={lock} chksum={lock.chksum} onEditClick={this.props.onEditClick} />
           );
         })
       }

@@ -12,7 +12,8 @@ module.exports = {
     ],
     login: __dirname + '/src/js/login/index.js',
     myorder: __dirname + '/src/js/myorder/index.js',
-    order: __dirname + '/src/js/order/index.js'
+    order: __dirname + '/src/js/order/index.js',
+    lock: __dirname + '/src/js/lock/index.js',
   },
   output: {
     path: DIST_PATH,

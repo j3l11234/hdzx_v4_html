@@ -33,7 +33,7 @@ class FormValidator {
   }
 
   validateValue (name, value) {
-    let error = this.validators[name](value);
+    let error = this.validators[name] ? this.validators[name](value) : null;
 
     let result = {};
     result[PREFIX + name + '_value'] = value;
@@ -42,15 +42,29 @@ class FormValidator {
     return error;
   }
 
-  getInputError (name) {
+  getInputError(name) {
     return this.component.state[PREFIX + name + '_error'];
   }
 
-  getInputValue (name) {
+  getInputValue(name) {
     return this.component.state[PREFIX + name + '_value'];
   }
 
-  validateAll (){
+  setInputValues(data) {
+    let result = {};
+    for (var name in data) {
+      result[PREFIX + name + '_value'] = data[name];
+    }
+    this.component.setState(result);
+  }
+
+  setInputValue (name, value) {
+    let result = {};
+    result[PREFIX + name + '_value'] = value;
+    this.component.setState(result);
+  }
+
+  validateAll(){
     let hasError = false;
     for(var name in this.validators){
       let value = this.getInputValue(name);
@@ -63,7 +77,7 @@ class FormValidator {
     return !hasError;
   }
 
-  getFormData () {
+  getFormData() {
     let data = {}
     for(var name in this.validators){
       data[name] = this.getInputValue(name);

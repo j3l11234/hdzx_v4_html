@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMixin';
 
 import { getListFormTable } from '../../common/units/Helpers';
-
-const weekName = ['日','一','二','三','四','五','六'];
+import { LOOP, WEEKDAY } from '../../common/constants/LockStatus';
 
 class OrderLockList extends Component {
   constructor(props) {
@@ -34,11 +33,11 @@ class OrderLockList extends Component {
 
             let {hours, title, loop_type, loop_day} = lock;
             let date;
-            if(loop_type == 1){
+            if(loop_type == LOOP.DAY){
               date = '每日';
-            }else if(loop_type == 2){
-              date = '每周'+weekName[loop_day]+'';
-            }else if(loop_type == 3){
+            }else if(loop_type == LOOP.WEEK){
+              date = '每周'+WEEKDAY[loop_day]+'';
+            }else if(loop_type == LOOP.MONTH){
               date = '每月'+loop_day+'日';
             }
             let startHour = parseInt(hours[0]);

@@ -28,18 +28,6 @@ class ApprovePage extends Component {
   }
 
   componentWillMount() {
-    ajaxGet('/data/getdepts', (success, data) => {
-      if (success) {
-        let {depts, deptList} = data;
-        this.store.entities = Object.assign({}, this.store.entities, { 
-          depts: Object.assign({}, this.store.entities.depts, depts)
-        });
-        this.store.approve = Object.assign({}, this.store.approve, {
-          deptList: deptList
-        }); 
-        this.setState(this.store);
-      }
-    });
   }
 
   componentDidMount() {
@@ -110,23 +98,22 @@ class ApprovePage extends Component {
     });
   }
 
-  onFilter(status, perPage, dept_id) {
+  onFilter(status, perPage) {
     this.refs.list.setFilter({
       status,
       perPage,
-      dept_id,
       curPage: 1
     });
   }
 
   render() {
-    let { depts, orders } = this.state.entities;
-    let { deptList, orderList, order_id, operation } = this.state.approve;
+    let { orders } = this.state.entities;
+    let { orderList, order_id, operation } = this.state.approve;
     let { type } = this.props;
     let order = orders[order_id];
     return (
       <div>
-        <Query ref="query" type={type} depts={depts} deptList={deptList} onQeury={this.doGetMyOrders.bind(this)} onFilter={this.onFilter.bind(this)} />
+        <Query ref="query" type={type} onQeury={this.doGetMyOrders.bind(this)} onFilter={this.onFilter.bind(this)} />
         <hr />
         <List ref="list" type={type} orders={orders} orderList={orderList} onOperationClick={this.onOperationClick.bind(this)}/>
         <Modal ref="modal" order={order} operation={operation} onSubmit={this.doOperateOrder.bind(this)} />

@@ -4,8 +4,9 @@ import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMix
 import Header from './RoomTableHeader';
 import Cell from './RoomTableCell';
 import Pagination from '../../common/components/Pagination';
-import { getDateRange } from '../../common/units/Helpers';
-
+import { getDateRange, checkPrivilege } from '../../common/units/Helpers';
+import { TYPE as ROOM_TYPE } from '../../common/constants/RoomStatus';
+import { PRIV as USER_PRIV } from '../../common/constants/UserStatus';
 
 class RoomTable extends Component {
   constructor (props) {
@@ -46,9 +47,9 @@ class RoomTable extends Component {
   }
 
   render () {
-    let {rooms, onCellClick} = this.props;
+    let { rooms, user, onCellClick } = this.props;
     let { curPage, perPage } = this.state.filter;
-    let {dateList, roomList, roomTables} = this.props.roomTable;
+    let { dateList, roomList, roomTables } = this.props.roomTable;
 
     roomList = roomList ? roomList : [];
     let pageRange = Pagination.getLimit(curPage, roomList.length, perPage);
@@ -76,16 +77,23 @@ class RoomTable extends Component {
             let dateRange = getDateRange(room.max_before, room.min_before, room.by_week);
             dateRange.start = Date.parse(dateRange.start);
             dateRange.end = Date.parse(dateRange.end);
+            let privAvail;
+            if (room.type == ROOM_TYPE.TYPE_SIMPLE){
+              privAvail = checkPrivilege(user.privilege, USER_PRIV.PRIV_ORDER_SIMPLE);
+            } else if(room.type == ROOM_TYPE.TYPE_ACTIVITY) {
+              privAvail = checkPrivilege(user.privilege, USER_PRIV.PRIV_ORDER_ACTIVITY);
+            }
+            
             return (
               <div className="rt-table-row" key={roomId} style={{width:(dateList ? dateList.length : 0)*90+'px'}}>
               {
                 dateList && dateList.map(date => {
                   let ts = Date.parse(date);
-                  let available = ts >= dateRange.start && ts <= dateRange.end;
-                  let roomTable = roomTables[roomId][date] ? roomTables[roomId][date] : {};
+                  let dateAvail = ts >= dateRange.start && ts <= dateRange.end;
+                  let roomTable = roomTables[roomId+'_'+date];
                   let {hourTable, chksum} = roomTable;
                   return (
-                    <Cell key={roomId+'_'+date} chksum={chksum} date={date} room={roomId} hourTable={hourTable} available={available} onCellClick={onCellClick}/>
+                    <Cell key={roomId+'_'+date} chksum={chksum} date={date} room={roomId} hourTable={hourTable} privAvail={privAvail} dateAvail={dateAvail} onCellClick={onCellClick}/>
                   );
                 })
               }

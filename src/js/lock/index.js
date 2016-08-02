@@ -23,7 +23,8 @@ class LockPage extends Component {
       },
       lock: {
         roomList: [],
-        lockList: []
+        lockList: [],
+        mode: 'add'
       }
     };
     this.state = Object.assign({}, this.store);
@@ -72,10 +73,20 @@ class LockPage extends Component {
     });
   }
   
-  onOperationClick(order_id, operation) {
-    this.store.approve = Object.assign({}, this.store.approve, {
-      order_id: order_id,
-      operation: operation
+  onEditClick(lock_id) {
+    console.log(lock_id);
+    this.store.lock = Object.assign({}, this.store.lock, {
+      mode: 'edit',
+      lock_id: lock_id,
+    }); 
+    this.setState(this.store);
+    this.refs.modal.showModal();
+  }
+
+  onAddClick() {
+    this.store.lock = Object.assign({}, this.store.lock, {
+      mode: 'add',
+      lock_id: 0,
     }); 
     this.setState(this.store);
     this.refs.modal.showModal();
@@ -107,20 +118,21 @@ class LockPage extends Component {
   }
 
   render() {
+    let { type } = this.props;
     let { rooms, locks } = this.state.entities;
-    let { roomList, lockList, lock_id } = this.state.lock;
-    let lock = locks[lock];
+    let { roomList, lockList, lock_id, mode } = this.state.lock;
+    let lock = locks[lock_id];
     return (
       <div>
-        <Query ref="query" rooms={rooms} roomList={roomList} onQeury={this.doGetLocks.bind(this)} onFilter={this.onFilter.bind(this)} />
+        <Query ref="query" rooms={rooms} roomList={roomList} onQeury={this.doGetLocks.bind(this)} onFilter={this.onFilter.bind(this)} onAddClick={this.onAddClick.bind(this)} />
         <hr />
-        <List ref="list" rooms={rooms} locks={locks} lockList={lockList} onEditClick={this.onOperationClick.bind(this)}/>
-        <Modal ref="modal" order={lock} onSubmit={this.doOperateOrder.bind(this)} />
+        <List ref="list" type={type} rooms={rooms} locks={locks} lockList={lockList} onEditClick={this.onEditClick.bind(this)}/>
+        <Modal ref="modal" rooms={rooms} roomList={roomList} lock={lock} mode={mode} onSubmit={this.doOperateOrder.bind(this)} />
       </div>
     );
   }
 }
 ReactDOM.render(
-  <LockPage type={_Server_Data_.iaAdmin ? _Server_Data_.iaAdmin : false} />,
+  <LockPage type={_Server_Data_.type} />,
   document.getElementById('lock-page')
 );

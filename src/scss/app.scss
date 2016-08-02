@@ -303,3 +303,12 @@ hr.small{
    -khtml-user-select:none;/*早期浏览器*/
           user-select:none;
 }
+
+.panel-lock{
+  position: relative;
+}
+.btn-lockedit {
+  position:absolute;
+  right: 10px;
+  top: 5px;
+}

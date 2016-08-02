@@ -15,24 +15,27 @@ class RoomTableQuery extends Component {
 
     this.fv = new FormValidator(this, {
       start_date: {
-        value: _Server_Data_.start_date ? _Server_Data_.start_date : '',
+        value: '',
         validator: (value) => {
-          if(!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-            return  '请输入开始日期';
+          if(value !== '' && !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+            return  '开始日期格式错误';
           }
         }
       },
       end_date: {
-        value: _Server_Data_.end_date ? _Server_Data_.end_date : '',
+        value: '',
         validator: (value) => {
-          if(!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-            return  '请输入结束日期';
+          if(value !== '' && !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+            return  '结束日期格式错误';
           }
         }
       },
     });
   }
   
+  componentWillMount() {
+  }
+
   handleChange (name, event) {
     this.fv.handleChange.call(this.fv, name, event);
   }
@@ -49,7 +52,10 @@ class RoomTableQuery extends Component {
       this.props.onQeury(formData.start_date, formData.end_date, (success, data) => {
         this.setState({loading: false});
         if (success) {
-
+            this.fv.setInputValues({
+              start_date: data.dateList[0],
+              end_date: data.dateList[data.dateList.length-1]
+            })
         }else{
           this.setState({
             alert: { style: 'danger', text: data.message}

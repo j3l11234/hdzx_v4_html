@@ -8,12 +8,14 @@ class RoomTableCell extends Component {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    return (this.props.chksum !== nextProps.chksum || this.props.available !== nextProps.available);
+    return (this.props.chksum !== nextProps.chksum ||
+      this.props.dateAvail !== nextProps.dateAvail ||
+      this.props.privAvail !== nextProps.privAvail);
   }
 
   onClick(){
-    let {onCellClick, room, date} = this.props;
-    onCellClick(room, date);
+    let {onCellClick, room, date, dateAvail, privAvail} = this.props;
+    onCellClick(room, date, dateAvail, privAvail);
   }
 
   getCellClass (hourTable, hour) {
@@ -26,10 +28,10 @@ class RoomTableCell extends Component {
 
   render() {
     console.log('render RoomTableCell');
-    let { hourTable, available } = this.props;
+    let { hourTable, dateAvail, privAvail } = this.props;
     return !hourTable ? null : (
 
-      <div className={'rt-table-item '+ (!available ? 'disabled' : '')} onClick={this.onClick.bind(this)} 
+      <div className={'rt-table-item '+ (dateAvail && privAvail ? '' : 'disabled')} onClick={this.onClick.bind(this)} 
         dangerouslySetInnerHTML={{__html: 
           '<div class="' + this.getCellClass(hourTable, 8) + '">8</div>' +
           '<div class="' + this.getCellClass(hourTable, 9) + '">9</div>' +

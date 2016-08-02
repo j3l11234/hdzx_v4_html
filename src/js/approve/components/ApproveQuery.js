@@ -68,8 +68,7 @@ class ApproveQuery extends Component {
   onFilterClick(e) {
     let status = parseInt(this.refs.status.value);
     let perPage = parseInt(this.refs.perPage.value);
-    let dept_id = parseInt(this.refs.dept_id.value);
-    this.props.onFilter(status, perPage, dept_id);
+    this.props.onFilter(status, perPage);
   }
 
   getBsStyle (name) {
@@ -81,7 +80,7 @@ class ApproveQuery extends Component {
   }
 
   render() {
-    let { depts, deptList } = this.props;
+    let { } = this.props;
     return (
       <form onSubmit={this.onQeury.bind(this)} >
         <div className="row">
@@ -124,14 +123,7 @@ class ApproveQuery extends Component {
             <div className="inline-control">
               <select ref="dept_id" className="form-control" defaultValue="0">
                 <option value="0">全部</option>
-                {
-                  deptList && deptList.map(dept_id => {
-                    let dept = depts[dept_id];
-                    return (
-                      <option key={dept_id} value={dept_id}>{dept.name}</option>
-                    );
-                  })
-                }
+                
               </select>
             </div>
           </div>

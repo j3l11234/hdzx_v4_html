@@ -36,6 +36,14 @@ class OrderForm extends Component {
           }
         }
       },
+      student_no: {
+        value: '',
+        validator: (value) => {
+          if(!/^\d{8}$/.test(value)) {
+            return  '学号不正确';
+          }
+        }
+      },
       phone: {
         value: '13377088888',
         validator: (value) => {
@@ -65,14 +73,6 @@ class OrderForm extends Component {
         validator: (value) => {
           if(value == 0) {
             return '请选择活动人数';
-          }
-        }
-      },
-      dept: {
-        value: 0,
-        validator: (value) => {
-          if(value == 0) {
-            return  '请选择社团单位';
           }
         }
       },
@@ -194,22 +194,16 @@ class OrderForm extends Component {
               <input type="text" placeholder="姓名" className="form-control" onBlur={this.handleChange.bind(this, 'name')} />
             </div>
           </div>
+          <div className={'form-group col-sm-6 '+this.getBsStyle.call(this, 'student_no')}>
+            <label className="control-label inline-label">学号</label>
+            <div className="inline-control">
+              <input type="text" placeholder="学号" className="form-control" onBlur={this.handleChange.bind(this, 'student_no')} />
+            </div>
+          </div>
           <div className={'form-group col-sm-6 '+this.getBsStyle.call(this, 'phone')}>
             <label className="control-label inline-label">联系方式</label>
             <div className="inline-control">
               <input type="text" placeholder="联系方式" className="form-control" onBlur={this.handleChange.bind(this, 'phone')} defaultValue={this.fv.getInputValue('phone')} />
-            </div>
-          </div>
-          <div className={'form-group col-sm-12 '+this.getBsStyle.call(this, 'title')}>
-            <label className="control-label inline-label">活动主题</label>
-            <div className="inline-control">
-              <input type="text" placeholder="请填写活动主题" className="form-control" onBlur={this.handleChange.bind(this, 'title')} />
-            </div>
-          </div>
-          <div className={'form-group col-sm-12 '+this.getBsStyle.call(this, 'content')}>
-            <label className="control-label inline-label">活动内容</label>
-            <div className="inline-control">
-              <textarea placeholder="请填写活动内容" className="form-control" onBlur={this.handleChange.bind(this, 'content')} />
             </div>
           </div>
           <div className={'form-group col-sm-6 '+this.getBsStyle.call(this, 'number')}>
@@ -225,22 +219,19 @@ class OrderForm extends Component {
               </select>
             </div>
           </div>
-          <div className={'form-group col-sm-6 '+this.getBsStyle.call(this, 'dept')}>
-            <label className="control-label inline-label">社团单位</label>
+          <div className={'form-group col-sm-12 '+this.getBsStyle.call(this, 'title')}>
+            <label className="control-label inline-label">活动主题</label>
             <div className="inline-control">
-              <select className="form-control" onChange={this.handleChange.bind(this, 'dept')} value={this.fv.getInputValue('dept')}>
-                <option value="0">请选择</option>
-                {
-                  deptList&&deptList.map(dept_id => {
-                    let dept = depts[dept_id];
-                    return (
-                      <option key={dept_id} value={dept_id}>{dept.name}</option>
-                    );
-                  })
-                }
-              </select>
+              <input type="text" placeholder="请填写活动主题" className="form-control" onBlur={this.handleChange.bind(this, 'title')} />
             </div>
           </div>
+          <div className={'form-group col-sm-12 '+this.getBsStyle.call(this, 'content')}>
+            <label className="control-label inline-label">活动内容</label>
+            <div className="inline-control">
+              <textarea placeholder="请填写活动内容" className="form-control" onBlur={this.handleChange.bind(this, 'content')} />
+            </div>
+          </div>
+          
           <div className={'form-group col-sm-12 '+this.getBsStyle.call(this, 'secure')}>
             <label className="control-label inline-label">安保措施</label>
             <div className="inline-control">
