@@ -15,7 +15,7 @@ class ApproveModal extends Component {
       loading: false,
     }
 
-    this.fv = new FormValidator(this, {
+    this.fv = new FormValidator({
       comment: {
         value: '',
         validator: (value) => {
@@ -26,7 +26,8 @@ class ApproveModal extends Component {
   }
 
   handleChange (name, event) {
-    this.fv.handleChange.call(this.fv, name, event);
+    this.fv.handleChange(name, event);
+    this.forceUpdate();
   }
 
   showModal() {
@@ -40,24 +41,31 @@ class ApproveModal extends Component {
   onSubmit() {
     let { operation, order } = this.props;
 
-    if (this.fv.validateAll()) {
-      let formData = this.fv.getFormData();
-      formData.order_id = order.id;
-
-      this.setState({loading: true});
-      this.props.onSubmit(operation, formData, (success, data) => {
-        if(success){
-          this.setState({
-            alert: { style: 'success', text: data.message}
-          });
-        }else{
-          this.setState({loading: false});
-          this.setState({
-            alert: { style: 'danger', text: data.message}
-          });
-        }
+    this.fv.validateAll();
+    let error = this.fv.getFirstError();
+    if(error) {
+      this.setState({
+        alert: {style: 'danger', text: error}
       });
-    } 
+      return;
+    }
+
+    let formData = this.fv.getFormData();
+    formData.order_id = order.id;
+
+    this.setState({loading: true});
+    this.props.onSubmit(operation, formData, (success, data) => {
+      if(success) {
+        this.setState({
+          alert: { style: 'success', text: data.message}
+        });
+      } else {
+        this.setState({loading: false});
+        this.setState({
+          alert: { style: 'danger', text: data.message}
+        });
+      }
+    });
   } 
 
   getBsStyle (name) {

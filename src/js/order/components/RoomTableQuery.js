@@ -13,7 +13,7 @@ class RoomTableQuery extends Component {
       alert: null,
     }
 
-    this.fv = new FormValidator(this, {
+    this.fv = new FormValidator({
       start_date: {
         value: '',
         validator: (value) => {
@@ -37,36 +37,40 @@ class RoomTableQuery extends Component {
   }
 
   handleChange (name, event) {
-    this.fv.handleChange.call(this.fv, name, event);
+    this.fv.handleChange(name, event);
+    this.forceUpdate();
   }
 
   onQeury (e) {
     e && e.preventDefault();
 
-     if (this.fv.validateAll()) {
-      let formData = this.fv.getFormData();
-
-      this.setState({alert: null});
-      this.setState({loading: true});
-
-      this.props.onQeury(formData.start_date, formData.end_date, (success, data) => {
-        this.setState({loading: false});
-        if (success) {
-            this.fv.setInputValues({
-              start_date: data.dateList[0],
-              end_date: data.dateList[data.dateList.length-1]
-            })
-        }else{
-          this.setState({
-            alert: { style: 'danger', text: data.message}
-          });
-        }
-      });
-    } else {
+    this.fv.validateAll();
+    let error = this.fv.getFirstError();
+    if(error) {
       this.setState({
-        alert: { style: 'danger', text: this.fv.errorText}
+        alert: {style: 'danger', text: error}
       });
+      return;
     }
+
+    let formData = this.fv.getFormData();
+
+    this.setState({alert: null});
+    this.setState({loading: true});
+
+    this.props.onQeury(formData.start_date, formData.end_date, (success, data) => {
+      this.setState({loading: false});
+      if (success) {
+          this.fv.setInputValues({
+            start_date: data.dateList[0],
+            end_date: data.dateList[data.dateList.length-1]
+          })
+      }else{
+        this.setState({
+          alert: { style: 'danger', text: data.message}
+        });
+      }
+    });
   }
 
   onFilterClick(e) {

@@ -27,7 +27,7 @@ class OrderForm extends Component {
       hours: null
     }
 
-    this.fv = new FormValidator(this, {
+    this.fv = new FormValidator({
       name: {
         value: '',
         validator: (value) => {
@@ -96,7 +96,8 @@ class OrderForm extends Component {
   }
 
   handleChange (name, event) {
-    this.fv.handleChange.call(this.fv, name, event);
+    this.fv.handleChange(name, event);
+    this.forceUpdate();
   }
 
   onChooseHours (startHour, endHour, hours) {
@@ -127,12 +128,15 @@ class OrderForm extends Component {
   }
 
   onSubmit(parent) {
-    if (!this.fv.validateAll()) {
+    this.fv.validateAll();
+    let error = this.fv.getFirstError();
+    if(error) {
       this.setState({
-        alert: { style: 'danger', text: this.fv.errorText}
+        alert: {style: 'danger', text: error}
       });
       return;
     }
+    
     if (!this.state.hours) {
       this.setState({
         alert: { style: 'danger', text: '请选择预约时段'}

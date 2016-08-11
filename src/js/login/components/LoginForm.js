@@ -14,7 +14,7 @@ class LoginForm extends Component {
       loading: false,
     }
 
-    this.fv = new FormValidator(this, {
+    this.fv = new FormValidator({
       username: {
         value: '',
         validator: (value) => {
@@ -39,7 +39,8 @@ class LoginForm extends Component {
   }
 
   handleChange (name, event) {
-    this.fv.handleChange.call(this.fv, name, event);
+    this.fv.handleChange(name, event);
+    this.forceUpdate();
   }
 
   getBsStyle (name) {
@@ -52,29 +53,33 @@ class LoginForm extends Component {
 
   onSubmit (e) {
     e && e.preventDefault();
-    if (this.fv.validateAll()) {
-      let formData = this.fv.getFormData();
 
-      this.setState({alert: null});
-      this.setState({loading: true});
-      this.props.doLogin(formData, (success, data) => {
-        this.setState({loading: false});
-        if (success) {
-          this.setState({
-            alert: { style: 'success', text: data.message}
-          });
-          setTimeout(()=>{window.location.href=data.url}, 1000);
-        }else{
-          this.setState({
-            alert: { style: 'danger', text: data.message}
-          });
-        }
-      });
-    } else {
+    this.fv.validateAll();
+    let error = this.fv.getFirstError();
+    if(error) {
       this.setState({
-        alert: { style: 'danger', text: this.fv.errorText}
+        alert: {style: 'danger', text: error}
       });
+      return;
     }
+
+    let formData = this.fv.getFormData();
+
+    this.setState({alert: null});
+    this.setState({loading: true});
+    this.props.doLogin(formData, (success, data) => {
+      this.setState({loading: false});
+      if (success) {
+        this.setState({
+          alert: { style: 'success', text: data.message}
+        });
+        setTimeout(()=>{window.location.href=data.url}, 1000);
+      }else{
+        this.setState({
+          alert: { style: 'danger', text: data.message}
+        });
+      }
+    });
   }
 
   render() {

@@ -15,7 +15,7 @@ class OrderQuery extends Component {
       loading: false
     }
 
-    this.fv = new FormValidator(this, {
+    this.fv = new FormValidator({
       start_date: {
         value: _Server_Data_.start_date ? _Server_Data_.start_date : '',
         validator: (value) => {
@@ -36,33 +36,36 @@ class OrderQuery extends Component {
   }
   
   handleChange (name, event) {
-    this.fv.handleChange.call(this.fv, name, event);
+    this.fv.handleChange(name, event);
+    this.forceUpdate();
   }
 
   onQeury (e) {
     e && e.preventDefault();
 
-    if (this.fv.validateAll()) {
-      let formData = this.fv.getFormData();
-
-      this.setState({alert: null});
-      this.setState({loading: true});
-
-      this.props.onQeury(formData.start_date, formData.end_date, (success, data) => {
-        this.setState({loading: false});
-        if (success) {
-
-        }else{
-          this.setState({
-            alert: { style: 'danger', text: data.message}
-          });
-        }
-      });
-    } else {
+    this.fv.validateAll();
+    let error = this.fv.getFirstError();
+    if(error) {
       this.setState({
-        alert: { style: 'danger', text: this.fv.errorText}
+        alert: {style: 'danger', text: error}
       });
+      return;
     }
+
+    let formData = this.fv.getFormData();
+
+    this.setState({alert: null});
+    this.setState({loading: true});
+    this.props.onQeury(formData.start_date, formData.end_date, (success, data) => {
+      this.setState({loading: false});
+      if (success) {
+
+      }else{
+        this.setState({
+          alert: { style: 'danger', text: data.message}
+        });
+      }
+    });
   }
 
   onFilterClick(e) {

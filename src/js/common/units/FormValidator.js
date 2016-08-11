@@ -1,27 +1,30 @@
 const PREFIX = "_form_";
 
 class FormValidator {
-  constructor (component, data) {
-    this.component = component;
 
+  constructor(data) {
     this.validators = {};
-    let initState = {};
+    this.state = {};
     for(var name in data){
       this.validators[name] = data[name].validator;
-      initState[PREFIX + name + '_value'] = data[name].value;
-      initState[PREFIX + name + '_error'] = null;
+      this.state[PREFIX + name + '_value'] = data[name].value;
+      this.state[PREFIX + name + '_error'] = null;
     }
-    this.component.state = Object.assign(initState, this.component.state);
-    this.errorText = '';
   }
 
-  handleChange (name, event){
+  setInput(name, input) {
+    this.validators[name] = input.validator;
+    this.state[PREFIX + name + '_value'] = input.value;
+    this.state[PREFIX + name + '_error'] = null;
+  }
+
+  handleChange(name, event) {
     let value = '';
     switch (event.target.type) {
       case 'checkbox' :
         value = event.target.checked;
         break;
-        case 'text' :
+      case 'text' :
         value = event.target.value;
         break;
       default :
@@ -29,58 +32,50 @@ class FormValidator {
         break;
     }
 
-    this.validateValue(name, value);
-  }
-
-  validateValue (name, value) {
-    let error = this.validators[name] ? this.validators[name](value) : null;
-
-    let result = {};
-    result[PREFIX + name + '_value'] = value;
-    result[PREFIX + name + '_error'] = error;
-    this.component.setState(result);
-    return error;
+    let error = this.validators[name](value);
+    this.state[PREFIX + name + '_value'] = value;
+    this.state[PREFIX + name + '_error'] = error;
   }
 
   getInputError(name) {
-    return this.component.state[PREFIX + name + '_error'];
+    return this.state[PREFIX + name + '_error'];
   }
 
   getInputValue(name) {
-    return this.component.state[PREFIX + name + '_value'];
+    return this.state[PREFIX + name + '_value'];
   }
 
-  setInputValues(data) {
-    let result = {};
-    for (var name in data) {
-      result[PREFIX + name + '_value'] = data[name];
-    }
-    this.component.setState(result);
+  setInputValue(name, value) {
+    this.state[PREFIX + name + '_value'] = value;
+    this.state[PREFIX + name + '_error'] = null;
   }
 
-  setInputValue (name, value) {
-    let result = {};
-    result[PREFIX + name + '_value'] = value;
-    this.component.setState(result);
-  }
-
-  validateAll(){
+  validateAll() {
     let hasError = false;
     for(var name in this.validators){
-      let value = this.getInputValue(name);
-      let error = this.validateValue(name, value);
-      if (error && !hasError) {
-        hasError = true;
-        this.errorText = error;
-      }
+      let value = this.state[PREFIX + name + '_value'];
+      let error = this.validators[name](value);
+      this.state[PREFIX + name + '_error'] = error;
     }
-    return !hasError;
   }
 
-  getFormData() {
+  getState() {
+    return this.state;    
+  }
+
+  getFirstError() {
+    for(var name in this.validators){
+      let error = this.state[PREFIX + name + '_error'];
+      if (error) {
+        return error;
+      }
+    }
+  }
+
+  getFormData () {
     let data = {}
     for(var name in this.validators){
-      data[name] = this.getInputValue(name);
+      data[name] = this.state[PREFIX + name + '_value'];
     }
     return data;
   }
