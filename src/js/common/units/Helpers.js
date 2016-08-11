@@ -57,11 +57,11 @@ export function checkPrivilege(userPriv, priv){
 
 export function getAbstractStatus(status, type) {
   if (type == 'auto') {
-    if (status == STATUS.AUTO_PENDING) {
+    if (status == STATUS.SIMPLE_PENDING) {
       return STATUS.STATUS_PENDING;
-    } else if (status == STATUS.AUTO_APPROVED) {
+    } else if (status == STATUS.SIMPLE_APPROVED) {
       return STATUS.STATUS_APPROVED;
-    } else if (status == STATUS.AUTO_REJECTED) {
+    } else if (status == STATUS.SIMPLE_REJECTED) {
       return STATUS.STATUS_REJECTED;
     }
   } else if (type == 'manager') {
@@ -85,11 +85,11 @@ export function getAbstractStatus(status, type) {
       return STATUS.STATUS_REJECTED;
     }
   } else {
-    if (status == STATUS.AUTO_PENDING || status == STATUS.MANAGER_PENDING || status == STATUS.SCHOOL_PENDING) {
+    if (status == STATUS.SIMPLE_PENDING || status == STATUS.MANAGER_PENDING || status == STATUS.SCHOOL_PENDING) {
       return STATUS.STATUS_PENDING;
-    } else if (status == STATUS.AUTO_APPROVED || status == STATUS.SCHOOL_APPROVED) {
+    } else if (status == STATUS.SIMPLE_APPROVED || status == STATUS.SCHOOL_APPROVED) {
       return STATUS.STATUS_APPROVED;
-    } else if (status == STATUS.AUTO_REJECTED || status == STATUS.SCHOOL_REJECTED || status == STATUS.MANAGER_REJECTED) {
+    } else if (status == STATUS.SIMPLE_REJECTED || status == STATUS.SCHOOL_REJECTED || status == STATUS.MANAGER_REJECTED) {
       return STATUS.STATUS_REJECTED;
     }
   }

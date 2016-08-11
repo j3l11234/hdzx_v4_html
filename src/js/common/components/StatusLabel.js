@@ -15,7 +15,7 @@ class StatusLabel extends Component {
       return (<span className="label label-primary">初始化</span>);
     } else if (status == STATUS.PASSED || 
       status == STATUS.SCHOOL_APPROVED ||
-      status == STATUS.AUTO_APPROVED) {
+      status == STATUS.SIMPLE_APPROVED) {
       if (type == 'manager' || type == 'school') {
         return (<span className="label label-success">校团委审批通过</span>);
       } else if (type == 'auto') {
@@ -40,10 +40,10 @@ class StatusLabel extends Component {
       return (<span className="label label-danger">负责人审批驳回</span>);
     } else if (status == STATUS.SCHOOL_REJECTED) {
       return (<span className="label label-danger">校团委审批驳回</span>);
-    } else if (status == STATUS.AUTO_PENDING) {
-      return (<span className="label label-info">待自动审批</span>);
-    } else if (status == STATUS.AUTO_REJECTED) {
-      return (<span className="label label-danger">自动审批驳回</span>);
+    } else if (status == STATUS.SIMPLE_PENDING) {
+      return (<span className="label label-info">待琴房审批</span>);
+    } else if (status == STATUS.SIMPLE_REJECTED) {
+      return (<span className="label label-danger">琴房审批驳回</span>);
     }
     return null;
   }
