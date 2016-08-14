@@ -89,6 +89,7 @@ class ApproveModal extends Component {
     }
     
     let title = "";
+    let conflict = order.conflict ? order.conflict.length > 0 : false;
     let operateBtn;
     switch(operation) {
       case 'approve':
@@ -134,7 +135,10 @@ class ApproveModal extends Component {
                   </div>
                   <div className="col-sm-12">
                   {
-                    this.state.alert ? (<FormAlert style={this.state.alert.style} text={this.state.alert.text}/>) : null
+                    conflict ? <FormAlert style="danger" text="审批通过该预约将会撤回其他预约"/> : null
+                  }
+                  {
+                    this.state.alert ? <FormAlert style={this.state.alert.style} text={this.state.alert.text}/> : null
                   }
                   </div>
                 </div>

@@ -5,7 +5,7 @@ import Prop from '../../common/components/PropGroup';
 import StatusLabel from '../../common/components/StatusLabel';
 import { STATUS } from '../../common/constants/OrderStatus';
 import { TYPE_NAME } from '../../common/constants/OperationTypes';
-import { getAbstractStatus } from '../../common/units/Helpers';
+import { getAbsStatus } from '../../common/units/Helpers';
 
 
 class ApproveOrderItem extends Component {
@@ -44,7 +44,7 @@ class ApproveOrderItem extends Component {
     let endHour = parseInt(hours[hours.length -1])+1;
     let submit_time = order.submit_time ? new Date(order.submit_time*1000).Format('yyyy-MM-dd hh:mm:ss') : ' ';
     let issue_time = order.issue_time ? new Date(order.issue_time*1000).Format('yyyy-MM-dd hh:mm:ss') : '未发放'; 
-    let status = getAbstractStatus(order.status);
+    let status = getAbsStatus(order.status);
 
 
     // //操作按钮生成

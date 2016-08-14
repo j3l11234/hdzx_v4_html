@@ -5,7 +5,8 @@ import Prop from '../../common/components/PropGroup';
 import StatusLabel from '../../common/components/StatusLabel';
 import { STATUS } from '../../common/constants/OrderStatus';
 import { TYPE_NAME } from '../../common/constants/OperationTypes';
-import { getAbstractStatus } from '../../common/units/Helpers';
+import FormAlert from '../../common/components/FormAlert';
+import { getAbsStatus } from '../../common/units/Helpers';
 
 
 class ApproveOrderItem extends Component {
@@ -31,9 +32,9 @@ class ApproveOrderItem extends Component {
   getPanelStyle (status, conflict) {
     if (status == STATUS.STATUS_PENDING) {
       return conflict ? 'panel-warning' : 'panel-info';
-    } else if (status == STATUS.STATUS_APPROVED || STATUS.STATUS_APPROVED_FIXED) {
+    } else if (status == STATUS.STATUS_APPROVED || status == STATUS.STATUS_APPROVED_FIXED) {
       return 'panel-success';
-    } else if (status == STATUS.STATUS_REJECTED || STATUS_REJECTED_FIXED) {
+    } else if (status == STATUS.STATUS_REJECTED || status == STATUS.STATUS_REJECTED_FIXED) {
       return 'panel-danger';
     }
   }
@@ -50,7 +51,7 @@ class ApproveOrderItem extends Component {
     let endHour = parseInt(hours[hours.length -1])+1;
     let submit_time = order.submit_time ? new Date(order.submit_time*1000).Format('yyyy-MM-dd hh:mm:ss') : ' ';
     let issue_time = order.issue_time ? new Date(order.issue_time*1000).Format('yyyy-MM-dd hh:mm:ss') : '未发放'; 
-    let status = getAbstractStatus(order.status, type);
+    let status = getAbsStatus(order.status, type);
     let conflict = order.conflict ? order.conflict.length > 0 : false;
 
     //操作按钮生成
@@ -108,11 +109,11 @@ class ApproveOrderItem extends Component {
             <div className="row">
               <hr className="small" />
               {
-                conflict && status == STATUS.STATUS_PENDING ? (
-                  <div className="col-sm-12 form-group">
-                    <div className="alert alert-danger" role="alert">该预约和其他预约存在冲突！</div>
-                  </div>
-                ) : null
+                conflict && status == STATUS.STATUS_PENDING ? 
+                <div className="col-sm-12 form-group">
+                  <FormAlert style="danger" text="审批通过该预约将会撤回其他预约"/>
+                </div>
+                : null
               }
               {
                 operationBtns.map((operationBtn,i) => {

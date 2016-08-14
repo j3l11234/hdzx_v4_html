@@ -17,17 +17,17 @@ class ApproveQuery extends Component {
 
     this.fv = new FormValidator({
       start_date: {
-        value: _Server_Data_.start_date ? _Server_Data_.start_date : '',
+        value: '',
         validator: (value) => {
-          if(!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+          if(value !== '' && !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
             return  '请输入开始日期';
           }
         }
       },
       end_date: {
-        value: _Server_Data_.end_date ? _Server_Data_.end_date : '',
+        value: '',
         validator: (value) => {
-          if(!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+          if(value !== '' && !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
             return  '请输入结束日期';
           }
         }
@@ -59,7 +59,11 @@ class ApproveQuery extends Component {
     this.props.onQeury(formData.start_date, formData.end_date, (success, data) => {
       this.setState({loading: false});
       if (success) {
-
+        this.fv.setInputValues({
+          start_date: data.start_date,
+          end_date: data.end_date
+        });
+        this.forceUpdate();
       }else{
         this.setState({
           alert: { style: 'danger', text: data.message}

@@ -55,7 +55,7 @@ export function checkPrivilege(userPriv, priv){
 
 
 
-export function getAbstractStatus(status, type) {
+export function getAbsStatus(status, type) {
   if (type == 'auto') {
     if (status == STATUS.SIMPLE_PENDING) {
       return STATUS.STATUS_PENDING;

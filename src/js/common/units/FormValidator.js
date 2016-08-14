@@ -50,6 +50,14 @@ class FormValidator {
     this.state[PREFIX + name + '_error'] = null;
   }
 
+  setInputValues(data) {
+    for (var name in data) {
+      this.state[PREFIX + name + '_value'] = data[name];
+      this.state[PREFIX + name + '_error'] = null;
+    }
+  }
+
+
   validateAll() {
     let hasError = false;
     for(var name in this.validators){

@@ -64,7 +64,7 @@ class RoomTableQuery extends Component {
           this.fv.setInputValues({
             start_date: data.dateList[0],
             end_date: data.dateList[data.dateList.length-1]
-          })
+          });
       }else{
         this.setState({
           alert: { style: 'danger', text: data.message}

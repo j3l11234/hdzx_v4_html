@@ -114,8 +114,11 @@ class OrderPage extends Component {
   }
 
   doSubmitOrder (data, callback) {
-    ajaxPost('/order/submitorder', data, (success, data) => {
-      callback && callback(success, data); 
+    ajaxPost('/order/submitorder', data, (success, reData) => {
+      if (success) {
+        this.doGetRoomUse(data.room_id, data.date);
+      }
+      callback && callback(success, reData); 
     });
   }
 
