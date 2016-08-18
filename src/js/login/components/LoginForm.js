@@ -107,7 +107,7 @@ class LoginForm extends Component {
             <button type="submit" className="btn-block btn btn-primary" disabled={this.state.loading}>登录</button>
           </div>
           <div className="form-group col-sm-6">
-            <a className="btn-block btn btn-default" href={_Server_Data_.BASE_URL+'/user/request-active-user'} role="button">激活新用户</a>
+            <a className="btn-block btn btn-default" href={_Server_Data_.BASE_URL+'/user/request-student-user'} role="button">激活新用户</a>
           </div>
         </div>    
         {this.state.alert?(<FormAlert style={this.state.alert.style} text={this.state.alert.text}/>):null}         
