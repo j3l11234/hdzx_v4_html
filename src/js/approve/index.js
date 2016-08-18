@@ -128,7 +128,7 @@ class ApprovePage extends Component {
         <Query ref="query" type={type} onQeury={this.doGetApproveOrders.bind(this)} onFilter={this.onFilter.bind(this)} />
         <hr />
         <List ref="list" type={type} orders={orders} orderList={orderList} onOperationClick={this.onOperationClick.bind(this)}/>
-        <Modal ref="modal" order={order} operation={operation} onSubmit={this.doOperateOrder.bind(this)} />
+        <Modal ref="modal" type={type} order={order} operation={operation} onSubmit={this.doOperateOrder.bind(this)} />
       </div>
     );
   }

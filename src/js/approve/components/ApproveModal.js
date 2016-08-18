@@ -77,7 +77,7 @@ class ApproveModal extends Component {
   } 
 
   render() {
-    let { operation, order } = this.props;
+    let { operation, order,type } = this.props;
     let { loading } = this.state;
     order = order ? order : {};
 
@@ -135,7 +135,7 @@ class ApproveModal extends Component {
                   </div>
                   <div className="col-sm-12">
                   {
-                    conflict ? <FormAlert style="danger" text="审批通过该预约将会撤回其他预约"/> : null
+                    type != 'manager' && operation == 'approve' && conflict ? <FormAlert style="danger" text="审批通过该预约将会撤回其他预约"/> : null
                   }
                   {
                     this.state.alert ? <FormAlert style={this.state.alert.style} text={this.state.alert.text}/> : null

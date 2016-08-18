@@ -111,7 +111,7 @@ class ApproveOrderItem extends Component {
               {
                 conflict && status == STATUS.STATUS_PENDING ? 
                 <div className="col-sm-12 form-group">
-                  <FormAlert style="danger" text="审批通过该预约将会撤回其他预约"/>
+                  <FormAlert style="danger" text="该申请和其他申请冲突，请谨慎审批"/>
                 </div>
                 : null
               }
