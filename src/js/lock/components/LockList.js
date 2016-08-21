@@ -66,7 +66,7 @@ class LockList extends Component {
         lockList.slice(start, end).map(lock_id => {
           let lock = locks[lock_id];
           return (
-            <Item key={lock_id} type={type} rooms={rooms} lock={lock} chksum={lock.chksum} onEditClick={this.props.onEditClick} />
+            <Item key={lock_id} type={type} rooms={rooms} lock={lock} chksum={lock.chksum} onEditClick={this.props.onEditClick} onDelClick={this.props.onDelClick}/>
           );
         })
       }

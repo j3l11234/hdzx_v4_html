@@ -26,6 +26,9 @@ class LockModal extends Component {
       },
       loop_type: {
         value: LOOP.DAY,
+        validator: (value) => {
+          return null;
+        }
       },
       loop_day: {
         value: '',
@@ -64,6 +67,9 @@ class LockModal extends Component {
       },
       status: {
         value: STATUS.ENABLE,
+        validator: (value) => {
+          return null;
+        }
       },
       start_hour: {
         value: '',
@@ -93,12 +99,14 @@ class LockModal extends Component {
       },
       comment: {
         value: '',
+        validator: (value) => {
+          return null;
+        }
       }
     });
   }
 
   componentWillReceiveProps(nextProps){
-    console.log(nextProps);
     if(this.props.lock !== nextProps.lock) {
       if(nextProps.mode == 'edit') {
         let lock = nextProps.lock;
@@ -148,7 +156,7 @@ class LockModal extends Component {
   }
 
   onSubmit() {
-    let { operation, lock } = this.props;
+    let { operation, lock, mode } = this.props;
 
     this.fv.validateAll();
     let error = this.fv.getFirstError();
@@ -160,10 +168,11 @@ class LockModal extends Component {
     }
 
     let formData = this.fv.getFormData();
-    formData.order_id = lock.id;
+    formData.lock_id = mode == 'edit' ? lock.id : 0;
+    formData.rooms = JSON.stringify(this.refs.roomselect.getRooms());
 
     this.setState({loading: true});
-    this.props.onSubmit(operation, formData, (success, data) => {
+    this.props.onSubmit(formData, (success, data) => {
       if(success){
         this.setState({
           alert: { style: 'success', text: data.message}

@@ -20,6 +20,12 @@ class LockItem extends Component {
     this.props.onEditClick(lock.id);
   }
 
+  onDelClick (e) {
+    if (confirm("确认要删除该房间锁吗？")){
+      let { lock } = this.props;
+      this.props.onDelClick(lock.id);
+    }  
+  }
 
   getPanelStyle (status) {
     if (status == STATUS.ENABLE) {
@@ -45,12 +51,13 @@ class LockItem extends Component {
     }
 
     let room_name;
-    if(lock.rooms.length > 1) {
-      room_name = '多个房间';
-    }else{
+    if(lock.rooms.length == 1) {
       let room = rooms[lock.rooms[0]];
-      room_name = room.name+'('+room.number+')';
+      room_name = room ? room.name+'('+room.number+')': '';
+    } else {
+      room_name = '多个房间';
     }
+
     let startHour = parseInt(lock.hours[0]);
     let endHour = parseInt(lock.hours[lock.hours.length -1])+1;
     let lock_time = startHour + '时 - ' + endHour + '时';
@@ -75,6 +82,7 @@ class LockItem extends Component {
               </div>
             </a>
             {type == 'admin' ? (<button type="button" className="btn btn-warning btn-sm btn-lockedit" onClick={this.onEditClick.bind(this)}>编辑</button>) : null}
+            {type == 'admin' ? (<button type="button" className="btn btn-danger btn-sm btn-lockdel" onClick={this.onDelClick.bind(this)}>删除</button>) : null}
           </h4>
         </div>
         <div className="panel-collapse collapse in" id={'collapse-lock-' + lock.id}>

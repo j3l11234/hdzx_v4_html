@@ -74,7 +74,6 @@ class LockPage extends Component {
   }
   
   onEditClick(lock_id) {
-    console.log(lock_id);
     this.store.lock = Object.assign({}, this.store.lock, {
       mode: 'edit',
       lock_id: lock_id,
@@ -92,23 +91,21 @@ class LockPage extends Component {
     this.refs.modal.showModal();
   }
 
-  doOperateOrder(operation, data, callback) {
-    let url;
-    switch(operation) {
-      case 'approve':
-        url = '/approve/approveorder?type='+this.props.type;
-        break;
-      case 'reject':
-        url = '/approve/rejectorder?type='+this.props.type;
-        break;
-      case 'revoke':
-        url = '/approve/revokeorder?type='+this.props.type;
-        break;
-      default:
-        return;
-    }
-    ajaxPost(url, data, (success, data) => {
-      callback && callback(success, data); 
+  onDelClick(lock_id, callback) {
+    ajaxPost('/lock/deletelock', {lock_id}, (success, resData) => {
+      if (success) {
+        this.doGetLocks();
+      }
+      callback && callback(success, resData); 
+    });
+  }
+
+  doSubmitLock(data, callback) {
+    ajaxPost('/lock/submitlock', data, (success, resData) => {
+      if (success) {
+        this.doGetLocks();
+      }
+      callback && callback(success, resData); 
     });
   }
 
@@ -126,8 +123,8 @@ class LockPage extends Component {
       <div>
         <Query ref="query" rooms={rooms} roomList={roomList} onQeury={this.doGetLocks.bind(this)} onFilter={this.onFilter.bind(this)} onAddClick={this.onAddClick.bind(this)} />
         <hr />
-        <List ref="list" type={type} rooms={rooms} locks={locks} lockList={lockList} onEditClick={this.onEditClick.bind(this)}/>
-        <Modal ref="modal" rooms={rooms} roomList={roomList} lock={lock} mode={mode} onSubmit={this.doOperateOrder.bind(this)} />
+        <List ref="list" type={type} rooms={rooms} locks={locks} lockList={lockList} onEditClick={this.onEditClick.bind(this)} onDelClick={this.onDelClick.bind(this)} />
+        <Modal ref="modal" rooms={rooms} roomList={roomList} lock={lock} mode={mode} onSubmit={this.doSubmitLock.bind(this)} />
       </div>
     );
   }
