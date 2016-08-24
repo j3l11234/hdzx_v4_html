@@ -50,10 +50,6 @@ class LockQuery extends Component {
     });
   }
 
-  onAddClick(e){
-    this.props.onAddClick();
-  }
-
   getBsStyle (name) {
     if(!this.fv.getInputError(name)){
       return null;
@@ -63,7 +59,7 @@ class LockQuery extends Component {
   }
 
   render() {
-    let { rooms, roomList } = this.props;
+    let { rooms, roomList, onAddClick, onApplyClick } = this.props;
     return (
       <form onSubmit={this.onQeury.bind(this)} >
         <div className="row">
@@ -71,8 +67,12 @@ class LockQuery extends Component {
             <button type="submit" className="btn-block btn btn-primary" disabled={this.state.loading}>查找</button>
           </div>
           <div className="form-group col-sm-6 col-md-4">
-            <button type="button" className="btn-block btn btn-success" onClick={this.onAddClick.bind(this)}>新增房间锁</button>
+            <button type="button" className="btn-block btn btn-success" onClick={onAddClick}>新增房间锁</button>
           </div>
+          <div className="form-group col-sm-6 col-md-4">
+            <button type="button" className="btn-block btn btn-info" onClick={onApplyClick}>应用房间锁</button>
+          </div>
+          
           <div className="col-md-12">
             {this.state.alert?(<FormAlert style={this.state.alert.style} text={this.state.alert.text}/>):null}
           </div>

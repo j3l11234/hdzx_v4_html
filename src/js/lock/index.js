@@ -7,6 +7,7 @@ import md5 from 'md5';
 import Query from './components/LockQuery';
 import List from './components/LockList';
 import Modal from './components/LockModal';
+import ApplyModal from './components/LockApplyModal';
 import { ajaxGet, ajaxPost } from '../common/units/AjaxApi';
 import { getListFormTable } from '../common/units/Helpers';
 
@@ -91,6 +92,10 @@ class LockPage extends Component {
     this.refs.modal.showModal();
   }
 
+  onApplyClick() { ;
+    this.refs.applyModal.showModal();
+  }
+
   onDelClick(lock_id, callback) {
     ajaxPost('/lock/deletelock', {lock_id}, (success, resData) => {
       if (success) {
@@ -109,6 +114,12 @@ class LockPage extends Component {
     });
   }
 
+  doApplyLock(data, callback) {
+    ajaxPost('/lock/applylock', data, (success, resData) => {
+      callback && callback(success, resData); 
+    });
+  }
+
   onFilter(filter) {
     filter.curPage = 1;
     this.refs.list.setFilter(filter);
@@ -121,10 +132,12 @@ class LockPage extends Component {
     let lock = locks[lock_id];
     return (
       <div>
-        <Query ref="query" rooms={rooms} roomList={roomList} onQeury={this.doGetLocks.bind(this)} onFilter={this.onFilter.bind(this)} onAddClick={this.onAddClick.bind(this)} />
+        <Query ref="query" rooms={rooms} roomList={roomList} 
+          onQeury={this.doGetLocks.bind(this)} onFilter={this.onFilter.bind(this)} onAddClick={this.onAddClick.bind(this)} onApplyClick={this.onApplyClick.bind(this)} />
         <hr />
         <List ref="list" type={type} rooms={rooms} locks={locks} lockList={lockList} onEditClick={this.onEditClick.bind(this)} onDelClick={this.onDelClick.bind(this)} />
         <Modal ref="modal" rooms={rooms} roomList={roomList} lock={lock} mode={mode} onSubmit={this.doSubmitLock.bind(this)} />
+        <ApplyModal ref="applyModal" onSubmit={this.doApplyLock.bind(this)} />
       </div>
     );
   }

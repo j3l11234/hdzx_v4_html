@@ -94,7 +94,7 @@ class LockItem extends Component {
 
               <Prop groupClassName="col-sm-12" label="锁定房间" content={
                 lock.rooms.map(room_id => {
-                  let room = rooms[lock.rooms[0]];
+                  let room = rooms[room_id];
                   let room_name = room.name+'('+room.number+')';
                   return room_name+', ';
                 })
