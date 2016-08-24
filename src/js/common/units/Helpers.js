@@ -16,6 +16,7 @@ export function getListFormTable (table, hours) {
   return idList;
 }
 
+/*
 export function getDateRange(max_before, min_before, by_week, now) {
   max_before = parseInt(max_before);
   min_before = parseInt(min_before);
@@ -41,6 +42,7 @@ export function getDateRange(max_before, min_before, by_week, now) {
     end: limitEnd.Format('yyyy-MM-dd')
   };
 }
+*/
 
 export function isEmptyObject(obj){
   for (var name in obj){

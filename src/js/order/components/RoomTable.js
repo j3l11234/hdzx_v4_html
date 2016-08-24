@@ -4,7 +4,7 @@ import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMix
 import Header from './RoomTableHeader';
 import Cell from './RoomTableCell';
 import Pagination from '../../common/components/Pagination';
-import { getDateRange, checkPrivilege } from '../../common/units/Helpers';
+import { checkPrivilege } from '../../common/units/Helpers';
 import { TYPE as ROOM_TYPE } from '../../common/constants/RoomStatus';
 import { PRIV as USER_PRIV } from '../../common/constants/UserStatus';
 
@@ -74,11 +74,8 @@ class RoomTable extends Component {
         {
           roomList.slice(pageRange.start, pageRange.end).map(roomId => {
             let room = rooms[roomId];
-            let dateRange = getDateRange(room.max_before, room.min_before, room.by_week);
-            dateRange.start = Date.parse(dateRange.start);
-            dateRange.end = Date.parse(dateRange.end);
             let privAvail;
-            if (room.type == ROOM_TYPE.TYPE_SIMPLE){
+            if (room.type == ROOM_TYPE.TYPE_SIMPLE) {
               privAvail = checkPrivilege(user.privilege, USER_PRIV.PRIV_ORDER_SIMPLE);
             } else if(room.type == ROOM_TYPE.TYPE_ACTIVITY) {
               privAvail = checkPrivilege(user.privilege, USER_PRIV.PRIV_ORDER_ACTIVITY);
@@ -88,9 +85,8 @@ class RoomTable extends Component {
               <div className="rt-table-row" key={roomId} style={{width:(dateList ? dateList.length : 0)*90+'px'}}>
               {
                 dateList && dateList.map(date => {
-                  let ts = Date.parse(date);
-                  let dateAvail = ts >= dateRange.start && ts <= dateRange.end;
                   let roomTable = roomTables[roomId+'_'+date];
+                  let dateAvail = roomTable.available;
                   let {hourTable, chksum} = roomTable;
                   return (
                     <Cell key={roomId+'_'+date} chksum={chksum} date={date} room={roomId} hourTable={hourTable} privAvail={privAvail} dateAvail={dateAvail} onCellClick={onCellClick}/>

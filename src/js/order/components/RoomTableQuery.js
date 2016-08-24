@@ -61,10 +61,11 @@ class RoomTableQuery extends Component {
     this.props.onQeury(formData.start_date, formData.end_date, (success, data) => {
       this.setState({loading: false});
       if (success) {
-          this.fv.setInputValues({
-            start_date: data.dateList[0],
-            end_date: data.dateList[data.dateList.length-1]
-          });
+        this.fv.setInputValues({
+          start_date: data.start_date,
+          end_date: data.end_date
+        });
+        this.forceUpdate();
       }else{
         this.setState({
           alert: { style: 'danger', text: data.message}
