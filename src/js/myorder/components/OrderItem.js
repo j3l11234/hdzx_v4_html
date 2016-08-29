@@ -17,11 +17,6 @@ class ApproveOrderItem extends Component {
     return (this.props.chksum !== nextProps.chksum);
   }
 
-  // onOperateClick (operate) {
-  //   let { type, order } = this.props;
-  //   this.props.onOperateClick(order.id, type, operate);
-  // }
-
   getPanelStyle (status) {
     if (status == STATUS.STATUS_PENDING) {
       return 'panel-info';
@@ -29,11 +24,20 @@ class ApproveOrderItem extends Component {
       return 'panel-success';
     } else if (status == STATUS.STATUS_REJECTED) {
       return 'panel-danger';
+    } else if (status ==STATUS.STATUS_CANCELED) {
+      return 'panel-default';
     }
   }
 
+  onCancelClick(){
+    if (confirm("确认要取消该申请吗？")) {
+      let { order,onCancelClick } = this.props;
+      onCancelClick(order.id);
+    }  
+  }
+
   render () {
-    let { order } = this.props;
+    let { order, onCancelClick } = this.props;
     if (!order){
       return null;
     }
@@ -47,22 +51,11 @@ class ApproveOrderItem extends Component {
     let status = getAbsStatus(order.status);
 
 
-    // //操作按钮生成
-    // let operateBtns = [];
-    // if(status == STATUS.STATUS_PENDING){
-    //   operateBtns.push((<Button bsStyle="success" bsSize="small" block onClick={this.onOperateClick.bind(this,"approve")}>审批通过</Button>));
-    //   operateBtns.push((<Button bsStyle="danger" bsSize="small" block onClick={this.onOperateClick.bind(this,"reject")}>审批驳回</Button>));
-    //   if(conflict){
-    //     operateBtns.push((<Button bsStyle="warning" bsSize="small" block onClick={this.onOperateClick.bind(this,"revoke")}>查看冲突预约</Button>));
-    //   }
-    // }else if(status == STATUS.STATUS_REJECTED || status == STATUS.STATUS_APPROVED){
-    //   operateBtns.push((<Button bsStyle="warning" bsSize="small" block onClick={this.onOperateClick.bind(this,"revoke")}>审批撤销</Button>));
-    //   operateBtns.push(null);
-    //   if(conflict){
-    //     operateBtns.push((<Button bsStyle="warning" bsSize="small" block onClick={this.onOperateClick.bind(this,"revoke")}>查看冲突预约</Button>));
-    //   }
-    // }
-
+    //操作按钮生成
+    let operationBtns = [];
+    if (status != STATUS.STATUS_CANCELED){
+      operationBtns.push((<button type="button" className="btn btn-block btn-danger btn-sm" onClick={this.onCancelClick.bind(this)}>取消申请</button>));
+    }
     return (
       <div className={'panel ' + this.getPanelStyle(status)}>
         <div className="panel-heading">
@@ -103,6 +96,18 @@ class ApproveOrderItem extends Component {
                 );
               })
             }
+            <div className="row">
+              <hr className="small" />
+              {
+                operationBtns.map((operationBtn,i) => {
+                  return (
+                    <div key={i} className="col-sm-4 form-group">
+                      {operationBtn}
+                    </div>
+                  );
+                })
+              }
+            </div>
           </div>
         </div>
       </div>

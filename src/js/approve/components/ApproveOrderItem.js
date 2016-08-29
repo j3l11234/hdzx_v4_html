@@ -36,6 +36,8 @@ class ApproveOrderItem extends Component {
       return 'panel-success';
     } else if (status == STATUS.STATUS_REJECTED || status == STATUS.STATUS_REJECTED_FIXED) {
       return 'panel-danger';
+    } else {
+      return 'panel-default';
     }
   }
 

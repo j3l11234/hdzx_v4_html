@@ -6,7 +6,7 @@ import md5 from 'md5';
 
 import OrderQuery from './components/OrderQuery';
 import OrderList from './components/OrderList';
-import { ajaxGet } from '../common/units/AjaxApi';
+import { ajaxGet, ajaxPost } from '../common/units/AjaxApi';
 
 class MyorderPage extends Component {
   constructor(props) {
@@ -51,6 +51,15 @@ class MyorderPage extends Component {
     });
   }
   
+  doCancelOrder(order_id, callback) {
+    ajaxPost('/order/cancelorder', {order_id}, (success, reData) => {
+      if (success) {
+        this.refs.query.onQeury();
+      }
+      callback && callback(success, reData); 
+    });
+  }
+
   onFilter(status, perPage) {
     this.refs.list.setFilter({
       status,
@@ -66,7 +75,7 @@ class MyorderPage extends Component {
       <div>
         <OrderQuery ref="query" onQeury={this.doGetMyOrders.bind(this)} onFilter={this.onFilter.bind(this)} />
         <hr />
-        <OrderList ref="list" orders={orders} orderList={orderList} />
+        <OrderList ref="list" orders={orders} orderList={orderList} onCancelClick={this.doCancelOrder.bind(this)}/>
       </div>
     );
   }

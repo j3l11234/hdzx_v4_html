@@ -58,6 +58,10 @@ export function checkPrivilege(userPriv, priv){
 
 
 export function getAbsStatus(status, type) {
+  if (status == STATUS.CANCELED) {
+    return STATUS.STATUS_CANCELED;
+  }
+
   if (type == 'auto') {
     if (status == STATUS.SIMPLE_PENDING) {
       return STATUS.STATUS_PENDING;

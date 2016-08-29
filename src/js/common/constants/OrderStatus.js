@@ -16,5 +16,6 @@ export const STATUS = {
 	STATUS_APPROVED:    2, //抽象通过
 	STATUS_REJECTED:    3, //抽象驳回
   STATUS_APPROVED_FIXED:    4, //抽象通过(固定,不可撤回)
-  STATUS_REJECTED_FIXED:    5 //抽象驳回(固定,不可撤回)
-};
+  STATUS_REJECTED_FIXED:    5, //抽象驳回(固定,不可撤回)
+  STATUS_CANCELED:    6 //抽象撤回};
+}
