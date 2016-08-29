@@ -18,6 +18,10 @@ class OrderPage extends Component {
       roomTable: {},
       user: {},
       modal: {},
+      usage:{
+        month: {},
+        week: {}
+      },
     };
     this.state = Object.assign({}, this.store);
   }
@@ -106,6 +110,22 @@ class OrderPage extends Component {
       callback && callback(success, data); 
     });
   }
+
+  doGetUsage(date, callback) {
+    ajaxGet('/order/getusage?date='+date, (success, data) => {
+      if (success) {
+        this.store = Object.assign({}, this.store, {
+          usage: {
+            date,
+            month: data.month,
+            week: data.week
+          }
+        });
+        this.setState(this.store);
+      }
+      callback && callback(success, data); 
+    });
+  }
   
   doGetCaptcha (callback) {
     ajaxGet('/order/captcha?refresh=1&r='+Math.random(), (success, data) => {
@@ -131,14 +151,15 @@ class OrderPage extends Component {
 
   render() {
     let { rooms, locks, orders } = this.state.entities;
-    let { modal, user, roomTable } = this.state;
+    let { modal, user, roomTable, usage } = this.state;
     return(
       <div>
         <RoomTableQuery ref="query" onQeury={this.doGetRoomTables.bind(this)} onFilter={this.onFilter.bind(this)} />
         <hr />
         <RoomTable ref="list" rooms={rooms} roomTable={roomTable} user={user} onCellClick={this.onCellClick.bind(this)}  />
-        <OrderModal ref="modal" rooms={rooms} orders={orders} locks={locks} room_id={modal.room_id} date={modal.date} dateAvail={modal.dateAvail} privAvail={modal.privAvail} roomTables={roomTable.roomTables} 
-          onSubmit={this.doSubmitOrder.bind(this)} onQueryUse={this.doGetRoomUse.bind(this)} onCaptcha={this.doGetCaptcha.bind(this)}/>
+        <OrderModal ref="modal" rooms={rooms} orders={orders} locks={locks} room_id={modal.room_id} date={modal.date} dateAvail={modal.dateAvail} privAvail={modal.privAvail} roomTables={roomTable.roomTables} usage={usage}
+          onSubmit={this.doSubmitOrder.bind(this)} onQueryUse={this.doGetRoomUse.bind(this)} doGetUsage={this.doGetUsage.bind(this)} onCaptcha={this.doGetCaptcha.bind(this)}/>
+        }
       </div>
     );
   }

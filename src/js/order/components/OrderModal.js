@@ -4,6 +4,7 @@ import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMix
 import Form from './OrderForm';
 import OrderList from './OrderOrderList';
 import LockList from './OrderLockList';
+import Usage from './OrderUsage';
 
 class OrderModal extends Component {
   constructor (props) {
@@ -17,8 +18,9 @@ class OrderModal extends Component {
 
   showModal() {
     setTimeout(()=>{
-      let { room_id, date} = this.props;
-      this.props.onQueryUse(room_id, date);
+      let { room_id, date, onQueryUse, doGetUsage} = this.props;
+      onQueryUse(room_id, date);
+      doGetUsage(date);
     }, 500);
 
     this.setState({ loading: false });
@@ -42,7 +44,7 @@ class OrderModal extends Component {
   }
 
   render () {
-    let { roomTables, rooms, locks, orders, room_id, date, dateAvail, privAvail} = this.props;
+    let { roomTables, rooms, locks, orders, room_id, date, dateAvail, privAvail, usage} = this.props;
     let { loading } = this.state;
 
     let roomTable;
@@ -70,6 +72,9 @@ class OrderModal extends Component {
                 <li role="presentation">
                   <a ref="label_use" href="#model-use" aria-controls="model-use" role="tab" data-toggle="tab">使用情况</a>
                 </li>
+                <li role="presentation">
+                  <a ref="label_usage" href="#model-usage" aria-controls="model-usage" role="tab" data-toggle="tab">可用额度</a>
+                </li>
               </ul>
               <div className="tab-content">
                 <div role="tabpanel" className="tab-pane" id="model-order">
@@ -78,6 +83,9 @@ class OrderModal extends Component {
                 <div role="tabpanel" className="tab-pane" id="model-use">
                   <OrderList orders={orders} ordered={ordered} used={used} />
                   <LockList locks={locks} locked={locked} />
+                </div>
+                <div role="tabpanel" className="tab-pane" id="model-usage">
+                  <Usage monthUsage={usage.month[room_id]} weekUsage={usage.week[room_id]} />
                 </div>
               </div>
             </div>
