@@ -26,7 +26,6 @@ class Usage extends Component {
     let monthUsed = monthUsage.used * 100.0 / monthTotal;
     let monthOrdered = monthUsage.ordered * 100.0 / monthTotal;
 
-    console.log(monthUsage,weekUsage);
     return (
       <div>
         <br />
