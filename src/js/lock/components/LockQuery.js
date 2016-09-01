@@ -59,20 +59,23 @@ class LockQuery extends Component {
   }
 
   render() {
-    let { rooms, roomList, onAddClick, onApplyClick } = this.props;
+    let { type, rooms, roomList, onAddClick, onApplyClick } = this.props;
     return (
       <form onSubmit={this.onQeury.bind(this)} >
         <div className="row">
           <div className="form-group col-sm-6 col-md-4">
             <button type="submit" className="btn-block btn btn-primary" disabled={this.state.loading}>查找</button>
           </div>
-          <div className="form-group col-sm-6 col-md-4">
-            <button type="button" className="btn-block btn btn-success" onClick={onAddClick}>新增房间锁</button>
-          </div>
-          <div className="form-group col-sm-6 col-md-4">
-            <button type="button" className="btn-block btn btn-info" onClick={onApplyClick}>应用房间锁</button>
-          </div>
-          
+          {type == 'admin' ? (
+            <div className="form-group col-sm-6 col-md-4">
+              <button type="button" className="btn-block btn btn-success" onClick={onAddClick}>新增房间锁</button>
+            </div>
+          ) : null}
+          {type == 'admin' ? (
+            <div className="form-group col-sm-6 col-md-4">
+              <button type="button" className="btn-block btn btn-info" onClick={onApplyClick}>应用房间锁</button>
+            </div>
+          ) : null}
           <div className="col-md-12">
             {this.state.alert?(<FormAlert style={this.state.alert.style} text={this.state.alert.text}/>):null}
           </div>

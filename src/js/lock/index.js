@@ -132,7 +132,7 @@ class LockPage extends Component {
     let lock = locks[lock_id];
     return (
       <div>
-        <Query ref="query" rooms={rooms} roomList={roomList} 
+        <Query ref="query" type={type} rooms={rooms} roomList={roomList} 
           onQeury={this.doGetLocks.bind(this)} onFilter={this.onFilter.bind(this)} onAddClick={this.onAddClick.bind(this)} onApplyClick={this.onApplyClick.bind(this)} />
         <hr />
         <List ref="list" type={type} rooms={rooms} locks={locks} lockList={lockList} onEditClick={this.onEditClick.bind(this)} onDelClick={this.onDelClick.bind(this)} />
