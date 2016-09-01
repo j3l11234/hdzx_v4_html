@@ -15,7 +15,8 @@ class OrderList extends Component {
       filter: {
         perPage: 8,
         curPage: 1
-      }
+      },
+      conflict_id: -1,
     };
   }
 
@@ -31,14 +32,29 @@ class OrderList extends Component {
     });
   }
 
+  setConflict(order_id) {
+    this.setState({
+      conflict_id: order_id,
+    });
+  }
+
   getFilteredList() {
     let { orders, orderList, type } = this.props;
-    let filter = this.state.filter;
+    let {filter, conflict_id} = this.state;
+    console.log(conflict_id,orders[conflict_id]);
+    if(conflict_id != -1 && orders[conflict_id]){
+      orderList = [conflict_id].concat(orders[conflict_id].conflict);
+    }
+
     let _orderList = [];
     for (var index in orderList) {
       let order_id = orderList[index];
       let order = orders[order_id];
       
+      if (!order){
+        continue;
+      }
+
       let status = getAbsStatus(order.status, type);
       if (filter.status) {
         if ((filter.status == STATUS.STATUS_PENDING && status != STATUS.STATUS_PENDING) ||
@@ -53,19 +69,25 @@ class OrderList extends Component {
   }
 
   render() {
-    let { orders, type } = this.props;
+    let { orders, type, onOperationClick, onConflictClick } = this.props;
     let { curPage, perPage } = this.state.filter;
 
     let orderList = this.getFilteredList();
     let { start, end } = Pagination.getLimit(curPage, orderList.length, perPage);
-
+    console.log(orderList);
     return (
       <div>
+      { 
+        this.state.conflict_id != -1 ? 
+        <button type="button" className="btn-block btn btn-success" onClick={this.setConflict.bind(this,-1)}>显示所有申请</button> : null
+      }
+      <br />
       {
         orderList.slice(start, end).map(order_id => {
           let order = orders[order_id];
           return (
-            <Item key={order_id} type={type} order={order} chksum={order.chksum} onOperationClick={this.props.onOperationClick} />
+            <Item key={order_id} type={type} order={order} chksum={order.chksum} 
+            onOperationClick={onOperationClick} onConflictClick={onConflictClick}/>
           );
         })
       }

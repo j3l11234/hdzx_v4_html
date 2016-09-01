@@ -25,7 +25,7 @@ class ApproveOrderItem extends Component {
 
   onConflictClick (e) {
     let { type, order } = this.props;
-    this.props.onConflictClick(order.id, type, operation);
+    this.props.onConflictClick(order.id);
   }
 
 

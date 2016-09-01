@@ -86,6 +86,10 @@ class ApprovePage extends Component {
     this.refs.modal.showModal();
   }
 
+  onConflictClick(order_id){
+    this.refs.list.setConflict(order_id);
+  }
+
   doOperateOrder(operation, data, callback) {
     let url;
     switch(operation) {
@@ -127,7 +131,8 @@ class ApprovePage extends Component {
       <div>
         <Query ref="query" type={type} onQeury={this.doGetApproveOrders.bind(this)} onFilter={this.onFilter.bind(this)} />
         <hr />
-        <List ref="list" type={type} orders={orders} orderList={orderList} onOperationClick={this.onOperationClick.bind(this)}/>
+        <List ref="list" type={type} orders={orders} orderList={orderList}
+         onOperationClick={this.onOperationClick.bind(this)} onConflictClick={this.onConflictClick.bind(this)}/>
         <Modal ref="modal" type={type} order={order} operation={operation} onSubmit={this.doOperateOrder.bind(this)} />
       </div>
     );
