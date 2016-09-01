@@ -11,9 +11,9 @@ export function ajaxGet(url, callback) {
     .fail((jqXHR, textStatus, errorThrown) => {
       let data = {
         error: jqXHR.status,
-        message: errorThrown
+        message: jqXHR.statusText
       };
-      callback && callback(false, data);
+      callback && callback(false, jqXHR.responseJSON ? jqXHR.responseJSON : data);
     });
 }
 
@@ -29,8 +29,8 @@ export function ajaxPost(url, data, callback) {
     .fail((jqXHR, textStatus, errorThrown) => {
       data = {
         error: jqXHR.status,
-        message: errorThrown
+        message: jqXHR.statusText
       };
-      callback && callback(false, data);
+      callback && callback(false, jqXHR.responseJSON ? jqXHR.responseJSON : data);
     });
 }
