@@ -12,6 +12,7 @@ module.exports = {
     ],
     approve: __dirname + '/src/js/approve/index.js',
     lock: __dirname + '/src/js/lock/index.js',
+    issue: __dirname + '/src/js/issue/index.js',
   },
   output: {
     path: DIST_PATH,

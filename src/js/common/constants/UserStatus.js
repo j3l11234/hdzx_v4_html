@@ -7,5 +7,5 @@ export const PRIV = {
   PRIV_APPROVE_SIMPLE:                  1<<5, //琴房审批权限(审批/驳回/撤销)
   PRIV_BACKEND:                         1<<6, //后台登陆
   PRIV_ADMIN:                           1<<7, //系统管理
-  PRIV_TYPE_ISSUE:                      1<<8, //开门条
+  PRIV_ISSUE:                           1<<8, //开门条
 };
