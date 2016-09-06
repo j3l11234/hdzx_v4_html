@@ -44,7 +44,7 @@ class OrderModal extends Component {
   }
 
   render () {
-    let { roomTables, rooms, locks, orders, room_id, date, dateAvail, privAvail, usage} = this.props;
+    let { roomTables, rooms, locks, orders, room_id, date, dateAvail, privAvail, usage, depts, deptMap} = this.props;
     let { loading } = this.state;
 
     let roomTable;
@@ -78,7 +78,8 @@ class OrderModal extends Component {
               </ul>
               <div className="tab-content">
                 <div role="tabpanel" className="tab-pane" id="model-order">
-                  <Form ref="form" room_id={room_id} date={date} room={room} hourTable={roomTable.hourTable} onSubmit={this.props.onSubmit} onCaptcha={this.props.onCaptcha} />
+                  <Form ref="form" room_id={room_id} date={date} room={room} hourTable={roomTable.hourTable} depts={depts} deptMap={deptMap}
+                   onSubmit={this.props.onSubmit} onCaptcha={this.props.onCaptcha} />
                 </div>
                 <div role="tabpanel" className="tab-pane" id="model-use">
                   <OrderList orders={orders} ordered={ordered} used={used} />

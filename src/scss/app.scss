@@ -307,6 +307,7 @@ hr.small{
 .panel-lock{
   position: relative;
 }
+
 .btn-lockedit {
   position:absolute;
   right: 70px;
@@ -317,4 +318,19 @@ hr.small{
   position:absolute;
   right: 20px;
   top: 5px;
+}
+
+//社团选择
+.select-dept {
+  display: inline;
+  width: 100%;
+  
+  margin-bottom: 5px;
+}
+
+@media (min-width: 768px) {
+  .select-dept {
+    margin-right: 2%;
+    width: 31.3%;
+  }
 }

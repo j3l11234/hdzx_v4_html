@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMixin';
 
 import HourSelect from './OrderHourSelect';
+import DeptSelect from './OrderDeptSelect';
 import Note from './OrderNote';
 import FormAlert from '../../common/components/FormAlert';
 import FormValidator from '../../common/units/FormValidator';
@@ -136,7 +137,13 @@ class OrderForm extends Component {
       });
       return;
     }
-    
+    if(!this.refs.deptSelect.valadate()){
+      this.setState({
+        alert: { style: 'danger', text: '请正确选择社团单位'}
+      });
+      return;
+    }
+
     if (!this.state.hours) {
       this.setState({
         alert: { style: 'danger', text: '请选择预约时段'}
@@ -148,7 +155,8 @@ class OrderForm extends Component {
       number: NumberMap[formData.number],
       room_id: this.props.room_id,
       date: this.props.date,
-      hours: JSON.stringify(this.state.hours)
+      hours: JSON.stringify(this.state.hours),
+      dept_id: this.refs.deptSelect.getSelect(),
     });
 
     this.setState({alert: null});
@@ -177,7 +185,7 @@ class OrderForm extends Component {
   }
 
   render() {
-    let { depts, deptList, room, hourTable, date } = this.props;
+    let {room, hourTable, date, depts, deptMap} = this.props;
     let { startHour, endHour } = this.state;
     let roomName = room.number+' - '+room.name;
     hourTable = hourTable ? hourTable : [];
@@ -223,6 +231,12 @@ class OrderForm extends Component {
               </select>
             </div>
           </div>
+
+          <div className={'form-group col-sm-12 '}>
+            <label className="control-label inline-label">社团单位</label>
+            <DeptSelect ref="deptSelect" depts={depts} deptMap={deptMap} />
+          </div>
+
           <div className={'form-group col-sm-12 '+this.getBsStyle.call(this, 'title')}>
             <label className="control-label inline-label">活动主题</label>
             <div className="inline-control">

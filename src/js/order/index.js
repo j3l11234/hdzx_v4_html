@@ -43,6 +43,19 @@ class OrderPage extends Component {
         this.setState(this.store);
       }
     });
+    ajaxGet('/data/getdepts', (success, data) => {
+      if (success) {
+        let {depts, deptMap} = data;
+        let entities = Object.assign({}, this.store.entities, { 
+          depts: depts
+        });
+        this.store = Object.assign({}, this.store, {
+          entities,
+          deptMap,
+        }); 
+        this.setState(this.store);
+      }
+    });
     ajaxGet('/user/getlogin', (success, data) => {
       if (success) {
         let { user } = data;
@@ -151,14 +164,15 @@ class OrderPage extends Component {
   }
 
   render() {
-    let { rooms, locks, orders } = this.state.entities;
-    let { modal, user, roomTable, usage } = this.state;
+    let { rooms, locks, orders, depts } = this.state.entities;
+    let { modal, user, roomTable, usage, deptMap } = this.state;
     return(
       <div>
         <RoomTableQuery ref="query" onQeury={this.doGetRoomTables.bind(this)} onFilter={this.onFilter.bind(this)} />
         <hr />
         <RoomTable ref="list" rooms={rooms} roomTable={roomTable} user={user} onCellClick={this.onCellClick.bind(this)}  />
-        <OrderModal ref="modal" rooms={rooms} orders={orders} locks={locks} room_id={modal.room_id} date={modal.date} dateAvail={modal.dateAvail} privAvail={modal.privAvail} roomTables={roomTable.roomTables} usage={usage}
+        <OrderModal ref="modal" rooms={rooms} orders={orders} locks={locks} room_id={modal.room_id} date={modal.date} dateAvail={modal.dateAvail} privAvail={modal.privAvail}
+          roomTables={roomTable.roomTables} usage={usage} depts={depts} deptMap={deptMap}
           onSubmit={this.doSubmitOrder.bind(this)} onQueryUse={this.doGetRoomUse.bind(this)} doGetUsage={this.doGetUsage.bind(this)} onCaptcha={this.doGetCaptcha.bind(this)}/>
         }
       </div>
