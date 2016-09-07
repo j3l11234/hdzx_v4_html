@@ -17,14 +17,18 @@ class OrderModal extends Component {
   }
 
   showModal() {
-    setTimeout(()=>{
-      let { room_id, date, onQueryUse, doGetUsage} = this.props;
+    let { room_id, date, onQueryUse, doGetUsage, user} = this.props;
+    setTimeout(() => {
       onQueryUse(room_id, date);
       doGetUsage(date);
     }, 500);
 
     this.setState({ loading: false });
     this.refs.form.reset();
+    this.refs.form.setValues({
+      name: user.alias,
+      student_no: /^\d{8}$/.test(user.username)? user.username : '' ,
+    });
     
     setTimeout(()=>{
       let {dateAvail, privAvail } = this.props;

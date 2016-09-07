@@ -171,7 +171,7 @@ class OrderPage extends Component {
         <RoomTableQuery ref="query" onQeury={this.doGetRoomTables.bind(this)} onFilter={this.onFilter.bind(this)} />
         <hr />
         <RoomTable ref="list" rooms={rooms} roomTable={roomTable} user={user} onCellClick={this.onCellClick.bind(this)}  />
-        <OrderModal ref="modal" rooms={rooms} orders={orders} locks={locks} room_id={modal.room_id} date={modal.date} dateAvail={modal.dateAvail} privAvail={modal.privAvail}
+        <OrderModal ref="modal" rooms={rooms} orders={orders} locks={locks} user={user} room_id={modal.room_id} date={modal.date} dateAvail={modal.dateAvail} privAvail={modal.privAvail}
           roomTables={roomTable.roomTables} usage={usage} depts={depts} deptMap={deptMap}
           onSubmit={this.doSubmitOrder.bind(this)} onQueryUse={this.doGetRoomUse.bind(this)} doGetUsage={this.doGetUsage.bind(this)} onCaptcha={this.doGetCaptcha.bind(this)}/>
         }

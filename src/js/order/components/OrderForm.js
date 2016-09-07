@@ -46,7 +46,7 @@ class OrderForm extends Component {
         }
       },
       phone: {
-        value: '13377088888',
+        value: '',
         validator: (value) => {
           if(!/^\d{11}$/.test(value)) {
             return  '电话号码不正确';
@@ -115,6 +115,11 @@ class OrderForm extends Component {
     this.setState({
       captchaUrl: _Server_Data_.BASE_URL+'/order/captcha?r='+Math.random()
     });
+  }
+
+  setValues (values) {
+    this.fv.setInputValues(values);
+    this.forceUpdate();
   }
 
   reset() {
@@ -203,19 +208,19 @@ class OrderForm extends Component {
           <div className={'form-group col-sm-6 '+this.getBsStyle.call(this, 'name')}>
             <label className="control-label inline-label">姓名</label>
             <div className="inline-control">
-              <input type="text" placeholder="姓名" className="form-control" onBlur={this.handleChange.bind(this, 'name')} />
+              <input type="text" placeholder="姓名" className="form-control" value={this.fv.getInputValue('name')} onChange={this.handleChange.bind(this, 'name')} />
             </div>
           </div>
           <div className={'form-group col-sm-6 '+this.getBsStyle.call(this, 'student_no')}>
             <label className="control-label inline-label">学号</label>
             <div className="inline-control">
-              <input type="text" placeholder="学号" className="form-control" onBlur={this.handleChange.bind(this, 'student_no')} />
+              <input type="text" placeholder="学号" className="form-control" value={this.fv.getInputValue('student_no')} onChange={this.handleChange.bind(this, 'student_no')} />
             </div>
           </div>
           <div className={'form-group col-sm-6 '+this.getBsStyle.call(this, 'phone')}>
             <label className="control-label inline-label">联系方式</label>
             <div className="inline-control">
-              <input type="text" placeholder="联系方式" className="form-control" onBlur={this.handleChange.bind(this, 'phone')} defaultValue={this.fv.getInputValue('phone')} />
+              <input type="text" placeholder="联系方式" className="form-control" value={this.fv.getInputValue('phone')} onChange={this.handleChange.bind(this, 'phone')} />
             </div>
           </div>
           <div className={'form-group col-sm-6 '+this.getBsStyle.call(this, 'number')}>
@@ -240,26 +245,26 @@ class OrderForm extends Component {
           <div className={'form-group col-sm-12 '+this.getBsStyle.call(this, 'title')}>
             <label className="control-label inline-label">活动主题</label>
             <div className="inline-control">
-              <input type="text" placeholder="请填写活动主题" className="form-control" onBlur={this.handleChange.bind(this, 'title')} />
+              <input type="text" placeholder="请填写活动主题" className="form-control" value={this.fv.getInputValue('title')} onChange={this.handleChange.bind(this, 'title')} />
             </div>
           </div>
           <div className={'form-group col-sm-12 '+this.getBsStyle.call(this, 'content')}>
             <label className="control-label inline-label">活动内容</label>
             <div className="inline-control">
-              <textarea placeholder="请填写活动内容" className="form-control" onBlur={this.handleChange.bind(this, 'content')} />
+              <textarea placeholder="请填写活动内容" className="form-control" value={this.fv.getInputValue('content')} onChange={this.handleChange.bind(this, 'content')} />
             </div>
           </div>
           
           <div className={'form-group col-sm-12 '+this.getBsStyle.call(this, 'secure')}>
             <label className="control-label inline-label">安保措施</label>
             <div className="inline-control">
-              <textarea placeholder="请填写安保措施" className="form-control" onBlur={this.handleChange.bind(this, 'secure')} />
+              <textarea placeholder="请填写安保措施" className="form-control" value={this.fv.getInputValue('secure')} onChange={this.handleChange.bind(this, 'secure')} />
             </div>
           </div>
           <div className={'form-group col-sm-6 '+this.getBsStyle.call(this, 'captcha')}>
             <label className="control-label inline-label">验证码</label>
             <div className="inline-control">
-              <input type="text" placeholder="验证码" className="form-control" onBlur={this.handleChange.bind(this, 'captcha')} />
+              <input type="text" placeholder="验证码" className="form-control" value={this.fv.getInputValue('captcha')} onChange={this.handleChange.bind(this, 'captcha')} />
             </div>
           </div>
           <div className="col-sm-6">
