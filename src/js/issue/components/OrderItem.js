@@ -85,7 +85,7 @@ class OrderItem extends Component {
                   <div key={operation.id} className="row">
                     <hr className="small" />
                     <Prop groupClassName="col-sm-4" label="操作类型" content={TYPE_NAME[operation.type]} />
-                    <Prop groupClassName="col-sm-8" label="操作标注" content={operation.commemt} />
+                    <Prop groupClassName="col-sm-8" label="操作标注" content={operation.comment} />
                     <Prop groupClassName="col-sm-4" label="操作人" content={operation.operator} />
                     <Prop groupClassName="col-sm-4" label="操作时间" content={time} />
                   </div>
