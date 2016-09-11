@@ -32,11 +32,11 @@ class OrderQuery extends Component {
           }
         }
       },
-      student_no: {
+      username: {
         value: '',
         validator: (value) => {
-          if(!/^\d{8}$/.test(value)) {
-            return  '请输入正确学号';
+          if(value == '') {
+            return  '请输入用户名或学号';
           }
         }
       }
@@ -64,7 +64,7 @@ class OrderQuery extends Component {
 
     this.setState({alert: null});
     this.setState({loading: true});
-    this.props.onQeury(formData.student_no, formData.start_date, formData.end_date, (success, data) => {
+    this.props.onQeury(formData.username, formData.start_date, formData.end_date, (success, data) => {
       this.setState({loading: false});
       if (success) {
         this.fv.setInputValues({
@@ -113,9 +113,9 @@ class OrderQuery extends Component {
             </div>
           </div>
           <div className="form-group col-sm-6 col-md-4">
-            <label className="control-label inline-label">查询学号</label>
+            <label className="control-label inline-label">用户名/学号</label>
             <div className="inline-control">
-              <input type="text" placeholder="查询学号" className="form-control" onChange={this.handleChange.bind(this, 'student_no')} value={this.fv.getInputValue('student_no')} />
+              <input type="text" placeholder="查询学号" className="form-control" onChange={this.handleChange.bind(this, 'username')} value={this.fv.getInputValue('username')} />
             </div>
           </div>
           <div className="form-group col-sm-6 col-md-4">

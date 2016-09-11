@@ -28,8 +28,8 @@ class IssuePage extends Component {
 
   }
 
-  doGetIssueOrders(student_no, start_date, end_date, callback) {
-    ajaxGet('/order/getissueorders?student_no='+student_no+'&start_date='+start_date+'&end_date='+end_date, (success, data) => {
+  doGetIssueOrders(username, start_date, end_date, callback) {
+    ajaxGet('/order/getissueorders?username='+username+'&start_date='+start_date+'&end_date='+end_date, (success, data) => {
       if (success) {
         let {orders, orderList} = data;
 
