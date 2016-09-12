@@ -32,6 +32,9 @@ class OrderList extends Component {
     for (var index in orderList) {
       let order_id = orderList[index];
       let order = orders[order_id];
+      if(!order){
+        continue;
+      }
       
       let status = getAbsStatus(order.status);
       if (filter.status) {
@@ -67,6 +70,9 @@ class OrderList extends Component {
       {
         orderList.slice(start, end).map(orderId => {
           let order = orders[orderId];
+          if(!order) {
+            return null;
+          }
           return (
             <Item key={orderId} order={order} chksum={order.chksum} onIssueClick={doIssueOrder} />
           );

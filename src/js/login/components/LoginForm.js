@@ -103,6 +103,9 @@ class LoginForm extends Component {
               <a href={_Server_Data_.BASE_URL+'/user/request-password-reset'}>忘记密码？</a>
           </div>
           <div className="clearfix" />
+          <div className="form-group col-sm-12">
+            <FormAlert style="info" text="如果要审批预约或者进行系统管理，请进入后台系统" />
+          </div>
           <div className="form-group col-sm-6">
             <button type="submit" className="btn-block btn btn-primary" disabled={this.state.loading}>登录</button>
           </div>
