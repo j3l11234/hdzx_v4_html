@@ -1,22 +1,22 @@
 var webpack = require('webpack');
 
-const DIST_PATH = 'D:/xampp/htdocs/hdzx_v4/frontend/web/js';
-
 module.exports = {
-    entry: {
+  entry: {
     common: [
       'md5',
       'react',
       'react-dom',
       'react/lib/ReactComponentWithPureRenderMixin.js'
     ],
+    approve: __dirname + '/src/js/approve/index.js',
+    issue: __dirname + '/src/js/issue/index.js',
     login: __dirname + '/src/js/login/index.js',
     myorder: __dirname + '/src/js/myorder/index.js',
     order: __dirname + '/src/js/order/index.js',
     lock: __dirname + '/src/js/lock/index.js',
   },
   output: {
-    path: DIST_PATH,
+    path: '/dist/js',
     filename: '[name].js',
     publicPath: "/js",
   },

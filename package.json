@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "gulp dev",
-    "devb": "webpack --display-modules --watch --config webpack.config.backend.js",
+    "build": "gulp build",
     "sass": "node sass.js"
   },
   "author": "j3l11234",
@@ -24,6 +24,7 @@
     "gulp-plumber": "*",
     "gulp-sass": "^2.3.2",
     "node-sass": "^3.8.0",
+    "optimist": "^0.6.1",
     "webpack": "*",
     "webpack-stream": "*"
   }
