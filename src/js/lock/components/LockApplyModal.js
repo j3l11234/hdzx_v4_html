@@ -11,6 +11,7 @@ class LockApplyModal extends Component {
 
     this.state = {
       loading: false,
+      alert: null,
     }
 
     let today = new Date();
@@ -47,8 +48,15 @@ class LockApplyModal extends Component {
   }
 
   showModal() {
-    this.setState({ loading: false });
+    this.reset();
     $(this.refs.modal).modal('show');
+  }
+
+  reset() {
+    this.setState({
+      loading: false,
+      alert: null,
+    });
   }
 
   onSubmit() {
