@@ -17,8 +17,9 @@ class OrderModal extends Component {
   }
 
   showModal() {
-    let { room_id, date, onQueryUse, doGetUsage, user} = this.props;
+    let { user } = this.props;
     setTimeout(() => {
+      let { room_id, date, onQueryUse, doGetUsage } = this.props;
       onQueryUse(room_id, date);
       doGetUsage(date);
     }, 500);
