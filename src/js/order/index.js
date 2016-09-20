@@ -111,7 +111,7 @@ class OrderPage extends Component {
           entities.locks = Object.assign({}, entities.locks, locks);
         }
         let roomTables = Object.assign({}, this.store.roomTable.roomTables);
-        roomTables[room+'_'+date] = roomTable;
+        roomTables[date+'_'+room] = roomTable;
         this.store = Object.assign({}, this.store, {
           entities,
           roomTable: Object.assign({}, this.store.roomTable, {

@@ -55,7 +55,7 @@ class OrderModal extends Component {
     let roomTable;
     let room;
     if (roomTables && room_id && date) {
-      roomTable = roomTables[room_id+'_'+date];
+      roomTable = roomTables[date+'_'+room_id];
       room = rooms[room_id]; 
     }else{
       roomTable = {};

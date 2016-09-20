@@ -85,11 +85,11 @@ class RoomTable extends Component {
               <div className="rt-table-row" key={roomId} style={{width:(dateList ? dateList.length : 0)*90+'px'}}>
               {
                 dateList && dateList.map(date => {
-                  let roomTable = roomTables[roomId+'_'+date];
+                  let roomTable = roomTables[date+'_'+roomId];
                   let dateAvail = roomTable.available;
                   let {hourTable, chksum} = roomTable;
                   return (
-                    <Cell key={roomId+'_'+date} chksum={chksum} date={date} room={roomId} hourTable={hourTable} privAvail={privAvail} dateAvail={dateAvail} onCellClick={onCellClick}/>
+                    <Cell key={date+'_'+roomId} chksum={chksum} date={date} room={roomId} hourTable={hourTable} privAvail={privAvail} dateAvail={dateAvail} onCellClick={onCellClick}/>
                   );
                 })
               }
