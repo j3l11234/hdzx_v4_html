@@ -11,6 +11,7 @@ class LockApplyModal extends Component {
 
     this.state = {
       loading: false,
+      finished: false,
       alert: null,
     }
 
@@ -55,6 +56,7 @@ class LockApplyModal extends Component {
   reset() {
     this.setState({
       loading: false,
+      finished: false,
       alert: null,
     });
   }
@@ -77,7 +79,8 @@ class LockApplyModal extends Component {
     onSubmit(formData, (success, data) => {
       if(success){
         this.setState({
-          alert: { style: 'success', text: data.message}
+          alert: { style: 'success', text: data.message},
+          finished: true,
         });
       } else {
         this.setState({loading: false});
@@ -98,7 +101,7 @@ class LockApplyModal extends Component {
 
   render() {
     let { } = this.props;
-    let { loading } = this.state;
+    let { loading,finished } = this.state;
 
 
     return (
@@ -138,7 +141,10 @@ class LockApplyModal extends Component {
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-default" data-dismiss="modal">关闭</button>
-              <button type="button" className="btn btn-success" disabled={loading} onClick={this.onSubmit.bind(this)}>提交</button>
+              {!finished ? 
+                <button type="button" className="btn btn-success" disabled={loading} onClick={this.onSubmit.bind(this)}>提交</button> :
+                <button type="button" className="btn btn-primary" data-dismiss="modal">确定</button>
+              }
             </div>
           </div>
         </div>
