@@ -58,20 +58,19 @@ class RoomTableQuery extends Component {
     this.setState({alert: null});
     this.setState({loading: true});
 
-    this.props.onQeury(formData.start_date, formData.end_date, (success, data) => {
+    this.props.onQeury(formData.start_date, formData.end_date).then(data => {
       this.setState({loading: false});
-      if (success) {
-        this.fv.setInputValues({
-          start_date: data.start_date,
-          end_date: data.end_date
-        });
-        this.forceUpdate();
-      }else{
-        this.setState({
-          alert: { style: 'danger', text: data.message}
-        });
-      }
-    });
+      this.fv.setInputValues({
+        start_date: data.start_date,
+        end_date: data.end_date
+      });
+      this.forceUpdate();
+    }, data => {
+      this.setState({loading: false});
+      this.setState({
+        alert: { style: 'danger', text: data.message}
+      });
+    })
   }
 
   onFilterClick(e) {

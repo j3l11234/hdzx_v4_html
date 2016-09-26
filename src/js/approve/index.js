@@ -45,7 +45,7 @@ class ApprovePage extends Component {
         //计算chksum，分析冲突预约
         for (var order_id in orders) {
           let order = orders[order_id];
-          let roomTable = roomTables[order.room_id+'_'+order.date];
+          let roomTable = roomTables[order.date+'_'+order.room_id];
 
           let parallelOrders = getListFormTable(roomTable.ordered, order.hours).concat(getListFormTable(roomTable.used, order.hours));
           order.conflict = [];

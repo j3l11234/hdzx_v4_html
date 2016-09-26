@@ -88,8 +88,8 @@ class LockItem extends Component {
         <div className="panel-collapse collapse in" id={'collapse-lock-' + lock.id}>
           <div className="panel-body">
             <div className="row">
-              <Prop groupClassName="col-sm-4" label="开始" content={lock.start_date} />
-              <Prop groupClassName="col-sm-4" label="结束" content={lock.end_date} />
+              <Prop groupClassName="col-sm-4" label="开始日期" content={lock.start_date} />
+              <Prop groupClassName="col-sm-4" label="结束日期" content={lock.end_date} />
               <Prop groupClassName="col-sm-4" label="锁信息" content={this.getStatusLabel(lock.status)} />
 
               <Prop groupClassName="col-sm-12" label="锁定房间" content={

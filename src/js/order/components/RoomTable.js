@@ -59,40 +59,28 @@ class RoomTable extends Component {
         <Header ref="header" dateList={dateList} onScroll={this.onScroll.bind(this)}/>
         <div className="rt-room-col">
         {
-          roomList.slice(pageRange.start, pageRange.end).map(roomId => {
-            let room = rooms[roomId];
-            
-            return !room ? null : (
-              <div key={roomId} className="rt-room-item">
+          roomList.slice(pageRange.start, pageRange.end).map(room_id => {
+            let room = rooms[room_id];
+            return room ? (
+              <div key={room_id} className="rt-room-item">
                 {room.name}<br />{room.number}
               </div>
-            );
+            ) : null;
           })
         }
         </div>
         <div ref="container" className="rt-table-content" onScroll={this.onScroll.bind(this)}>
         {
-          roomList.slice(pageRange.start, pageRange.end).map(roomId => {
-            let room = rooms[roomId];
-            let privAvail;
-            if (room.type == ROOM_TYPE.TYPE_SIMPLE) {
-              privAvail = checkPrivilege(user.privilege, USER_PRIV.PRIV_ORDER_SIMPLE);
-            } else if(room.type == ROOM_TYPE.TYPE_ACTIVITY) {
-              privAvail = checkPrivilege(user.privilege, USER_PRIV.PRIV_ORDER_ACTIVITY);
-            }
-            
+          roomList.slice(pageRange.start, pageRange.end).map(room_id => {
             return (
-              <div className="rt-table-row" key={roomId} style={{width:(dateList ? dateList.length : 0)*90+'px'}}>
-              {
-                dateList && dateList.map(date => {
-                  let roomTable = roomTables[date+'_'+roomId];
-                  let dateAvail = roomTable.available;
-                  let {hourTable, chksum} = roomTable;
-                  return (
-                    <Cell key={date+'_'+roomId} chksum={chksum} date={date} room={roomId} hourTable={hourTable} privAvail={privAvail} dateAvail={dateAvail} onCellClick={onCellClick}/>
-                  );
-                })
-              }
+              <div className="rt-table-row" key={room_id} style={{width:(dateList ? dateList.length : 0)*90+'px'}}>
+              {dateList && dateList.map(date => {
+                let roomTable = roomTables[date + '_' + room_id];
+                return roomTable ? (
+                  <Cell key={date+'_'+room_id} roomTable={roomTable} date={date} room_id={room_id}
+                    onCellClick={onCellClick.bind(this, date, room_id, roomTable.available)}/>
+                ) : null;
+              })}
               </div>
             );
           })

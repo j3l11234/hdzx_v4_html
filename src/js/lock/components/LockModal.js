@@ -170,7 +170,13 @@ class LockModal extends Component {
     let formData = this.fv.getFormData();
     formData.lock_id = mode == 'edit' ? lock.id : 0;
     formData.rooms = JSON.stringify(this.refs.roomselect.getRooms());
-
+    let hours = [];
+    for (let hour = formData.start_hour; hour <= formData.end_hour; hour++) {
+      hours.push(hour);
+    }
+    formData.hours = JSON.stringify(hours);
+    delete formData.start_hour;
+    delete formData.end_hour;
     this.setState({loading: true});
     this.props.onSubmit(formData, (success, data) => {
       if(success){

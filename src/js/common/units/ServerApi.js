@@ -1,9 +1,30 @@
-// import { fetchGet, fetchPost } from '../helpers/FetchApi';
+import { ajaxGet, ajaxPost } from './AjaxApi';
 // import urls from '../constants/Urls';
 
-export function meta_getRooms(){
-  return fetchGet(dispatch, urls.base + urls.order.getrooms, false);
-}
+const URL = '';
+
+export const Data = {
+  getdata: function(page) {
+    return ajaxGet(URL + 'data/getdata' +
+      '?page=' + page);
+  }
+};
+
+export const Order = {
+  getroomtables: function(start_date, end_date, rooms) {
+    return ajaxGet(URL + 'order/getroomtables' +
+      '?start_date=' + start_date +
+      '&end_date=' + end_date +
+      '&rooms=' + (rooms ? JSON.stringify(rooms) : ''));
+  },
+  getroomuse: function(date, room_id) {
+    return ajaxGet(URL + 'order/getroomuse' + 
+      '?date=' + date +
+      '&room=' + room_id);
+  }
+};
+
+
 
 // export function meta_getDepts(dispatch){
 //   return fetchGet(dispatch, urls.base + urls.order.getdepts, false);
