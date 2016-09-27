@@ -4,23 +4,33 @@ import { ajaxGet, ajaxPost } from './AjaxApi';
 const URL = '';
 
 export const Data = {
-  getdata: function(page) {
+  getData: function(page) {
     return ajaxGet(URL + 'data/getdata' +
       '?page=' + page);
   }
 };
 
 export const Order = {
-  getroomtables: function(start_date, end_date, rooms) {
+  getRoomTables: function(start_date, end_date, rooms) {
     return ajaxGet(URL + 'order/getroomtables' +
       '?start_date=' + start_date +
       '&end_date=' + end_date +
       '&rooms=' + (rooms ? JSON.stringify(rooms) : ''));
   },
-  getroomuse: function(date, room_id) {
+  getRoomUse: function(date, room_id) {
     return ajaxGet(URL + 'order/getroomuse' + 
       '?date=' + date +
       '&room=' + room_id);
+  },
+  getUsage: function(date) {
+    return ajaxGet(URL + 'order/getusage' + 
+      '?date=' + date);
+  },
+  getCaptcha: function() {
+    return ajaxGet('order/captcha?refresh=1');
+  },
+  submitOrder: function(data) {
+    return ajaxPost('order/submitorder', data);
   }
 };
 

@@ -12,17 +12,26 @@ class OrderModal extends Component {
     this.shouldComponentUpdate = shouldComponentUpdate.bind(this);
 
     this.state = {
-      loading: false
+      loading: false,
+      tab: ''
     }
+  }
+
+  componentDidMount() {
+    let {label_order, label_use, label_usage} = this.refs;
+    $([label_order, label_use, label_usage]).on('shown.bs.tab', e => {
+      if (e.target === label_order) {
+        this.setState({tab: 'order'});
+      } else if (e.target === label_use) {
+        this.setState({tab: 'use'});
+      } else if (e.target === label_usage) {
+        this.setState({tab: 'usage'});
+      }
+    });
   }
 
   showModal() {
     let { user } = this.props;
-    setTimeout(() => {
-      let { room_id, date, onQueryUse, doGetUsage } = this.props;
-      onQueryUse(date, room_id);
-      doGetUsage(date);
-    }, 500);
 
     this.setState({ loading: false });
     this.refs.form.reset();
@@ -32,25 +41,40 @@ class OrderModal extends Component {
     });
     
     setTimeout(()=>{
-      let {dateAvail, privAvail } = this.props;
-      $(this.refs.modal).modal('show');
-      if (dateAvail && privAvail) {
-        $(this.refs.label_order).show();
+      let { room_id, date } = this.props.modal;
+      let roomTable = this.props.roomTables[date+'_'+room_id];
+      if (roomTable && roomTable.available) {
         $(this.refs.label_order).tab('show');
       } else {
-        $(this.refs.label_order).hide();
         $(this.refs.label_use).tab('show');
       }
+      $(this.refs.modal).modal('show');
     }, 0);
+
   }
 
   onSubmitClick() {
-    this.refs.form.onSubmit.call(this.refs.form,this);
+    let form = this.refs.form;
+    form.onSubmit.call(form);
+  }
+
+  onSubmit(data) {
+    let { onSubmit } = this.props;
+    this.setState({loading: true});
+    return onSubmit(data).then(data => {
+      this.setState({loading: false});
+      return data;
+    }, data => {
+      this.setState({loading: false});
+      throw data;
+    });
   }
 
   render () {
-    let { roomTables, rooms, locks, orders, room_id, date, dateAvail, privAvail, usage, depts, deptMap} = this.props;
-    let { loading } = this.state;
+    let { roomTables, rooms, locks, orders, usage, depts, deptMap} = this.props;
+    let { onCaptcha } = this.props;
+    let { room_id, date } = this.props.modal;
+    let { loading, tab } = this.state;
 
     let roomTable;
     let room;
@@ -61,8 +85,7 @@ class OrderModal extends Component {
       roomTable = {};
       room = {};
     }
-
-    let {ordered, used, locked} = roomTable;
+    let {ordered, used, locked, available} = roomTable;
 
     return (
       <div className="modal" ref="modal" data-backdrop="static">
@@ -71,7 +94,7 @@ class OrderModal extends Component {
             <div className="modal-body">
               <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
               <ul className="nav nav-tabs" role="tablist">
-                <li role="presentation">
+                <li role="presentation" style={!available ? {display: 'none'} : null}>
                   <a ref="label_order" href="#model-order" aria-controls="model-order" role="tab" data-toggle="tab">房间预约</a>
                 </li>
                 <li role="presentation">
@@ -82,9 +105,9 @@ class OrderModal extends Component {
                 </li>
               </ul>
               <div className="tab-content">
-                <div role="tabpanel" className="tab-pane" id="model-order">
+                <div role="tabpanel" className="tab-pane" id="model-order" style={!available ? {display: 'none'} : null}>
                   <Form ref="form" room_id={room_id} date={date} room={room} hourTable={roomTable.hourTable} depts={depts} deptMap={deptMap}
-                   onSubmit={this.props.onSubmit} onCaptcha={this.props.onCaptcha} />
+                    onSubmit={this.onSubmit.bind(this)} onCaptcha={onCaptcha} />
                 </div>
                 <div role="tabpanel" className="tab-pane" id="model-use">
                   <OrderList orders={orders} ordered={ordered} used={used} />
@@ -95,10 +118,15 @@ class OrderModal extends Component {
                 </div>
               </div>
             </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-default" data-dismiss="modal">关闭</button>
-              <button type="button" className="btn btn-primary" disabled={loading} onClick={this.onSubmitClick.bind(this)}>提交</button>
-            </div>
+            {tab === 'order' ? 
+              <div className="modal-footer">
+                <button type="button" className="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" className="btn btn-primary" disabled={loading} onClick={this.onSubmitClick.bind(this)}>提交</button>
+              </div> : 
+              <div className="modal-footer">
+                <button type="button" className="btn btn-primary" data-dismiss="modal">确定</button>
+              </div>  
+            }
           </div>
         </div>
       </div>

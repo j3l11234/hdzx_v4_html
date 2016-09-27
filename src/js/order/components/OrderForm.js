@@ -32,7 +32,7 @@ class OrderForm extends Component {
       name: {
         value: '',
         validator: (value) => {
-          if(value === '') {
+          if(value.length < 1) {
             return  '请认真填写姓名';
           }
         }
@@ -106,14 +106,10 @@ class OrderForm extends Component {
   }
 
   onCaptcha () {
-    this.props.onCaptcha((success, data) => {
-      this.updateCaptcha();
-    });
-  }
-
-  updateCaptcha () {
-    this.setState({
-      captchaUrl: _Server_Data_.BASE_URL+'/order/captcha?r='+Math.random()
+    this.props.onCaptcha().then(data => {
+      this.setState({
+        captchaUrl: data.url
+      });
     });
   }
 
@@ -130,10 +126,10 @@ class OrderForm extends Component {
       alert: null
     });
     this.refs.hourSelect.reset();
-    this.updateCaptcha();
+    this.onCaptcha();
   }
 
-  onSubmit(parent) {
+  onSubmit() {
     this.fv.validateAll();
     let error = this.fv.getFirstError();
     if(error) {
@@ -165,19 +161,16 @@ class OrderForm extends Component {
     });
 
     this.setState({alert: null});
-    parent.setState({loading: true});
-    this.props.onSubmit(formData, (success,data) => {
-      if (data.error == 0) {
-        this.setState({
-          alert: { style: 'success', text: data.message}
-        });
-      } else {
-        parent.setState({loading: false});
-        this.setState({
-          alert: { style: 'danger', text: data.message}
-        });
-        this.updateCaptcha();
-      }
+    console.log('aaa');
+    this.props.onSubmit(formData).then(data => {
+      this.setState({
+        alert: { style: 'success', text: data.message}
+      });
+    } , data => {
+      this.setState({
+        alert: { style: 'danger', text: data.message}
+      });
+      this.updateCaptcha();
     });
   }
 

@@ -47,11 +47,10 @@ class RoomTable extends Component {
   }
 
   render () {
-    let { rooms, user, onCellClick } = this.props;
+    let { rooms, onCellClick, roomTable } = this.props;
+    let { dateList, roomList, roomTables } = roomTable;
     let { curPage, perPage } = this.state.filter;
-    let { dateList, roomList, roomTables } = this.props.roomTable;
-
-    roomList = roomList ? roomList : [];
+    
     let pageRange = Pagination.getLimit(curPage, roomList.length, perPage);
     
     return (
@@ -78,7 +77,7 @@ class RoomTable extends Component {
                 let roomTable = roomTables[date + '_' + room_id];
                 return roomTable ? (
                   <Cell key={date+'_'+room_id} roomTable={roomTable} date={date} room_id={room_id}
-                    onCellClick={onCellClick.bind(this, date, room_id, roomTable.available)}/>
+                    onCellClick={onCellClick}/>
                 ) : null;
               })}
               </div>

@@ -22,7 +22,11 @@ class OrderPage extends Component {
         orders: {},
         locks: {}
       },
-      roomTable: {},
+      roomTable: {
+        roomList: [],
+        dateList: [],
+        roomTables: {}
+      },
       user: {},
       modal: {},
       usage:{
@@ -42,7 +46,7 @@ class OrderPage extends Component {
   }
 
   doGetData() {
-    return ServerApi.Data.getdata('order').then(data => {
+    return ServerApi.Data.getData('order').then(data => {
       let { room, dept, tooltip } = data;
       this.store = update(this.store, {
         entities: {
@@ -54,14 +58,11 @@ class OrderPage extends Component {
       });
       this.setState(this.store);
       return data;
-    }, data => {
-      //console.error(data);
-      throw data;
     });
   }
 
   doGetRoomTables (start_date, end_date) {
-    return ServerApi.Order.getroomtables(start_date, end_date).then(data => {
+    return ServerApi.Order.getRoomTables(start_date, end_date).then(data => {
       let { roomList, dateList, roomTables} = data;
       this.store = update(this.store, {
         roomTable: {
@@ -72,26 +73,11 @@ class OrderPage extends Component {
       });
       this.setState(this.store);
       return data;
-    }, data => {
-      //console.error(data);
-      throw data;
     })
   }
 
-  onCellClick(date, room_id, available) {
-    this.store = update(this.store, {
-      modal: {$set: {
-        room_id,
-        date,
-        available
-      }}
-    });
-    this.setState(this.store);
-    this.refs.modal.showModal();
-  }
-
-  doGetRoomUse (date, room_id, callback) {
-    return ServerApi.Order.getroomuse(date, room_id).then(data => {
+  doGetRoomUse (date, room_id) {
+    return ServerApi.Order.getRoomUse(date, room_id).then(data => {
       let { orders, locks, roomTable } = data;
 
       this.store = update(this.store, {
@@ -107,45 +93,47 @@ class OrderPage extends Component {
       });
       this.setState(this.store);
       return data;
-    }, data => {
-      throw data;
     });
   }
 
-  doGetUsage(date, callback) {
-    ajaxGet('/order/getusage?date='+date, (success, data) => {
-      if (success) {
-        this.store = Object.assign({}, this.store, {
-          usage: {
-            date,
-            month: data.month,
-            week: data.week
-          }
-        });
-        this.setState(this.store);
-      }
-      callback && callback(success, data); 
+  doGetUsage(date) {
+    return ServerApi.Order.getUsage(date).then(data => {
+      this.store = update(this.store, {
+        usage: {$set: {
+          date: date,
+          month: data.month,
+          week: data.week
+        }}
+      });
+      this.setState(this.store);
+      return data;
     });
   }
   
-  doGetCaptcha (callback) {
-    ajaxGet('/order/captcha?refresh=1&r='+Math.random(), (success, data) => {
-      callback && callback(success, data); 
-    });
+  doGetCaptcha() {
+    return ServerApi.Order.getCaptcha();
   }
 
-  doSubmitOrder (data, callback) {
-    ajaxPost('/order/submitorder', data, (success, reData) => {
-      if (success) {
-        this.doGetRoomUse(data.room_id, data.date);
-        this.doGetUsage(data.date);
+  doSubmitOrder (data) {
+    return ServerApi.Order.submitOrder(data);
+  }
+
+  onCellClick(date, room_id) {
+    this.doGetRoomUse(date, room_id);
+    this.doGetUsage(date,);
+
+    this.store = update(this.store, {
+      modal: {
+        date: {$set: date},
+        room_id: {$set: room_id}, 
       }
-      callback && callback(success, reData); 
     });
+    this.setState(this.store);
+    this.refs.modal.showModal(); 
   }
 
   onFilter(perPage) {
-    this.refs.list.setFilter({
+    this.refs.roomtable.setFilter({
       perPage,
       curPage: 1
     });
@@ -158,10 +146,10 @@ class OrderPage extends Component {
       <div>
         <RoomTableQuery ref="query" onQeury={this.doGetRoomTables.bind(this)} onFilter={this.onFilter.bind(this)} />
         <hr />
-        <RoomTable ref="list" rooms={rooms} roomTable={roomTable} user={user} onCellClick={this.onCellClick.bind(this)}  />
-        <OrderModal ref="modal" rooms={rooms} orders={orders} locks={locks} user={user} room_id={modal.room_id} date={modal.date} dateAvail={modal.dateAvail} privAvail={modal.privAvail}
+        <RoomTable ref="roomtable" rooms={rooms} roomTable={roomTable} onCellClick={this.onCellClick.bind(this)}  />
+        <OrderModal ref="modal" rooms={rooms} orders={orders} locks={locks} user={user} modal={modal}
           roomTables={roomTable.roomTables} usage={usage} depts={depts} deptMap={deptMap}
-          onSubmit={this.doSubmitOrder.bind(this)} onQueryUse={this.doGetRoomUse.bind(this)} doGetUsage={this.doGetUsage.bind(this)} onCaptcha={this.doGetCaptcha.bind(this)}/>
+          onSubmit={this.doSubmitOrder.bind(this)}  onCaptcha={this.doGetCaptcha.bind(this)}/>
       </div>
     );
   }

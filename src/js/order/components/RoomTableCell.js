@@ -3,16 +3,16 @@ import React, { Component } from 'react';
 import { statusClass } from '../../common/constants/RoomTableStatus';
 
 class RoomTableCell extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
   }
 
-  shouldComponentUpdate (nextProps, nextState) {
+  shouldComponentUpdate(nextProps, nextState) {
     return (this.props.roomTable.chksum !== nextProps.roomTable.chksum ||
       this.props.roomTable.available !== nextProps.roomTable.available);
   }
 
-  getCellClass (hourTable, hour) {
+  getCellClass(hourTable, hour) {
     let className = statusClass[hourTable[hour]];
     if (!className) {
       className = 'z-rt-free';
@@ -20,11 +20,16 @@ class RoomTableCell extends Component {
     return className;
   }
 
+  onCellClick() {
+    let {date, room_id, onCellClick} = this.props;
+    onCellClick(date, room_id);
+  }
+
   render() {
     console.log('render RoomTableCell');
     let { hourTable, available, chksum } = this.props.roomTable;
     return hourTable ? (
-      <div className={'rt-table-item '+ (available ? '' : 'disabled')} onClick={this.props.onCellClick} 
+      <div className={'rt-table-item '+ (available ? '' : 'disabled')} onClick={this.onCellClick.bind(this)} 
         dangerouslySetInnerHTML={{__html: '\
 <div class="' + this.getCellClass(hourTable, 8) + '">8</div>\
 <div class="' + this.getCellClass(hourTable, 9) + '">9</div>\
