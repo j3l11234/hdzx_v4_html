@@ -4,7 +4,7 @@ import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMix
 import ReactDOM from 'react-dom';
 
 import LoginForm from './components/LoginForm';
-import { ajaxPost } from '../common/units/AjaxApi';
+import * as ServerApi from '../common/units/ServerApi';
 
 class LoginPage extends Component {
   constructor(props) {
@@ -12,20 +12,18 @@ class LoginPage extends Component {
     this.shouldComponentUpdate = shouldComponentUpdate.bind(this);
 
     this.store = {};
-    this.state = Object.assign({}, this.store);
+    this.state = this.store;
   }
 
-  doLogin (data, callback) {
-    ajaxPost('/user/login', data, (success, data) => {
-      callback && callback(success, data); 
-    });
+  doLogin(data) {
+    return ServerApi.User.login(data);
   }
 
   render() {
     return(
       <div className="panel panel-default" id="login-panel">
         <div className="panel-body">
-          <LoginForm doLogin={this.doLogin.bind(this)} />
+          <LoginForm onLogin={this.doLogin.bind(this)} />
         </div>
       </div>
     );

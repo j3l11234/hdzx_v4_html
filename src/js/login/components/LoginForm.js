@@ -56,7 +56,7 @@ class LoginForm extends Component {
 
     this.fv.validateAll();
     let error = this.fv.getFirstError();
-    if(error) {
+    if (error) {
       this.setState({
         alert: {style: 'danger', text: error}
       });
@@ -65,20 +65,21 @@ class LoginForm extends Component {
 
     let formData = this.fv.getFormData();
 
-    this.setState({alert: null});
-    this.setState({loading: true});
-    this.props.doLogin(formData, (success, data) => {
-      this.setState({loading: false});
-      if (success) {
-        this.setState({
-          alert: { style: 'success', text: data.message}
-        });
-        setTimeout(()=>{window.location.href=data.url}, 1000);
-      }else{
-        this.setState({
-          alert: { style: 'danger', text: data.message}
-        });
-      }
+    this.setState({
+      alert: null,
+      loading: true
+    });
+    this.props.onLogin(formData).then(data => {
+      this.setState({
+        loading: false,
+        alert: { style: 'success', text: data.message}
+      });
+      setTimeout(()=>{window.location.href=data.url}, 1000);
+    }, data => {
+      this.setState({
+        loading: false,
+        alert: { style: 'danger', text: data.message}
+      });
     });
   }
 

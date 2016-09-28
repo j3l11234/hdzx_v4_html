@@ -35,6 +35,9 @@ export const Order = {
 };
 
 export const User = {
+  login: function(data) {
+    return ajaxPost('user/login', data);
+  },
   getLogin: function() {
     return ajaxGet('user/getlogin');
   }
