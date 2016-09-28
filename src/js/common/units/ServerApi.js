@@ -34,6 +34,12 @@ export const Order = {
   }
 };
 
+export const User = {
+  getLogin: function() {
+    return ajaxGet('user/getlogin');
+  }
+};
+
 
 
 // export function meta_getDepts(dispatch){

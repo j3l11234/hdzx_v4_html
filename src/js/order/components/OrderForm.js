@@ -4,7 +4,6 @@ import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMix
 import HourSelect from './OrderHourSelect';
 import DeptSelect from './OrderDeptSelect';
 import Note from './OrderNote';
-import FormAlert from '../../common/components/FormAlert';
 import FormValidator from '../../common/units/FormValidator';
 
 const NumberMap =  {
@@ -21,7 +20,6 @@ class OrderForm extends Component {
     this.shouldComponentUpdate = shouldComponentUpdate.bind(this);
 
     this.state = {
-      alert: null,
       captchaUrl: null,
       startHour: null,
       endHour: null,
@@ -32,7 +30,7 @@ class OrderForm extends Component {
       name: {
         value: '',
         validator: (value) => {
-          if(value.length < 1) {
+          if(value || value.length < 1) {
             return  '请认真填写姓名';
           }
         }
@@ -56,7 +54,7 @@ class OrderForm extends Component {
       title: {
         value: '',
         validator: (value) => {
-          if(value.length < 2) {
+          if(value || value.length < 2) {
             return  '请认真填写标题';
           }
         }
@@ -64,7 +62,7 @@ class OrderForm extends Component {
       content: {
         value: '',
         validator: (value) => {
-          if(value.length < 4) {
+          if(value || value.length < 4) {
             return  '请认真填写活动内容';
           }
         }
@@ -80,7 +78,7 @@ class OrderForm extends Component {
       secure: {
         value: '',
         validator: (value) => {
-          if(value.length < 4) {
+          if(value || value.length < 4) {
             return  '请认真填写安保措施';
           }
         }
@@ -130,27 +128,22 @@ class OrderForm extends Component {
   }
 
   onSubmit() {
+    let {onAlert} = this.props;
     this.fv.validateAll();
     let error = this.fv.getFirstError();
     if(error) {
-      this.setState({
-        alert: {style: 'danger', text: error}
-      });
+      onAlert({style: 'danger', text: error});
       return;
     }
     if(!this.refs.deptSelect.valadate()){
-      this.setState({
-        alert: { style: 'danger', text: '请正确选择社团单位'}
-      });
+      onAlert({style: 'danger', text: '请正确选择社团单位'});
+      return;
+    }
+    if (!this.state.hours) {
+      onAlert({style: 'danger', text: '请选择预约时段'});
       return;
     }
 
-    if (!this.state.hours) {
-      this.setState({
-        alert: { style: 'danger', text: '请选择预约时段'}
-      });
-      return;
-    }
     let formData = this.fv.getFormData();
     formData = Object.assign(formData, {
       number: NumberMap[formData.number],
@@ -162,14 +155,7 @@ class OrderForm extends Component {
 
     this.setState({alert: null});
     console.log('aaa');
-    this.props.onSubmit(formData).then(data => {
-      this.setState({
-        alert: { style: 'success', text: data.message}
-      });
-    } , data => {
-      this.setState({
-        alert: { style: 'danger', text: data.message}
-      });
+    this.props.onSubmit(formData).then(data => {}, data => {
       this.updateCaptcha();
     });
   }
@@ -262,9 +248,6 @@ class OrderForm extends Component {
           </div>
           <div className="col-sm-6">
             {this.state.captchaUrl ? (<img src={this.state.captchaUrl} alt="验证码" onClick={this.onCaptcha.bind(this)}/>) : null}
-          </div>
-          <div className="col-sm-12">
-            {this.state.alert?(<FormAlert style={this.state.alert.style} text={this.state.alert.text}/>):null}
           </div>
         </div>      
       </form>

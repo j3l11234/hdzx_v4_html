@@ -7,9 +7,8 @@ import ReactDOM from 'react-dom';
 import RoomTableQuery from './components/RoomTableQuery';
 import RoomTable from './components/RoomTable';
 import OrderModal from './components/OrderModal';
-import { isEmptyObject } from '../common/units/Helpers';
+import FormAlert from '../common/components/FormAlert';
 import * as ServerApi from '../common/units/ServerApi';
-import { ajaxGet, ajaxPost } from '../common/units/AjaxApi';
 
 class OrderPage extends Component {
   constructor(props) {
@@ -39,6 +38,7 @@ class OrderPage extends Component {
 
   componentWillMount() {
     this.doGetData();
+    this.doGetLogin();
   }
 
   componentDidMount() {
@@ -61,7 +61,18 @@ class OrderPage extends Component {
     });
   }
 
-  doGetRoomTables (start_date, end_date) {
+  doGetLogin() {
+    return ServerApi.User.getLogin().then(data => {
+      let { user } = data;
+      this.store = update(this.store, {
+        user: {$set: user}
+      });
+      this.setState(this.store);
+      return data;
+    }); 
+  }
+
+  doGetRoomTables(start_date, end_date) {
     return ServerApi.Order.getRoomTables(start_date, end_date).then(data => {
       let { roomList, dateList, roomTables} = data;
       this.store = update(this.store, {
@@ -76,7 +87,7 @@ class OrderPage extends Component {
     })
   }
 
-  doGetRoomUse (date, room_id) {
+  doGetRoomUse(date, room_id) {
     return ServerApi.Order.getRoomUse(date, room_id).then(data => {
       let { orders, locks, roomTable } = data;
 
@@ -115,12 +126,16 @@ class OrderPage extends Component {
   }
 
   doSubmitOrder (data) {
-    return ServerApi.Order.submitOrder(data);
+    return ServerApi.Order.submitOrder(data).then(respData => {
+      this.doGetRoomUse(data.date, data.room_id);
+      this.doGetUsage(data.date);
+      return respData;
+    });
   }
 
   onCellClick(date, room_id) {
     this.doGetRoomUse(date, room_id);
-    this.doGetUsage(date,);
+    this.doGetUsage(date);
 
     this.store = update(this.store, {
       modal: {
@@ -141,9 +156,10 @@ class OrderPage extends Component {
 
   render() {
     let { rooms, locks, orders, depts } = this.state.entities;
-    let { modal, user, roomTable, usage, deptMap } = this.state;
+    let { modal, user, roomTable, usage, deptMap, tooltip } = this.state;
     return(
       <div>
+        {tooltip ? [<FormAlert key='alert' style='info' text={tooltip} />,<br key='br' />] : null}
         <RoomTableQuery ref="query" onQeury={this.doGetRoomTables.bind(this)} onFilter={this.onFilter.bind(this)} />
         <hr />
         <RoomTable ref="roomtable" rooms={rooms} roomTable={roomTable} onCellClick={this.onCellClick.bind(this)}  />

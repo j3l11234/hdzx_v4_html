@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMixin';
 
 import Form from './OrderForm';
+import FormAlert from '../../common/components/FormAlert';
 import OrderList from './OrderOrderList';
 import LockList from './OrderLockList';
 import Usage from './OrderUsage';
@@ -13,7 +14,8 @@ class OrderModal extends Component {
 
     this.state = {
       loading: false,
-      tab: ''
+      tab: '',
+      alert: null
     }
   }
 
@@ -62,19 +64,30 @@ class OrderModal extends Component {
     let { onSubmit } = this.props;
     this.setState({loading: true});
     return onSubmit(data).then(data => {
-      this.setState({loading: false});
+      this.setState({
+        loading: false,
+        alert: {tabs: ['order'], style: 'success', text: data.message}
+      });
       return data;
     }, data => {
-      this.setState({loading: false});
+      this.setState({
+        loading: false,
+        alert: {tabs: ['order'], style: 'danger', text: data.message}
+      });
       throw data;
     });
+  }
+
+  onFormAlert(alert){
+    alert.tabs = ['order'];
+    this.setState({alert});
   }
 
   render () {
     let { roomTables, rooms, locks, orders, usage, depts, deptMap} = this.props;
     let { onCaptcha } = this.props;
     let { room_id, date } = this.props.modal;
-    let { loading, tab } = this.state;
+    let { loading, tab, alert } = this.state;
 
     let roomTable;
     let room;
@@ -107,7 +120,7 @@ class OrderModal extends Component {
               <div className="tab-content">
                 <div role="tabpanel" className="tab-pane" id="model-order" style={!available ? {display: 'none'} : null}>
                   <Form ref="form" room_id={room_id} date={date} room={room} hourTable={roomTable.hourTable} depts={depts} deptMap={deptMap}
-                    onSubmit={this.onSubmit.bind(this)} onCaptcha={onCaptcha} />
+                    onAlert={this.onFormAlert.bind(this)} onSubmit={this.onSubmit.bind(this)} onCaptcha={onCaptcha} />
                 </div>
                 <div role="tabpanel" className="tab-pane" id="model-use">
                   <OrderList orders={orders} ordered={ordered} used={used} />
@@ -117,6 +130,7 @@ class OrderModal extends Component {
                   <Usage monthUsage={usage.month[room_id]} weekUsage={usage.week[room_id]} />
                 </div>
               </div>
+              {alert && alert.tabs.indexOf(tab) !== -1 ? <FormAlert style={alert.style} text={alert.text} /> : null}
             </div>
             {tab === 'order' ? 
               <div className="modal-footer">
