@@ -1,13 +1,14 @@
 import '../common/Polyfills';
 import React, { Component } from 'react';
 import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMixin';
+import update from 'react/lib/update';
 import ReactDOM from 'react-dom';
 import md5 from 'md5';
 
 import Query from './components/ApproveQuery';
 import List from './components/ApproveOrderList';
 import Modal from './components/ApproveModal';
-import { ajaxGet, ajaxPost } from '../common/units/AjaxApi';
+import * as ServerApi from '../common/units/ServerApi';
 import { getListFormTable } from '../common/units/Helpers';
 
 
@@ -21,12 +22,10 @@ class ApprovePage extends Component {
         orders: {}
       },
       approve: {
-        orderList: [],
-        start_date: '',
-        end_date: '',
-      }
+      },
+      orderList: [],
     };
-    this.state = Object.assign({}, this.store);
+    this.state = this.store;
   }
 
   componentWillMount() {
@@ -37,51 +36,48 @@ class ApprovePage extends Component {
     this.refs.query.onFilterClick();
   }
 
-  doGetApproveOrders(start_date, end_date, callback) {
-    ajaxGet('/approve/getorders?type='+this.props.type+'&start_date='+start_date+'&end_date='+end_date, (success, resData) => {
-      if (success) {
-        let {orders, orderList, roomTables, start_date, end_date} = resData;
+  doGetApproveOrders(start_date, end_date) {
+    return ServerApi.Approve.getOrders(this.props.type, start_date, end_date).then(respData => {
+      let { orders, orderList, roomTables } = respData;
 
-        //计算chksum，分析冲突预约
-        for (var order_id in orders) {
-          let order = orders[order_id];
-          let roomTable = roomTables[order.date+'_'+order.room_id];
+      //计算chksum，分析冲突预约
+      for (var order_id in orders) {
+        let order = orders[order_id];
+        let roomTable = roomTables[order.date+'_'+order.room_id];
+        order.conflict = [];
 
-          let parallelOrders = getListFormTable(roomTable.ordered, order.hours).concat(getListFormTable(roomTable.used, order.hours));
-          order.conflict = [];
-          for(var i in parallelOrders) {
-            let parallelOrder_id_ = parallelOrders[i];
-            if (!orders[parallelOrder_id_] || parallelOrder_id_ == order_id) {
-              continue;
+        if (roomTable) {
+          let conflictOrders = Object.assign( [],
+            getListFormTable(roomTable.ordered, order.hours),
+            getListFormTable(roomTable.used, order.hours)
+          );
+          conflictOrders.forEach(conflict_order_id => {
+            if (orders[conflict_order_id] && conflict_order_id != order_id) {
+              order.conflict.push(conflict_order_id);
             }
-            order.conflict.push(parallelOrder_id_);
-          }
-          order.chksum = md5(JSON.stringify(order)).substr(0,6);
+          }); 
         }
-
-        let entities = Object.assign({}, this.store.entities, { 
-          orders: Object.assign({}, this.store.entities.orders, orders),
-        });
-        let approve = Object.assign({}, this.store.approve, {
-          orderList: orderList,
-          start_date,
-          end_date,
-        });
-        this.store = Object.assign({}, this.store, {
-          entities,
-          approve,
-        });
-        this.setState(this.store);
+        order.chksum = md5(JSON.stringify(order)).substr(0,6);
       }
-      callback && callback(success, resData); 
+      this.store = update(this.store, {
+        entities: {
+          orders: {$merge: orders},
+        },
+        orderList: {$set: orderList},
+      });
+      this.setState(this.store);
+
+      return respData;
     });
   }
   
   onOperationClick(order_id, operation) {
-    this.store.approve = Object.assign({}, this.store.approve, {
-      order_id: order_id,
-      operation: operation
-    }); 
+    this.store = update(this.store, {
+      approve: {
+        order_id: {$set: order_id},
+        operation: {$set: operation}
+      }
+    });
     this.setState(this.store);
     this.refs.modal.showModal();
   }
@@ -90,27 +86,25 @@ class ApprovePage extends Component {
     this.refs.list.setConflict(order_id);
   }
 
-  doOperateOrder(operation, data, callback) {
+  doOperateOrder(operation, data) {
     let url;
+    let operateFn;
     switch(operation) {
       case 'approve':
-        url = '/approve/approveorder?type='+this.props.type;
+        operateFn = ServerApi.Approve.approveOrder;
         break;
       case 'reject':
-        url = '/approve/rejectorder?type='+this.props.type;
+        operateFn = ServerApi.Approve.rejectOrder;
         break;
       case 'revoke':
-        url = '/approve/revokeorder?type='+this.props.type;
+        operateFn = ServerApi.Approve.revokeOrder;
         break;
       default:
         return;
     }
-    ajaxPost(url, data, (success, data) => {
-      if (success) {
-        let { start_date, end_date } = this.store.approve;
-        this.doGetApproveOrders(start_date, end_date);
-      }
-      callback && callback(success, data); 
+    return operateFn(this.props.type, data).then(respData => {
+      this.refs.query.onQeury();
+      return respData;
     });
   }
 
@@ -123,10 +117,12 @@ class ApprovePage extends Component {
   }
 
   render() {
+    let { orderList } = this.state;
     let { orders } = this.state.entities;
-    let { orderList, order_id, operation } = this.state.approve;
+    let { order_id, operation } = this.state.approve;  
     let { type } = this.props;
     let order = orders[order_id];
+
     return (
       <div>
         <Query ref="query" type={type} onQeury={this.doGetApproveOrders.bind(this)} onFilter={this.onFilter.bind(this)} />

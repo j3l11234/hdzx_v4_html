@@ -1,12 +1,13 @@
 import { ajaxGet, ajaxPost } from './AjaxApi';
 // import urls from '../constants/Urls';
 
-const URL = '';
+const URL = _Server_Data_.BASE_URL;
 
 export const Data = {
-  getData: function(page) {
+  getData: function(page, type) {
     return ajaxGet(URL + 'data/getdata' +
-      '?page=' + page);
+      '?page=' + page +
+      '&type=' + type);
   }
 };
 
@@ -27,19 +28,64 @@ export const Order = {
       '?date=' + date);
   },
   getCaptcha: function() {
-    return ajaxGet('order/captcha?refresh=1');
+    return ajaxGet(URL + 'order/captcha?refresh=1');
   },
   submitOrder: function(data) {
-    return ajaxPost('order/submitorder', data);
+    return ajaxPost(URL + 'order/submitorder', data);
+  },
+  getIssueOrders: function(username, start_date, end_date) {
+    return ajaxGet(URL + 'order/getissueorders' +
+      '?username=' + username +
+      '&start_date=' + start_date +
+      '&end_date=' + end_date);
+  },
+  issueOrder: function(order_id) {
+    return ajaxPost(URL + 'order/issueorder', {order_id});
   }
 };
 
 export const User = {
   login: function(data) {
-    return ajaxPost('user/login', data);
+    return ajaxPost(URL + 'user/login', data);
   },
   getLogin: function() {
-    return ajaxGet('user/getlogin');
+    return ajaxGet(URL + 'user/getlogin');
+  }
+};
+
+export const Approve = {
+  getOrders: function(type, start_date, end_date) {
+    return ajaxGet(URL + 'approve/getorders' +
+      '?type=' + type +
+      '&start_date=' + start_date +
+      '&end_date=' + end_date);
+  },
+  approveOrder: function(type, data) {
+    return ajaxPost(URL + 'approve/approveorder' +
+      '?type=' + type, data);
+  },
+  rejectOrder: function(type, data) {
+    return ajaxPost(URL + 'approve/rejectorder' +
+      '?type=' + type, data);
+  },
+  revokeOrder: function(type, data) {
+    return ajaxPost(URL + 'approve/revokeorder' +
+      '?type=' + type, data);
+  },
+};
+
+export const Lock = {
+  getLocks: function() {
+    return ajaxGet(URL + 'lock/getlocks');
+  },
+  submitLock: function(data) {
+    return ajaxPost('lock/submitlock', data);
+  },
+  deleteLock: function(lock_id) {
+    return ajaxPost('lock/deletelock', {lock_id});
+  },
+  applyLocks: function(data) {
+    return ajaxPost('lock/applylock', data);
   }
 };
 

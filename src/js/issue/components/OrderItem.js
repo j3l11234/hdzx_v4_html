@@ -5,7 +5,7 @@ import Prop from '../../common/components/PropGroup';
 import StatusLabel from '../../common/components/StatusLabel';
 import { STATUS } from '../../common/constants/OrderStatus';
 import { TYPE_NAME } from '../../common/constants/OperationTypes';
-import { getAbsStatus } from '../../common/units/Helpers';
+import { getAbstractStatus } from '../../common/units/Helpers';
 
 
 class OrderItem extends Component {
@@ -32,8 +32,10 @@ class OrderItem extends Component {
   onIssueClick(){
     if (confirm("确认要发放开门条吗？")) {
       let { order, onIssueClick } = this.props;
-      onIssueClick(order.id, (success, reData) => {
-        alert(reData.message);
+      onIssueClick(order.id).then(data => {
+        alert(data.message);
+      }, data => {
+        alert(data.message);
       });
     }  
   }
@@ -50,7 +52,7 @@ class OrderItem extends Component {
     let endHour = parseInt(hours[hours.length -1])+1;
     let submit_time = order.submit_time ? new Date(order.submit_time*1000).Format('yyyy-MM-dd hh:mm:ss') : ' ';
     let issue_time = order.issue_time ? new Date(order.issue_time*1000).Format('yyyy-MM-dd hh:mm:ss') : '未发放'; 
-    let status = getAbsStatus(order.status);
+    let status = getAbstractStatus(order.status);
 
     return (
       <div className={'panel ' + this.getPanelStyle(status)}>

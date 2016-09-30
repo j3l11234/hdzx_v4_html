@@ -3,7 +3,7 @@ import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMix
 
 import Item from './ApproveOrderItem';
 import Pagination from '../../common/components/Pagination';
-import { getAbsStatus } from '../../common/units/Helpers';
+import { getAbstractStatus } from '../../common/units/Helpers';
 import { STATUS } from '../../common/constants/OrderStatus';
 
 class OrderList extends Component {
@@ -40,32 +40,38 @@ class OrderList extends Component {
 
   getFilteredList() {
     let { orders, orderList, type } = this.props;
-    let {filter, conflict_id} = this.state;
-    console.log(conflict_id,orders[conflict_id]);
-    if(conflict_id != -1 && orders[conflict_id]){
-      orderList = [conflict_id].concat(orders[conflict_id].conflict);
-    }
+    let { filter, conflict_id} = this.state;
 
-    let _orderList = [];
-    for (var index in orderList) {
-      let order_id = orderList[index];
-      let order = orders[order_id];
-      
-      if (!order){
-        continue;
-      }
-
-      let status = getAbsStatus(order.status, type);
-      if (filter.status) {
-        if ((filter.status == STATUS.STATUS_PENDING && status != STATUS.STATUS_PENDING) ||
-          (filter.status == STATUS.STATUS_APPROVED && status != STATUS.STATUS_APPROVED && status != STATUS.STATUS_APPROVED_FIXED) ||
-          (filter.status == STATUS.STATUS_REJECTED && status != STATUS.STATUS_REJECTED && status != STATUS.STATUS_REJECTED_FIXED)){
-          continue;
+    if (conflict_id != -1 && orders[conflict_id]) { //显示冲突预约
+      orderList = Object.assign([conflict_id], orders[conflict_id].conflict);
+    } else { //筛选
+      let _orderList = [];  //filted orderList
+      orderList.forEach(order_id => {
+        let order = orders[order_id];
+        if (!order) {
+          return;
         }
-      }
-      _orderList.push(order_id);
+        let status = getAbstractStatus(order.status, type);
+        if (filter.status) {
+          if (filter.status == STATUS.STATUS_PENDING) {
+            if (status === STATUS.STATUS_PENDING) {
+              _orderList.push(order_id);
+            }
+          } else if (filter.status == STATUS.STATUS_APPROVED) {
+            if (status === STATUS.STATUS_APPROVED || status === STATUS.STATUS_APPROVED_FIXED) {
+              _orderList.push(order_id);
+            }
+          } else if (filter.status == STATUS.STATUS_REJECTED) {
+            if (status === STATUS.STATUS_REJECTED || status === STATUS.STATUS_REJECTED_FIXED) {
+              _orderList.push(order_id);
+            }
+          }
+        } 
+      });
+      orderList = _orderList;
     }
-    return _orderList;
+    
+    return orderList;
   }
 
   render() {
@@ -74,7 +80,7 @@ class OrderList extends Component {
 
     let orderList = this.getFilteredList();
     let { start, end } = Pagination.getLimit(curPage, orderList.length, perPage);
-    console.log(orderList);
+
     return (
       <div>
       { 

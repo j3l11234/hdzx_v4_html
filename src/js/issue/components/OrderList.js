@@ -3,7 +3,7 @@ import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMix
 
 import Item from './OrderItem';
 import Pagination from '../../common/components/Pagination';
-import { getAbsStatus } from '../../common/units/Helpers';
+import { getAbstractStatus } from '../../common/units/Helpers';
 import { STATUS } from '../../common/constants/OrderStatus';
 
 class OrderList extends Component {
@@ -36,7 +36,7 @@ class OrderList extends Component {
         continue;
       }
       
-      let status = getAbsStatus(order.status);
+      let status = getAbstractStatus(order.status);
       if (filter.status) {
         if ((filter.status == STATUS.STATUS_PENDING && status != STATUS.STATUS_PENDING) ||
           (filter.status == STATUS.STATUS_APPROVED && status != STATUS.STATUS_APPROVED) ||

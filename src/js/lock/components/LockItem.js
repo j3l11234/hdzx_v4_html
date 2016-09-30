@@ -22,8 +22,12 @@ class LockItem extends Component {
 
   onDelClick (e) {
     if (confirm("确认要删除该房间锁吗？")){
-      let { lock } = this.props;
-      this.props.onDelClick(lock.id);
+      let { lock, onDeleteLock } = this.props;
+      onDeleteLock(lock.id).then(data => {
+        alert(data.message);
+      }, data => {
+        alert(data.message);
+      });;
     }  
   }
 

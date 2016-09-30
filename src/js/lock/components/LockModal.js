@@ -5,6 +5,7 @@ import RoomSelect from './LockRoomSelect';
 import FormAlert from '../../common/components/FormAlert';
 import FormValidator from '../../common/units/FormValidator';
 import { STATUS, LOOP, WEEKDAY } from '../../common/constants/LockStatus';
+import { range2Hours, hours2Range } from '../../common/units/Helpers';
 
 class LockModal extends Component {
   constructor(props) {
@@ -78,7 +79,7 @@ class LockModal extends Component {
             return  '请输入开始时间';
           } else {
             value = parseInt(value);
-            if(value < 8 || value > 21) {
+            if (!(value >= 8 && value <= 21)) {
               return '开始时间在8-21之间';
             }
           }
@@ -91,7 +92,7 @@ class LockModal extends Component {
             return  '请输入结束时间';
           } else {
             value = parseInt(value);
-            if(value < 9 || value > 22) {
+            if (!(value >= 9 && value <= 22)) {
               return '结束时间在9-22之间';
             }
           }
@@ -106,12 +107,28 @@ class LockModal extends Component {
     });
   }
 
-  componentWillReceiveProps(nextProps){
-    if(this.props.lock !== nextProps.lock) {
-      if(nextProps.mode == 'edit') {
-        let lock = nextProps.lock;
-        let startHour = parseInt(lock.hours[0]);
-        let endHour = parseInt(lock.hours[lock.hours.length -1])+1;
+  componentWillReceiveProps(nextProps) {
+  }
+
+  handleChange (name, event) {
+    this.fv.handleChange(name, event);
+    this.forceUpdate();
+  }
+
+  onLoopTypeChange(){
+    this.setState({ loop_type: this.refs.loop_type.value });
+  }
+
+  showModal() {
+    this.setState({
+      loading: false,
+      alert: null
+    });
+
+    setTimeout(() => {
+      let { mode, lock } = this.props;
+       if (mode == 'edit') {
+        let { start_hour, end_hour } = hours2Range(lock.hours);
         this.fv.setInputValues({
           title: lock.title,
           loop_type: lock.loop_type,
@@ -119,8 +136,8 @@ class LockModal extends Component {
           start_date: lock.start_date,
           end_date: lock.end_date,
           status: lock.status,
-          start_hour: startHour,
-          end_hour: endHour,
+          start_hour: start_hour,
+          end_hour: end_hour,
           comment: lock.comment,
         });
         this.refs.roomselect.setRooms(lock.rooms);
@@ -138,21 +155,9 @@ class LockModal extends Component {
         });
         this.refs.roomselect.setRooms([]);
       }
-    }
-  }
-
-  handleChange (name, event) {
-    this.fv.handleChange(name, event);
-    this.forceUpdate();
-  }
-
-  onLoopTypeChange(){
-    this.setState({ loop_type: this.refs.loop_type.value });
-  }
-
-  showModal() {
-    this.setState({ loading: false });
-    $(this.refs.modal).modal('show');
+      this.forceUpdate();
+      $(this.refs.modal).modal('show');
+    }, 0);
   }
 
   onSubmit() {
@@ -168,27 +173,21 @@ class LockModal extends Component {
     }
 
     let formData = this.fv.getFormData();
+    console.log(formData);
     formData.lock_id = mode == 'edit' ? lock.id : 0;
     formData.rooms = JSON.stringify(this.refs.roomselect.getRooms());
-    let hours = [];
-    for (let hour = formData.start_hour; hour <= formData.end_hour; hour++) {
-      hours.push(hour);
-    }
-    formData.hours = JSON.stringify(hours);
-    delete formData.start_hour;
-    delete formData.end_hour;
+    formData.hours = JSON.stringify(range2Hours(formData.start_hour,formData.end_hour));
+
     this.setState({loading: true});
-    this.props.onSubmit(formData, (success, data) => {
-      if(success){
-        this.setState({
-          alert: { style: 'success', text: data.message}
-        });
-      } else {
-        this.setState({loading: false});
-        this.setState({
-          alert: { style: 'danger', text: data.message}
-        });
-      }
+    this.props.onSubmit(formData).then(data => {
+      this.setState({
+        alert: { style: 'success', text: data.message}
+      });
+    }, data => {
+      this.setState({
+        loading: false,
+        alert: { style: 'danger', text: data.message}
+      });
     });
   } 
 

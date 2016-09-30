@@ -1,6 +1,7 @@
 import '../common/Polyfills';
 import React, { Component } from 'react';
 import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMixin';
+import update from 'react/lib/update';
 import ReactDOM from 'react-dom';
 import md5 from 'md5';
 
@@ -8,7 +9,7 @@ import Query from './components/LockQuery';
 import List from './components/LockList';
 import Modal from './components/LockModal';
 import ApplyModal from './components/LockApplyModal';
-import { ajaxGet, ajaxPost } from '../common/units/AjaxApi';
+import * as ServerApi from '../common/units/ServerApi';
 import { getListFormTable } from '../common/units/Helpers';
 
 
@@ -22,28 +23,18 @@ class LockPage extends Component {
         rooms: {},
         locks: {}
       },
-      lock: {
-        roomList: [],
-        lockList: [],
-        mode: 'add'
+      roomList: [],
+      lockList: [],
+      modal: {
+        mode: 'add',
+        lock_id: 0,
       }
     };
-    this.state = Object.assign({}, this.store);
+    this.state = this.store;
   }
 
   componentWillMount() {
-    ajaxGet('/data/getrooms', (success, data) => {
-      if (success) {
-        let {rooms, roomList} = data;
-        this.store.entities = Object.assign({}, this.store.entities, { 
-          rooms: Object.assign({}, this.store.entities.rooms, rooms)
-        });
-        this.store.lock = Object.assign({}, this.store.lock, {
-          roomList: roomList
-        });
-        this.setState(this.store);
-      }
-    });
+    this.doGetData();
   }
 
   componentDidMount() {
@@ -51,43 +42,59 @@ class LockPage extends Component {
     this.refs.query.onFilterClick();
   }
 
-  doGetLocks(callback) {
-    ajaxGet('/lock/getlocks', (success, data) => {
-      if (success) {
-        let {locks, lockList} = data;
+  doGetData() {
+    return ServerApi.Data.getData('lock', this.props.type).then(data => {
+      let { room , tooltip } = data;
+      this.store = update(this.store, {
+        entities: {
+          rooms: {$merge: room.rooms},
+        },
+        roomList: {$set: room.roomList},
+        tooltip: {$set: tooltip}
+      });
+      this.setState(this.store);
+      return data;
+    });
+  }
 
-        //计算chksum
-        for (var lock_id in locks) {
-          let lcok = locks[lock_id];
-          lcok.chksum = md5(JSON.stringify(lcok)).substr(0,6);
-        }
+  doGetLocks() {
+    return ServerApi.Lock.getLocks().then(data => {
+      let {locks, lockList} = data;
 
-        this.store.entities = Object.assign({}, this.store.entities, { 
-          locks: Object.assign({}, this.store.entities.locks, locks)
-        });
-        this.store.lock = Object.assign({}, this.store.lock, {
-          lockList: lockList
-        });
-        this.setState(this.store);
+      //计算chksum
+      for (var lock_id in locks) {
+        let lcok = locks[lock_id];
+        lcok.chksum = md5(JSON.stringify(lcok)).substr(0,6);
       }
-      callback && callback(success, data); 
+      this.store = update(this.store, {
+        entities: {
+          locks: {$merge: locks},
+        },
+        lockList: {$set: lockList}
+      });
+      this.setState(this.store);
+      return data;
     });
   }
   
   onEditClick(lock_id) {
-    this.store.lock = Object.assign({}, this.store.lock, {
-      mode: 'edit',
-      lock_id: lock_id,
-    }); 
+    this.store = update(this.store, {
+      modal: {
+        mode: {$set: 'edit'},
+        lock_id: {$set: lock_id},
+      },
+    });
     this.setState(this.store);
     this.refs.modal.showModal();
   }
 
   onAddClick() {
-    this.store.lock = Object.assign({}, this.store.lock, {
-      mode: 'add',
-      lock_id: 0,
-    }); 
+    this.store = update(this.store, {
+      modal: {
+        mode: {$set: 'add'},
+        lock_id: {$set: '0'},
+      },
+    });
     this.setState(this.store);
     this.refs.modal.showModal();
   }
@@ -96,28 +103,22 @@ class LockPage extends Component {
     this.refs.applyModal.showModal();
   }
 
-  onDelClick(lock_id, callback) {
-    ajaxPost('/lock/deletelock', {lock_id}, (success, resData) => {
-      if (success) {
-        this.doGetLocks();
-      }
-      callback && callback(success, resData); 
+  doSubmitLock(data) {
+    return ServerApi.Lock.submitLock(data).then(data => {
+      this.refs.query.onQeury();
+      return data;
     });
   }
 
-  doSubmitLock(data, callback) {
-    ajaxPost('/lock/submitlock', data, (success, resData) => {
-      if (success) {
-        this.doGetLocks();
-      }
-      callback && callback(success, resData); 
+  doDeleteLock(lock_id) {
+    return ServerApi.Lock.deleteLock(lock_id).then(data => {
+      this.refs.query.onQeury();
+      return data;
     });
   }
 
-  doApplyLock(data, callback) {
-    ajaxPost('/lock/applylock', data, (success, resData) => {
-      callback && callback(success, resData); 
-    });
+  doApplyLock(data) {
+    return ServerApi.Lock.applyLocks(data);
   }
 
   onFilter(filter) {
@@ -127,15 +128,17 @@ class LockPage extends Component {
 
   render() {
     let { type } = this.props;
-    let { rooms, locks } = this.state.entities;
-    let { roomList, lockList, lock_id, mode } = this.state.lock;
+    let { rooms, locks} = this.state.entities;
+    let { roomList, lockList, tooltip } = this.state;
+    let { lock_id, mode } = this.state.modal;
     let lock = locks[lock_id];
     return (
       <div>
+        {tooltip ? <div key='tooltip' dangerouslySetInnerHTML={{__html: tooltip}} /> : null}
         <Query ref="query" type={type} rooms={rooms} roomList={roomList} 
           onQeury={this.doGetLocks.bind(this)} onFilter={this.onFilter.bind(this)} onAddClick={this.onAddClick.bind(this)} onApplyClick={this.onApplyClick.bind(this)} />
         <hr />
-        <List ref="list" type={type} rooms={rooms} locks={locks} lockList={lockList} onEditClick={this.onEditClick.bind(this)} onDelClick={this.onDelClick.bind(this)} />
+        <List ref="list" type={type} rooms={rooms} locks={locks} lockList={lockList} onEditClick={this.onEditClick.bind(this)} onDeleteLock={this.doDeleteLock.bind(this)} />
         <Modal ref="modal" rooms={rooms} roomList={roomList} lock={lock} mode={mode} onSubmit={this.doSubmitLock.bind(this)} />
         <ApplyModal ref="applyModal" onSubmit={this.doApplyLock.bind(this)} />
       </div>

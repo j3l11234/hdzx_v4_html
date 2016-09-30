@@ -7,7 +7,6 @@ import ReactDOM from 'react-dom';
 import RoomTableQuery from './components/RoomTableQuery';
 import RoomTable from './components/RoomTable';
 import OrderModal from './components/OrderModal';
-import FormAlert from '../common/components/FormAlert';
 import * as ServerApi from '../common/units/ServerApi';
 
 class OrderPage extends Component {
@@ -46,7 +45,7 @@ class OrderPage extends Component {
   }
 
   doGetData() {
-    return ServerApi.Data.getData('order').then(data => {
+    return ServerApi.Data.getData('order', 'user').then(data => {
       let { room, dept, tooltip } = data;
       this.store = update(this.store, {
         entities: {
@@ -159,7 +158,7 @@ class OrderPage extends Component {
     let { modal, user, roomTable, usage, deptMap, tooltip } = this.state;
     return(
       <div>
-        {tooltip ? [<FormAlert key='alert' style='info' text={tooltip} />,<br key='br' />] : null}
+        {tooltip ? <div key='tooltip' dangerouslySetInnerHTML={{__html: tooltip}} /> : null}
         <RoomTableQuery ref="query" onQeury={this.doGetRoomTables.bind(this)} onFilter={this.onFilter.bind(this)} />
         <hr />
         <RoomTable ref="roomtable" rooms={rooms} roomTable={roomTable} onCellClick={this.onCellClick.bind(this)}  />

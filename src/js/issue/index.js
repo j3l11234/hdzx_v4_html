@@ -1,12 +1,13 @@
 import '../common/Polyfills';
 import React, { Component } from 'react';
+import update from 'react/lib/update';
 import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMixin';
 import ReactDOM from 'react-dom';
 import md5 from 'md5';
 
 import OrderQuery from './components/OrderQuery';
 import OrderList from './components/OrderList';
-import { ajaxGet, ajaxPost } from '../common/units/AjaxApi';
+import * as ServerApi from '../common/units/ServerApi';
 
 class IssuePage extends Component {
   constructor(props) {
@@ -21,42 +22,39 @@ class IssuePage extends Component {
         orderList: []
       }
     };
-    this.state = Object.assign({}, this.store);
+    this.state = this.store;
   }
 
   componentDidMount() {
 
   }
 
-  doGetIssueOrders(username, start_date, end_date, callback) {
-    ajaxGet('/order/getissueorders?username='+username+'&start_date='+start_date+'&end_date='+end_date, (success, data) => {
-      if (success) {
-        let {orders, orderList} = data;
+  doGetIssueOrders(username, start_date, end_date) {
+    return ServerApi.Order.getIssueOrders(username, start_date, end_date).then(data => {
+      let {orders, orderList} = data;
 
-        //计算chksum
-        for (var order_id in orders) {
-          let order = orders[order_id];
-          order.chksum = md5(JSON.stringify(order)).substr(0,6);
-        }
-
-        this.store.entities = Object.assign({}, this.store.entities, { 
-          orders: Object.assign({}, this.store.entities.orders, orders)
-        });
-        this.store.issue = Object.assign({}, this.store.issue, {
-          orderList: orderList
-        });
-        this.setState(this.store);
+      //计算chksum
+      for (var order_id in orders) {
+        let order = orders[order_id];
+        order.chksum = md5(JSON.stringify(order)).substr(0,6);
       }
-      callback && callback(success, data); 
+
+      this.store = update(this.store, {
+        entities: {
+          orders: {$merge: orders}
+        },
+        orderList: {$set: orderList}
+      });
+      this.setState(this.store);
+
+      return data;
     });
   }
   
   doIssueOrder(order_id, callback) {
-    ajaxPost('/order/issueorder', {order_id}, (success, reData) => {
-      if (success) {
-        this.refs.query.onQeury();
-      }
-      callback && callback(success, reData); 
+    return ServerApi.Order.issueOrder(order_id).then(data => {
+      this.refs.query.onQeury();
+      return data;
     });
   }
 
@@ -70,7 +68,8 @@ class IssuePage extends Component {
 
   render() {
     let { orders } = this.state.entities;
-    let { orderList } = this.state.issue;
+    let { orderList } = this.state;
+
     return (
       <div>
         <OrderQuery ref="query" onQeury={this.doGetIssueOrders.bind(this)} onFilter={this.onFilter.bind(this)} />

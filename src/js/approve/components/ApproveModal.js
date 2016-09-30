@@ -54,17 +54,15 @@ class ApproveModal extends Component {
     formData.order_id = order.id;
 
     this.setState({loading: true});
-    this.props.onSubmit(operation, formData, (success, data) => {
-      if(success) {
-        this.setState({
-          alert: { style: 'success', text: data.message}
-        });
-      } else {
-        this.setState({loading: false});
-        this.setState({
-          alert: { style: 'danger', text: data.message}
-        });
-      }
+    this.props.onSubmit(operation, formData).then(data => {
+      this.setState({
+        alert: { style: 'success', text: data.message}
+      });
+    }, data => {
+      this.setState({
+        loading: false,
+        alert: { style: 'danger', text: data.message}
+      });
     });
   } 
 
@@ -77,7 +75,7 @@ class ApproveModal extends Component {
   } 
 
   render() {
-    let { operation, order,type } = this.props;
+    let { operation, order, type } = this.props;
     let { loading } = this.state;
     order = order ? order : {};
 

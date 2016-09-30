@@ -1,12 +1,13 @@
 import {STATUS} from '../constants/OrderStatus';
 
-export function getListFormTable (table, hours) {
+export function getListFormTable(table, hours) {
   var ids = {};
   var idList = [];
   for(var hour in table) {
-    if(!hours || hours.indexOf(parseInt(hour)) != -1) {
-      for(var key in table[hour]) {
-        ids[table[hour][key]] = true;
+    if(!hours || hours.indexOf(parseInt(hour)) !== -1) {
+      let table_oneHour = table[hour];
+      for(var i in table_oneHour) {
+        ids[table_oneHour[i]] = true;
       }
     }
   }
@@ -57,7 +58,7 @@ export function checkPrivilege(userPriv, priv){
 
 
 
-export function getAbsStatus(status, type) {
+export function getAbstractStatus(status, type) {
   if (status == STATUS.CANCELED) {
     return STATUS.STATUS_CANCELED;
   }
@@ -99,4 +100,35 @@ export function getAbsStatus(status, type) {
       return STATUS.STATUS_REJECTED;
     }
   }
+}
+
+export function range2Hours(start_hour, end_hour) {
+  start_hour = parseInt(start_hour);
+  end_hour = parseInt(end_hour);
+
+  let hours = [];
+  for (let hour = start_hour; hour < end_hour; hour++) {
+    hours.push(hour);
+  }
+
+  return hours;
+}
+
+export function hours2Range(hours) {
+  console.log('hours2Range');
+  let start_hour = 0;
+  let end_hour = 0;
+  hours.forEach(hour => {
+    if (start_hour === 0 || start_hour > hour) {
+      start_hour = hour;
+    }
+    if (end_hour === 0 || end_hour < hour) {
+      end_hour = hour;
+    }
+  });
+  
+  return {
+    start_hour: start_hour,
+    end_hour: end_hour + 1
+  };
 }

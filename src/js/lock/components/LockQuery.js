@@ -19,18 +19,18 @@ class LockQuery extends Component {
   onQeury(e) {
     e && e.preventDefault();
 
-    this.setState({alert: null});
-    this.setState({loading: true});
+    this.setState({
+      alert: null,
+      loading: true
+    });
 
-    this.props.onQeury((success, data) => {
+    this.props.onQeury().then(data => {
       this.setState({loading: false});
-      if (success) {
-
-      }else{
-        this.setState({
-          alert: { style: 'danger', text: data.message}
-        });
-      }
+    }, data => {
+      this.setState({
+        loading: false,
+        alert: { style: 'danger', text: data.message}
+      });
     });
   }
 

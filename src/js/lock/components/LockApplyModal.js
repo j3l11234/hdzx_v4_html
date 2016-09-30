@@ -49,16 +49,12 @@ class LockApplyModal extends Component {
   }
 
   showModal() {
-    this.reset();
-    $(this.refs.modal).modal('show');
-  }
-
-  reset() {
     this.setState({
       loading: false,
       finished: false,
       alert: null,
     });
+    $(this.refs.modal).modal('show');
   }
 
   onSubmit() {
@@ -66,7 +62,7 @@ class LockApplyModal extends Component {
 
     this.fv.validateAll();
     let error = this.fv.getFirstError();
-    if(error) {
+    if (error) {
       this.setState({
         alert: {style: 'danger', text: error}
       });
@@ -75,19 +71,19 @@ class LockApplyModal extends Component {
 
     let formData = this.fv.getFormData();
 
-    this.setState({loading: true});
-    onSubmit(formData, (success, data) => {
-      if(success){
-        this.setState({
-          alert: { style: 'success', text: data.message},
-          finished: true,
-        });
-      } else {
-        this.setState({loading: false});
-        this.setState({
-          alert: { style: 'danger', text: data.message}
-        });
-      }
+    this.setState({
+      loading: true
+    });
+    onSubmit(formData).then(data => {
+      this.setState({
+        alert: { style: 'success', text: data.message},
+        finished: true,
+      });
+    }, data => {
+      this.setState({
+        loading: false,
+        alert: { style: 'danger', text: data.message}
+      });
     });
   } 
 
