@@ -24,6 +24,16 @@ module.exports = {
     new webpack.optimize.CommonsChunkPlugin({
       name: 'common',
       minChunks: Infinity
+    }),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify(process.env.NODE_ENV)
+      }
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      compress: process.env.NODE_ENV !== 'production' ? false : {
+        warnings: false
+      }
     })
   ],
   module: {
@@ -38,5 +48,5 @@ module.exports = {
       }
     ]
   },
-  devtool: 'source-map'
+  devtool: process.env.NODE_ENV !== 'production' ? 'source-map' : ''
 };

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "gulp dev",
     "build": "gulp build",
-    "sass": "node sass.js"
+    "dist": "cross-env NODE_ENV=production gulp build"
   },
   "author": "j3l11234",
   "license": "ISC",
@@ -21,9 +21,12 @@
     "babel-loader": "*",
     "babel-preset-es2015": "*",
     "babel-preset-react": "*",
+    "cross-env": "^3.0.0",
     "gulp": "*",
+    "gulp-clean-css": "^2.0.13",
     "gulp-plumber": "*",
     "gulp-sass": "^2.3.2",
+    "gulp-sourcemaps": "^1.6.0",
     "node-sass": "^3.8.0",
     "optimist": "^0.6.1",
     "webpack": "*",

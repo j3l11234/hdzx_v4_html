@@ -1,4 +1,6 @@
 var gulp = require('gulp');
+var sourcemaps = require('gulp-sourcemaps');
+var cleanCSS = require('gulp-clean-css');
 var sass = require('gulp-sass');
 var plumber = require('gulp-plumber');
 var webpack = require('webpack-stream');
@@ -8,21 +10,31 @@ var DIST = argv.dist ? argv.dist : './dist';
 console.log('the DIST files wiil be saved in: '+DIST);
 
 gulp.task('dev', function() {
-    gulp.start('styles', 'webpack-watch', 'watch');
+    gulp.start('style', 'webpack-watch', 'watch');
 });
 
 gulp.task('build', function() {
-    gulp.start('styles', 'webpack');
+    gulp.start('style', 'webpack');
 });
 
-gulp.task('styles', function() {
-  gulp.src('./src/scss/app.scss')
-    .pipe(sass({
-      sourceMap: true,
-      includePaths: ['./node_modules/bootstrap-sass/assets/stylesheets'],
-    }).on('error', sass.logError))
-    .pipe(gulp.dest(DIST + '/css'));
-
+gulp.task('style', function() {
+  if (process.env.NODE_ENV !== 'production'){
+    gulp.src('./src/scss/app.scss')
+      .pipe(sourcemaps.init())
+      .pipe(sass({
+        includePaths: ['./node_modules/bootstrap-sass/assets/stylesheets']
+      }).on('error', sass.logError))
+      .pipe(sourcemaps.write('./'))
+      .pipe(gulp.dest(DIST + '/css'))
+  } else {
+     gulp.src('./src/scss/app.scss')
+      .pipe(sass({
+        includePaths: ['./node_modules/bootstrap-sass/assets/stylesheets']
+      }).on('error', sass.logError))
+      .pipe(cleanCSS())
+      .pipe(gulp.dest(DIST + '/css'))
+  }
+  
 });
 
 gulp.task('webpack-watch', function() {
@@ -39,9 +51,7 @@ gulp.task('webpack', function() {
     .pipe(gulp.dest(DIST + '/js'));
 });
 
-
-
 gulp.task('watch', function() {
-  gulp.watch('./src/scss/app.scss', ['styles']);
+  gulp.watch('./src/scss/app.scss', ['style']);
 });
 
