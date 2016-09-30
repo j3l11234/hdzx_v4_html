@@ -30,12 +30,13 @@ module.exports = {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV)
       }
     }),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: process.env.NODE_ENV !== 'production' ? false : {
+  ].concat(process.env.NODE_ENV !== 'production' ? [] : [
+     new webpack.optimize.UglifyJsPlugin({
+      compress: {
         warnings: false
       }
     })
-  ],
+  ]),
   module: {
     loaders: [
       {

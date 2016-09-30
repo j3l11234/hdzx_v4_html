@@ -1,19 +1,29 @@
 var gulp = require('gulp');
 var sourcemaps = require('gulp-sourcemaps');
 var cleanCSS = require('gulp-clean-css');
+var del = require('del');
 var sass = require('gulp-sass');
 var plumber = require('gulp-plumber');
 var webpack = require('webpack-stream');
 var argv = require('optimist').argv;
 
-var DIST = argv.dist ? argv.dist : './dist';
-console.log('the DIST files wiil be saved in: '+DIST);
+var DIST = './dist';
 
-gulp.task('dev', function() {
-    gulp.start('style', 'webpack-watch', 'watch');
+gulp.task('clean', function () {
+  return del([
+    './dist/**/*',
+  ]);
 });
 
-gulp.task('build', function() {
+gulp.task('dev', function() {
+  if (argv.dist) {
+    DIST = argv.dist;
+    console.log('the DIST files wiil be saved in: '+ DIST);
+  }
+  gulp.start('style', 'webpack-watch', 'watch');
+});
+
+gulp.task('build', ['clean'], function() {
     gulp.start('style', 'webpack');
 });
 

@@ -22,6 +22,7 @@
     "babel-preset-es2015": "*",
     "babel-preset-react": "*",
     "cross-env": "^3.0.0",
+    "del": "^2.2.2",
     "gulp": "*",
     "gulp-clean-css": "^2.0.13",
     "gulp-plumber": "*",
