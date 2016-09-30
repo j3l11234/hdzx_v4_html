@@ -3,7 +3,7 @@ import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMix
 
 import Prop from '../../common/components/PropGroup';
 import { STATUS, LOOP, WEEKDAY } from '../../common/constants/LockStatus';
-
+import { range2Hours, hours2Range } from '../../common/units/Helpers';
 
 class LockItem extends Component {
   constructor (props) {
@@ -62,9 +62,8 @@ class LockItem extends Component {
       room_name = '多个房间';
     }
 
-    let startHour = parseInt(lock.hours[0]);
-    let endHour = parseInt(lock.hours[lock.hours.length -1])+1;
-    let lock_time = startHour + '时 - ' + endHour + '时';
+    let { start_hour, end_hour } = hours2Range(lock.hours);
+    let lock_time = start_hour + '时 - ' + end_hour + '时';
     let lock_date;
     if (lock.loop_type == LOOP.DAY) {
       lock_date = '每日';

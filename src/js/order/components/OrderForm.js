@@ -5,6 +5,8 @@ import HourSelect from './OrderHourSelect';
 import DeptSelect from './OrderDeptSelect';
 import Note from './OrderNote';
 import FormValidator from '../../common/units/FormValidator';
+import { range2Hours } from '../../common/units/Helpers';
+
 
 const NumberMap =  {
   1: '<5',
@@ -21,8 +23,8 @@ class OrderForm extends Component {
 
     this.state = {
       captchaUrl: null,
-      startHour: null,
-      endHour: null,
+      start_hour: null,
+      end_hour: null,
       hours: null
     }
 
@@ -30,7 +32,7 @@ class OrderForm extends Component {
       name: {
         value: '',
         validator: (value) => {
-          if(value || value.length < 1) {
+          if(!value || value.length < 1) {
             return  '请认真填写姓名';
           }
         }
@@ -54,7 +56,7 @@ class OrderForm extends Component {
       title: {
         value: '',
         validator: (value) => {
-          if(value || value.length < 2) {
+          if(!value || value.length < 2) {
             return  '请认真填写标题';
           }
         }
@@ -62,7 +64,7 @@ class OrderForm extends Component {
       content: {
         value: '',
         validator: (value) => {
-          if(value || value.length < 4) {
+          if(!value || value.length < 4) {
             return  '请认真填写活动内容';
           }
         }
@@ -78,7 +80,7 @@ class OrderForm extends Component {
       secure: {
         value: '',
         validator: (value) => {
-          if(value || value.length < 4) {
+          if(!value || value.length < 4) {
             return  '请认真填写安保措施';
           }
         }
@@ -99,8 +101,8 @@ class OrderForm extends Component {
     this.forceUpdate();
   }
 
-  onChooseHours (startHour, endHour, hours) {
-    this.setState({startHour, endHour, hours});
+  onHoursChange (start_hour, end_hour) {
+    this.setState({start_hour, end_hour});
   }
 
   onCaptcha () {
@@ -118,9 +120,8 @@ class OrderForm extends Component {
 
   reset() {
     this.setState({
-      startHour: null,
-      endHour: null,
-      hours: null,
+      start_hour: null,
+      end_hour: null,
       alert: null
     });
     this.refs.hourSelect.reset();
@@ -129,6 +130,7 @@ class OrderForm extends Component {
 
   onSubmit() {
     let {onAlert} = this.props;
+    let {start_hour, end_hour} = this.state;
     this.fv.validateAll();
     let error = this.fv.getFirstError();
     if(error) {
@@ -139,7 +141,7 @@ class OrderForm extends Component {
       onAlert({style: 'danger', text: '请正确选择社团单位'});
       return;
     }
-    if (!this.state.hours) {
+    if (!this.state.start_hour || !this.state.end_hour) {
       onAlert({style: 'danger', text: '请选择预约时段'});
       return;
     }
@@ -149,7 +151,7 @@ class OrderForm extends Component {
       number: NumberMap[formData.number],
       room_id: this.props.room_id,
       date: this.props.date,
-      hours: JSON.stringify(this.state.hours),
+      hours: JSON.stringify(range2Hours(start_hour, end_hour)),
       dept_id: this.refs.deptSelect.getSelect(),
     });
 
@@ -170,7 +172,7 @@ class OrderForm extends Component {
 
   render() {
     let {room, hourTable, date, depts, deptMap} = this.props;
-    let { startHour, endHour } = this.state;
+    let { start_hour, end_hour } = this.state;
     let roomName = room.number+' - '+room.name;
     hourTable = hourTable ? hourTable : [];
 
@@ -178,10 +180,11 @@ class OrderForm extends Component {
       <form>
         <div className="row">
           <div className="col-sm-6">
-            <HourSelect ref="hourSelect" hourTable={hourTable} maxHour={room.max_hour} onChooseHours={this.onChooseHours.bind(this)}/>
+            <HourSelect ref="hourSelect" hourTable={hourTable} maxHour={room.max_hour}
+              onChooseHours={this.onHoursChange.bind(this)}/>
           </div>
           <div className="col-sm-6">
-            <Note ref="note" date={date} roomName={roomName} startHour={startHour} endHour={endHour} maxHour={room.max_hour}/>
+            <Note ref="note" date={date} roomName={roomName} start_hour={start_hour} end_hour={end_hour} maxHour={room.max_hour}/>
           </div>
           <div className="clearfix" />
           <div className={'form-group col-sm-6 '+this.getBsStyle.call(this, 'name')}>

@@ -5,7 +5,7 @@ import Prop from '../../common/components/PropGroup';
 import StatusLabel from '../../common/components/StatusLabel';
 import { STATUS } from '../../common/constants/OrderStatus';
 import { TYPE_NAME } from '../../common/constants/OperationTypes';
-import { getAbstractStatus } from '../../common/units/Helpers';
+import { getAbstractStatus, hours2Range } from '../../common/units/Helpers';
 
 
 class ApproveOrderItem extends Component {
@@ -32,7 +32,11 @@ class ApproveOrderItem extends Component {
   onCancelClick(){
     if (confirm("确认要取消该申请吗？")) {
       let { order,onCancelClick } = this.props;
-      onCancelClick(order.id);
+      onCancelClick(order.id).then(data => {
+        alert(data.message);
+      }, data => {
+        alert(data.message);
+      });;
     }  
   }
 
@@ -43,9 +47,7 @@ class ApproveOrderItem extends Component {
     }
 
     let student_no = order.student_no ? order.student_no : ' ';
-    let hours = order.hours;
-    let startHour = parseInt(hours[0]);
-    let endHour = parseInt(hours[hours.length -1])+1;
+    let { start_hour, end_hour } = hours2Range(order.hours);
     let submit_time = order.submit_time ? new Date(order.submit_time*1000).Format('yyyy-MM-dd hh:mm:ss') : ' ';
     let issue_time = order.issue_time ? new Date(order.issue_time*1000).Format('yyyy-MM-dd hh:mm:ss') : '未发放'; 
     let status = getAbstractStatus(order.status);
@@ -64,7 +66,7 @@ class ApproveOrderItem extends Component {
               <div className="row">
                 <div className="col-sm-4">{order.dept_name+ ' - ' + order.name}</div>
                 <div className="col-sm-4">{order.room_name}</div>
-                <div className="col-sm-4">{order.date + ' ' +startHour + '时 - ' + endHour + '时'}</div>
+                <div className="col-sm-4">{`${order.date} ${start_hour}时 - ${end_hour}时`}</div>
               </div>
             </a>
           </h4>

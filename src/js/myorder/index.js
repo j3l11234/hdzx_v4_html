@@ -1,12 +1,13 @@
 import '../common/Polyfills';
 import React, { Component } from 'react';
+import update from 'react/lib/update';
 import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMixin';
 import ReactDOM from 'react-dom';
 import md5 from 'md5';
 
 import OrderQuery from './components/OrderQuery';
 import OrderList from './components/OrderList';
-import { ajaxGet, ajaxPost } from '../common/units/AjaxApi';
+import * as ServerApi from '../common/units/ServerApi';
 
 class MyorderPage extends Component {
   constructor(props) {
@@ -21,42 +22,39 @@ class MyorderPage extends Component {
         orderList: []
       }
     };
-    this.state = Object.assign({}, this.store);
+    this.state = this.store;
   }
 
   componentDidMount() {
     this.refs.query.onQeury();
   }
 
-  doGetMyOrders(start_date, end_date, callback) {
-    ajaxGet('/order/getmyorders?start_date='+start_date+'&end_date='+end_date, (success, data) => {
-      if (success) {
-        let {orders, orderList} = data;
+  doGetMyOrders(start_date, end_date) {
+    return ServerApi.Order.getMyOrders(start_date, end_date).then(data => {
+      let {orders, orderList} = data;
 
-        //计算chksum
-        for (var order_id in orders) {
-          let order = orders[order_id];
-          order.chksum = md5(JSON.stringify(order)).substr(0,6);
-        }
-
-        this.store.entities = Object.assign({}, this.store.entities, { 
-          orders: Object.assign({}, this.store.entities.orders, orders)
-        });
-        this.store.myorder = Object.assign({}, this.store.myorder, {
-          orderList: orderList
-        });
-        this.setState(this.store);
+      //计算chksum
+      for (var order_id in orders) {
+        let order = orders[order_id];
+        order.chksum = md5(JSON.stringify(order)).substr(0,6);
       }
-      callback && callback(success, data); 
+
+      this.store = update(this.store, {
+        entities: {
+          orders: {$merge: orders},
+        },
+        orderList: {$set: orderList},
+      });
+      this.setState(this.store);
+
+      return data;
     });
   }
   
-  doCancelOrder(order_id, callback) {
-    ajaxPost('/order/cancelorder', {order_id}, (success, reData) => {
-      if (success) {
-        this.refs.query.onQeury();
-      }
-      callback && callback(success, reData); 
+  doCancelOrder(order_id) {
+    return ServerApi.Order.cancelOrder(order_id).then(data => {
+      this.refs.query.onQeury();
+      return data;
     });
   }
 
@@ -70,7 +68,7 @@ class MyorderPage extends Component {
 
   render() {
     let { orders } = this.state.entities;
-    let { orderList } = this.state.myorder;
+    let { orderList } = this.state;
     return (
       <div>
         <OrderQuery ref="query" onQeury={this.doGetMyOrders.bind(this)} onFilter={this.onFilter.bind(this)} />

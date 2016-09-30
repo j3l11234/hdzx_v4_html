@@ -203,12 +203,6 @@ class LockModal extends Component {
     let { mode, lock, roomList, rooms } = this.props;
     let { loading } = this.state;
     lock = lock ? lock : {};
-
-    let startHour,endHour
-    if(lock.hours){
-      startHour = parseInt(lock.hours[0]);
-      endHour = parseInt(lock.hours[lock.hours.length -1])+1;
-    }
     
     let title = "";
     if(mode == 'add') {

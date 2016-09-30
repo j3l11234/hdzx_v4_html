@@ -35,7 +35,10 @@ class OrderModal extends Component {
   showModal() {
     let { user } = this.props;
 
-    this.setState({ loading: false });
+    this.setState({
+      loading: false,
+      alert: null,
+    });
     this.refs.form.reset();
     this.refs.form.setValues({
       name: user.alias,
@@ -65,7 +68,6 @@ class OrderModal extends Component {
     this.setState({loading: true});
     return onSubmit(data).then(data => {
       this.setState({
-        loading: false,
         alert: {tabs: ['order'], style: 'success', text: data.message}
       });
       return data;

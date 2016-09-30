@@ -8,7 +8,7 @@ class OrderNote extends Component {
   }
 
   render() {
-    let {date, roomName, maxHour, startHour, endHour} = this.props;
+    let {date, roomName, maxHour, start_hour, end_hour} = this.props;
     return (
       <div className="note">
         <div className="note-row">
@@ -21,7 +21,7 @@ class OrderNote extends Component {
         </div>
         <div className="note-row">
           <label className="note-label">时段：</label>
-          <div className="note-content">从<span className="note-hour">{startHour ? startHour : ''}</span>时到<span className="note-hour">{endHour ? endHour+1 : ''}</span>时(最长<span>{maxHour}</span>小时)</div>
+          <div className="note-content">从<span className="note-hour">{start_hour ? start_hour : ''}</span>时到<span className="note-hour">{end_hour ? end_hour : ''}</span>时{`(最长${maxHour}小时)`}</div>
         </div>
         <div className="note-row">
           <label className="note-label">图例：</label>

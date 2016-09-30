@@ -41,6 +41,14 @@ export const Order = {
   },
   issueOrder: function(order_id) {
     return ajaxPost(URL + 'order/issueorder', {order_id});
+  },
+  getMyOrders: function(start_date, end_date) {
+    return ajaxGet(URL + '/order/getmyorders' +
+      '?start_date=' + start_date +
+      '&end_date=' + end_date);
+  },
+  cancelOrder: function(order_id) {
+    return ajaxPost(URL + 'order/cancelorder', {order_id});
   }
 };
 

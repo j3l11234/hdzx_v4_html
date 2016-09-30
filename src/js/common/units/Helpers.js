@@ -115,10 +115,10 @@ export function range2Hours(start_hour, end_hour) {
 }
 
 export function hours2Range(hours) {
-  console.log('hours2Range');
+
   let start_hour = 0;
   let end_hour = 0;
-  hours.forEach(hour => {
+  hours && hours.forEach(hour => {
     if (start_hour === 0 || start_hour > hour) {
       start_hour = hour;
     }

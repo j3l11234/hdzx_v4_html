@@ -4,6 +4,7 @@ import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMix
 import FormAlert from '../../common/components/FormAlert';
 import FormValidator from '../../common/units/FormValidator';
 import Prop from '../../common/components/PropGroup';
+import { hours2Range } from '../../common/units/Helpers';
 
 class ApproveModal extends Component {
   constructor(props) {
@@ -79,14 +80,8 @@ class ApproveModal extends Component {
     let { loading } = this.state;
     order = order ? order : {};
 
-    let startHour,endHour
-    if(order.hours){
-      let hours = order.hours;
-      startHour = parseInt(hours[0]);
-      endHour = parseInt(hours[hours.length -1])+1;
-    }
-    
-    let title = "";
+    let { start_hour, end_hour } = hours2Range(order.hours);
+    let title = '';
     let conflict = order.conflict ? order.conflict.length > 0 : false;
     let operateBtn;
     switch(operation) {
@@ -120,7 +115,7 @@ class ApproveModal extends Component {
                   <Prop groupClassName="col-sm-6" label="姓名" content={order.name} />
                   <Prop groupClassName="col-sm-6" label="社团单位" content={order.dept_name} />
                   <Prop groupClassName="col-sm-6" label="申请房间" content={order.room_name} />
-                  <Prop groupClassName="col-sm-6" label="申请时段" content={order.date + ' ' +startHour + '时 - ' + endHour + '时'} />
+                  <Prop groupClassName="col-sm-6" label="申请时段" content={`${order.date} ${start_hour}时 - ${end_hour}时`} />
                   <Prop groupClassName="col-sm-12" label="活动主题" content={order.title} />
                   <div className="col-sm-12">
                     <hr className="small" />
