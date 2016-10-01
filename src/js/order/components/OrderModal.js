@@ -33,21 +33,26 @@ class OrderModal extends Component {
   }
 
   showModal() {
-    let { user } = this.props;
-
     this.setState({
       loading: false,
       alert: null,
     });
-    this.refs.form.reset();
-    this.refs.form.setValues({
-      name: user.alias,
-      student_no: /^\d{8}$/.test(user.username)? user.username : '' ,
-    });
+    
     
     setTimeout(()=>{
+      let { rooms, user } = this.props;
       let { room_id, date } = this.props.modal;
       let roomTable = this.props.roomTables[date+'_'+room_id];
+      let room = rooms[room_id];
+
+      this.refs.form.reset();
+      this.refs.form.setValues({
+        name: user.alias,
+        student_no: /^\d{8}$/.test(user.username)? user.username : '' ,
+        secure: room.secure == 0 ? '系统自动填写' : ''
+      });
+
+      
       if (roomTable && roomTable.available) {
         $(this.refs.label_order).tab('show');
       } else {
@@ -96,7 +101,7 @@ class OrderModal extends Component {
     if (roomTables && room_id && date) {
       roomTable = roomTables[date+'_'+room_id];
       room = rooms[room_id]; 
-    }else{
+    } else {
       roomTable = {};
       room = {};
     }
@@ -121,7 +126,7 @@ class OrderModal extends Component {
               </ul>
               <div className="tab-content">
                 <div role="tabpanel" className="tab-pane" id="model-order" style={!available ? {display: 'none'} : null}>
-                  <Form ref="form" room_id={room_id} date={date} room={room} hourTable={roomTable.hourTable} depts={depts} deptMap={deptMap}
+                  <Form ref="form" date={date} room={room} hourTable={roomTable.hourTable} depts={depts} deptMap={deptMap}
                     onAlert={this.onFormAlert.bind(this)} onSubmit={this.onSubmit.bind(this)} onCaptcha={onCaptcha} />
                 </div>
                 <div role="tabpanel" className="tab-pane" id="model-use">

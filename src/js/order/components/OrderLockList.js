@@ -44,15 +44,9 @@ class OrderLockList extends Component {
             let endHour = parseInt(hours[hours.length -1])+1;
             return (
               <tr key={lockId}>
-                <td>
-                  <span>{title}</span>
-                </td>
-                <td>
-                  <span>{date}</span>
-                </td>
-                <td>
-                  <span>{startHour}时 - {endHour}时</span>
-                </td>
+                <td>{title}</td>
+                <td>{date}</td>
+                <td>{`${startHour}时 - ${endHour}时`}</td>
               </tr>
             );
           })

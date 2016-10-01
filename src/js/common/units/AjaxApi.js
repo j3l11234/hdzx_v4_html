@@ -43,7 +43,7 @@ function sendAjax(url, method, data) {
       }
     })
     .fail((jqXHR, textStatus, errorThrown) => {
-      reject(textStatus + ': ' + errorThrown);
+      reject({message: textStatus + ': ' + errorThrown});
     });
   });
 }

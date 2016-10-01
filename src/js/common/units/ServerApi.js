@@ -48,7 +48,12 @@ export const Order = {
       '&end_date=' + end_date);
   },
   cancelOrder: function(order_id) {
-    return ajaxPost(URL + 'order/cancelorder', {order_id});
+    return ajaxPost(URL + 'order/cancelorder' +
+      '?order_id=' + order_id, null);
+  },
+  paperOrder: function(order_id) {
+    return ajaxPost(URL + 'order/paperorder' +
+      '?order_id=' + order_id, null);
   }
 };
 

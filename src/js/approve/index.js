@@ -47,10 +47,8 @@ class ApprovePage extends Component {
         order.conflict = [];
 
         if (roomTable) {
-          let conflictOrders = Object.assign( [],
-            getListFormTable(roomTable.ordered, order.hours),
-            getListFormTable(roomTable.used, order.hours)
-          );
+          let conflictOrders = getListFormTable(roomTable.ordered, order.hours).concat(
+            getListFormTable(roomTable.used, order.hours));
           conflictOrders.forEach(conflict_order_id => {
             if (orders[conflict_order_id] && conflict_order_id != order_id) {
               order.conflict.push(conflict_order_id);

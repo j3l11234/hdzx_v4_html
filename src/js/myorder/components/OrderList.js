@@ -57,7 +57,7 @@ class OrderList extends Component {
   }
 
   render() {
-    let { orders, onCancelClick } = this.props;
+    let { orders, onCancelClick, onPaperClick } = this.props;
     let { curPage, perPage } = this.state.filter;
     let orderList = this.getFilteredList();
     let { start, end } = Pagination.getLimit(curPage, orderList.length, perPage);
@@ -68,7 +68,8 @@ class OrderList extends Component {
         orderList.slice(start, end).map(orderId => {
           let order = orders[orderId];
           return (
-            <Item key={orderId} order={order} chksum={order.chksum} onCancelClick={onCancelClick} />
+            <Item key={orderId} order={order} chksum={order.chksum}
+              onCancelClick={onCancelClick} onPaperClick={onPaperClick} />
           );
         })
       }

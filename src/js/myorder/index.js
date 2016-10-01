@@ -58,6 +58,10 @@ class MyorderPage extends Component {
     });
   }
 
+  doPaperOrder(order_id) {
+    return ServerApi.Order.paperOrder(order_id);
+  }
+
   onFilter(status, perPage) {
     this.refs.list.setFilter({
       status,
@@ -73,7 +77,8 @@ class MyorderPage extends Component {
       <div>
         <OrderQuery ref="query" onQeury={this.doGetMyOrders.bind(this)} onFilter={this.onFilter.bind(this)} />
         <hr />
-        <OrderList ref="list" orders={orders} orderList={orderList} onCancelClick={this.doCancelOrder.bind(this)}/>
+        <OrderList ref="list" orders={orders} orderList={orderList}
+          onCancelClick={this.doCancelOrder.bind(this)} onPaperClick={this.doPaperOrder.bind(this)}/>
       </div>
     );
   }

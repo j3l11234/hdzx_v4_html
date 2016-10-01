@@ -24,20 +24,30 @@ class ApproveOrderItem extends Component {
       return 'panel-success';
     } else if (status == STATUS.STATUS_REJECTED) {
       return 'panel-danger';
-    } else if (status ==STATUS.STATUS_CANCELED) {
+    } else if (status == STATUS.STATUS_CANCELED) {
       return 'panel-default';
     }
   }
 
-  onCancelClick(){
+  onCancelClick() {
     if (confirm("确认要取消该申请吗？")) {
-      let { order,onCancelClick } = this.props;
+      let { order, onCancelClick } = this.props;
       onCancelClick(order.id).then(data => {
         alert(data.message);
       }, data => {
         alert(data.message);
-      });;
+      });
     }  
+  }
+
+  onPaperClick(){
+    let { order, onPaperClick } = this.props;
+    onPaperClick(order.id).then(data => {
+      alert(data.message);
+    }, data => {
+      console.log(data);
+      alert(data.message);
+    });
   }
 
   render () {
@@ -52,12 +62,6 @@ class ApproveOrderItem extends Component {
     let issue_time = order.issue_time ? new Date(order.issue_time*1000).Format('yyyy-MM-dd hh:mm:ss') : '未发放'; 
     let status = getAbstractStatus(order.status);
 
-
-    //操作按钮生成
-    let operationBtns = [];
-    if (status != STATUS.STATUS_CANCELED){
-      operationBtns.push((<button type="button" className="btn btn-block btn-danger btn-sm" onClick={this.onCancelClick.bind(this)}>取消申请</button>));
-    }
     return (
       <div className={'panel ' + this.getPanelStyle(status)}>
         <div className="panel-heading">
@@ -100,15 +104,16 @@ class ApproveOrderItem extends Component {
             }
             <div className="row">
               <hr className="small" />
-              {
-                operationBtns.map((operationBtn,i) => {
-                  return (
-                    <div key={i} className="col-sm-4 form-group">
-                      {operationBtn}
-                    </div>
-                  );
-                })
-              }
+                {status == STATUS.STATUS_APPROVED && order.need_paper == 1 ? 
+                  <div className="col-sm-4 form-group">
+                    <button type="button" className="btn btn-block btn-success btn-sm" onClick={this.onPaperClick.bind(this)}>纸质申请表</button>
+                  </div>
+                : null}
+                {status != STATUS.STATUS_CANCELED ? 
+                  <div className="col-sm-4 form-group">
+                    <button type="button" className="btn btn-block btn-danger btn-sm" onClick={this.onCancelClick.bind(this)}>取消申请</button>
+                  </div>
+                : null}
             </div>
           </div>
         </div>

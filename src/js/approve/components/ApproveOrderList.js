@@ -43,7 +43,7 @@ class OrderList extends Component {
     let { filter, conflict_id} = this.state;
 
     if (conflict_id != -1 && orders[conflict_id]) { //显示冲突预约
-      orderList = Object.assign([conflict_id], orders[conflict_id].conflict);
+      orderList = [conflict_id].concat(orders[conflict_id].conflict);
     } else { //筛选
       let _orderList = [];  //filted orderList
       orderList.forEach(order_id => {
