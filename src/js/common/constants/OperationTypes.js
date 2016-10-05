@@ -15,9 +15,9 @@ const TYPE = {
 };
 
 let TYPE_NAME = {};
-TYPE_NAME[TYPE.TYPE_SUBMIT] =          '提交预约';
+TYPE_NAME[TYPE.TYPE_SUBMIT] =          '提交申请';
 TYPE_NAME[TYPE.TYPE_CHANGE_HOUR] =     '修改预约时间';
-TYPE_NAME[TYPE.TYPE_CANCEL] =          '取消预约';
+TYPE_NAME[TYPE.TYPE_CANCEL] =          '取消申请';
 TYPE_NAME[TYPE.TYPE_MANAGER_APPROVE] = '负责人审批通过';
 TYPE_NAME[TYPE.TYPE_MANAGER_REJECT] =  '负责人审批驳回';
 TYPE_NAME[TYPE.TYPE_MANAGER_REVOKE] =  '负责人审批撤回';

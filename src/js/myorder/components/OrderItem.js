@@ -3,6 +3,7 @@ import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMix
 
 import Prop from '../../common/components/PropGroup';
 import StatusLabel from '../../common/components/StatusLabel';
+import FormAlert from '../../common/components/FormAlert';
 import { STATUS } from '../../common/constants/OrderStatus';
 import { TYPE_NAME } from '../../common/constants/OperationTypes';
 import { getAbstractStatus, hours2Range } from '../../common/units/Helpers';
@@ -43,9 +44,8 @@ class ApproveOrderItem extends Component {
   onPaperClick(){
     let { order, onPaperClick } = this.props;
     onPaperClick(order.id).then(data => {
-      alert(data.message);
+      //alert(data.message);
     }, data => {
-      console.log(data);
       alert(data.message);
     });
   }
@@ -104,6 +104,14 @@ class ApproveOrderItem extends Component {
             }
             <div className="row">
               <hr className="small" />
+                {order.apply ? 
+                  <div className="col-sm-12">
+                    <FormAlert style='success'>
+                      申请表准备完成，请点击<a href={order.apply.url} target="_blank">链接</a>{`下载申请表，链接有效时间${order.apply.expire}s`}
+                    </FormAlert>
+                    <br />
+                  </div>
+                : null}
                 {status == STATUS.STATUS_APPROVED && order.need_paper == 1 ? 
                   <div className="col-sm-4 form-group">
                     <button type="button" className="btn btn-block btn-success btn-sm" onClick={this.onPaperClick.bind(this)}>纸质申请表</button>

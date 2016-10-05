@@ -59,7 +59,26 @@ class MyorderPage extends Component {
   }
 
   doPaperOrder(order_id) {
-    return ServerApi.Order.paperOrder(order_id);
+    return ServerApi.Order.paperOrder(order_id).then(data => {
+      let { expire, url } = data;
+
+      let order = update(this.store.entities.orders[order_id], {
+        apply: {$set: {
+          expire,
+          url,
+        }}
+      });
+      order.chksum = md5(JSON.stringify(order)).substr(0,6);
+      this.store = update(this.store, {
+        entities: {
+          orders: {
+            [order_id]: {$set: order}
+          },
+        },
+      });
+      this.setState(this.store);
+      return data;
+    });
   }
 
   onFilter(status, perPage) {
