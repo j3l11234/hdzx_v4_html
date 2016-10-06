@@ -148,7 +148,7 @@ class OrderForm extends Component {
   }
 
   setValues (values) {
-    this.fv.setInputValues(values, true);
+    this.fv.setInputValues(values, false);
   }
 
   reset() {
