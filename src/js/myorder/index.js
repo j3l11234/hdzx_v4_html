@@ -7,6 +7,7 @@ import md5 from 'md5';
 
 import OrderQuery from './components/OrderQuery';
 import OrderList from './components/OrderList';
+import OrderExtModal from './components/OrderExtModal';
 import * as ServerApi from '../common/units/ServerApi';
 
 class MyorderPage extends Component {
@@ -81,6 +82,23 @@ class MyorderPage extends Component {
     });
   }
 
+  doUpdateOrderExt(order_id, data) {
+    return ServerApi.Order.updateOrderExt(order_id, data).then(data => {
+      this.refs.query.onQeury();
+      return data;
+    });
+  }
+
+  onExtClick(order_id) {
+     this.store = update(this.store, {
+      myorder: {
+        order_id: {$set: order_id},
+      }
+    });
+    this.setState(this.store);
+    this.refs.modal.showModal();
+  }
+
   onFilter(status, perPage) {
     this.refs.list.setFilter({
       status,
@@ -92,12 +110,16 @@ class MyorderPage extends Component {
   render() {
     let { orders } = this.state.entities;
     let { orderList } = this.state;
+    let { order_id } = this.state.myorder;
+    let order = orders[order_id];
+
     return (
       <div>
         <OrderQuery ref="query" onQeury={this.doGetMyOrders.bind(this)} onFilter={this.onFilter.bind(this)} />
         <hr />
         <OrderList ref="list" orders={orders} orderList={orderList}
-          onCancelClick={this.doCancelOrder.bind(this)} onPaperClick={this.doPaperOrder.bind(this)}/>
+          onCancelClick={this.doCancelOrder.bind(this)} onPaperClick={this.doPaperOrder.bind(this)} onExtClick={this.onExtClick.bind(this)}/>
+        <OrderExtModal ref="modal" order={order} onSubmit={this.doUpdateOrderExt.bind(this)} />
       </div>
     );
   }

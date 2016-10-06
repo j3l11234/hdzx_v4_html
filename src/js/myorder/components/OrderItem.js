@@ -42,7 +42,7 @@ class ApproveOrderItem extends Component {
   }
 
   onPaperClick(){
-    let { order, onPaperClick } = this.props;
+    let { order, onPaperClick, } = this.props;
     onPaperClick(order.id).then(data => {
       //alert(data.message);
     }, data => {
@@ -51,7 +51,7 @@ class ApproveOrderItem extends Component {
   }
 
   render () {
-    let { order, onCancelClick } = this.props;
+    let { order, onCancelClick, onExtClick } = this.props;
     if (!order){
       return null;
     }
@@ -113,9 +113,18 @@ class ApproveOrderItem extends Component {
                   </div>
                 : null}
                 {status == STATUS.STATUS_APPROVED && order.need_paper == 1 ? 
-                  <div className="col-sm-4 form-group">
-                    <button type="button" className="btn btn-block btn-success btn-sm" onClick={this.onPaperClick.bind(this)}>纸质申请表</button>
-                  </div>
+                  typeof order.prin_student !== 'undefined' &&
+                  typeof order.prin_student_phone !== 'undefined' &&
+                  typeof order.prin_teacher !== 'undefined' &&
+                  typeof order.prin_teacher_phone !== 'undefined' &&
+                  typeof order.activity_type !== 'undefined' &&
+                  typeof order.need_media !== 'undefined' ?
+                    <div className="col-sm-4 form-group">
+                      <button type="button" className="btn btn-block btn-success btn-sm" onClick={this.onPaperClick.bind(this)}>纸质申请表</button>
+                    </div> :
+                    <div className="col-sm-4 form-group">
+                      <button type="button" className="btn btn-block btn-info btn-sm" onClick={onExtClick.bind(null,order.id)}>补充申请信息</button>
+                    </div> 
                 : null}
                 {status != STATUS.STATUS_CANCELED ? 
                   <div className="col-sm-4 form-group">

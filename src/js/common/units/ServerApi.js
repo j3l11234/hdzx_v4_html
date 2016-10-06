@@ -54,6 +54,10 @@ export const Order = {
   paperOrder: function(order_id) {
     return ajaxPost(URL + 'order/paperorder' +
       '?order_id=' + order_id, null);
+  },
+  updateOrderExt: function(order_id, data) {
+    return ajaxPost(URL + 'order/updateorderext' +
+      '?order_id=' + order_id, data);
   }
 };
 

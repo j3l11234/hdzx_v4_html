@@ -163,7 +163,7 @@ class OrderForm extends Component {
     let { date, room, onAlert } = this.props;
     let fields = ['hour','name','student_no','phone','title','content','number','secure','captcha'].concat(
       room.need_paper == 1 ? ['prin_student', 'prin_student_phone', 'prin_teacher', 'prin_teacher_phone', 'activity_type', 'need_media'] : []);
-    console.log(fields);
+    
     let errors = this.fv.validateInputs(fields);
     if(errors.length > 0) {
       onAlert({style: 'danger', text: errors[0].error});
