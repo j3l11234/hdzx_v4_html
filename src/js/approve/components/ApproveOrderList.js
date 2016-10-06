@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMixin';
+import update from 'react/lib/update';
 
 import Item from './ApproveOrderItem';
 import Pagination from '../../common/components/Pagination';
@@ -14,33 +15,36 @@ class OrderList extends Component {
     this.state = {
       filter: {
         perPage: 8,
-        curPage: 1
-      },
-      conflict_id: -1,
+        curPage: 1,
+        conflict_id: -1,
+      },  
     };
   }
 
   onPageClick(page) {
-    this.setFilter(Object.assign({}, this.state.filter, { 
-      curPage: page
-    }));
+    this.setFilter({curPage: page});
+  }
+
+  onConflictClick(order_id) {
+    this.setFilter({
+      conflict_id: order_id,
+      curPage: 1
+    });
   }
 
   setFilter(filter) {
-    this.setState({
-      filter
+    this.setState(state => {
+      state = update(state, {
+        filter: {$merge: filter}
+      });
+      return state;
     });
   }
 
-  setConflict(order_id) {
-    this.setState({
-      conflict_id: order_id,
-    });
-  }
 
   getFilteredList() {
     let { orders, orderList, type } = this.props;
-    let { filter, conflict_id} = this.state;
+    let { filter, filter:{conflict_id},} = this.state;
 
     if (conflict_id != -1 && orders[conflict_id]) { //显示冲突预约
       orderList = [conflict_id].concat(orders[conflict_id].conflict);
@@ -75,7 +79,7 @@ class OrderList extends Component {
   }
 
   render() {
-    let { orders, type, onOperationClick, onConflictClick } = this.props;
+    let { orders, type, onOperationClick } = this.props;
     let { curPage, perPage } = this.state.filter;
 
     let orderList = this.getFilteredList();
@@ -84,8 +88,8 @@ class OrderList extends Component {
     return (
       <div>
       { 
-        this.state.conflict_id != -1 ? 
-        <button type="button" className="btn-block btn btn-success" onClick={this.setConflict.bind(this,-1)}>显示所有申请</button> : null
+        this.state.filter.conflict_id != -1 ? 
+        <button type="button" className="btn-block btn btn-success" onClick={this.onConflictClick.bind(this,-1)}>显示所有申请</button> : null
       }
       <br />
       {
@@ -93,7 +97,7 @@ class OrderList extends Component {
           let order = orders[order_id];
           return (
             <Item key={order_id} type={type} order={order} chksum={order.chksum} 
-            onOperationClick={onOperationClick} onConflictClick={onConflictClick}/>
+              onOperationClick={onOperationClick} onConflictClick={this.onConflictClick.bind(this)}/>
           );
         })
       }
