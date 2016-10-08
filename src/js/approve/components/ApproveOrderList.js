@@ -56,7 +56,7 @@ class OrderList extends Component {
           return;
         }
         let status = getAbstractStatus(order.status, type);
-        if (filter.status) {
+        if (filter.status != 0) {
           if (filter.status == STATUS.STATUS_PENDING) {
             if (status === STATUS.STATUS_PENDING) {
               _orderList.push(order_id);
@@ -70,7 +70,9 @@ class OrderList extends Component {
               _orderList.push(order_id);
             }
           }
-        } 
+        } else {
+          _orderList.push(order_id);
+        }
       });
       orderList = _orderList;
     }
