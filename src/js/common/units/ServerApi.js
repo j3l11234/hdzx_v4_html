@@ -77,17 +77,20 @@ export const Approve = {
       '&start_date=' + start_date +
       '&end_date=' + end_date);
   },
-  approveOrder: function(type, data) {
+  approveOrder: function(type, order_id, data) {
     return ajaxPost(URL + 'approve/approveorder' +
-      '?type=' + type, data);
+      '?type=' + type +
+      '&order_id=' + order_id, data);
   },
-  rejectOrder: function(type, data) {
+  rejectOrder: function(type, order_id, data) {
     return ajaxPost(URL + 'approve/rejectorder' +
-      '?type=' + type, data);
+      '?type=' + type +
+      '&order_id=' + order_id, data);
   },
-  revokeOrder: function(type, data) {
+  revokeOrder: function(type, order_id, data) {
     return ajaxPost(URL + 'approve/revokeorder' +
-      '?type=' + type, data);
+      '?type=' + type +
+      '&order_id=' + order_id, data);
   },
 };
 

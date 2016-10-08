@@ -52,10 +52,9 @@ class ApproveModal extends Component {
     }
 
     let formData = this.fv.getFormData();
-    formData.order_id = order.id;
 
     this.setState({loading: true});
-    this.props.onSubmit(operation, formData).then(data => {
+    this.props.onSubmit(operation, order.id, formData).then(data => {
       this.setState({
         alert: { style: 'success', text: data.message}
       });

@@ -80,7 +80,7 @@ class ApprovePage extends Component {
     this.refs.modal.showModal();
   }
 
-  doOperateOrder(operation, data) {
+  doOperateOrder(operation, order_id, data) {
     let url;
     let operateFn;
     switch(operation) {
@@ -96,7 +96,7 @@ class ApprovePage extends Component {
       default:
         return;
     }
-    return operateFn(this.props.type, data).then(respData => {
+    return operateFn(this.props.type, order_id, data).then(respData => {
       this.refs.query.onQeury();
       return respData;
     });
