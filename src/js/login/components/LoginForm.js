@@ -88,8 +88,8 @@ class LoginForm extends Component {
       <form onSubmit={this.onSubmit.bind(this)}>
         <div className="row">
           <div className={'form-group col-sm-12 '+this.getBsStyle.call(this, 'username')}>
-            <label className="control-label">学号/用户名</label>
-            <input type="text" placeholder="用户名" className="form-control" onChange={this.handleChange.bind(this, 'username')} value={this.fv.getInputValue('username')} />
+            <label className="control-label">学号</label>
+            <input type="text" placeholder="学号" className="form-control" onChange={this.handleChange.bind(this, 'username')} value={this.fv.getInputValue('username')} />
           </div>
           <div className={'form-group col-sm-12 '+this.getBsStyle.call(this, 'password')}>
             <label className="control-label">密码</label>
@@ -104,9 +104,6 @@ class LoginForm extends Component {
               <a href={_Server_Data_.BASE_URL+'/user/request-password-reset'}>忘记密码？</a>
           </div>
           <div className="clearfix" />
-          <div className="form-group col-sm-12">
-            <FormAlert style="info" text="如果要审批预约或者进行系统管理，请进入后台系统" />
-          </div>
           <div className="form-group col-sm-6">
             <button type="submit" className="btn-block btn btn-primary" disabled={this.state.loading}>登录</button>
           </div>

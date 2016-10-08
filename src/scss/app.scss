@@ -334,3 +334,37 @@ hr.small{
     width: 31.3%;
   }
 }
+
+//首页轮播
+// Show and left align the captions
+.carousel-caption {
+  left: 10%;
+  right: 10%;
+  top: 5px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  bottom: auto;
+
+  p {
+    text-align: left;
+    font-size: 14px;
+    text-indent: 28px;
+  }
+}
+
+
+// Scale up controls for tablets and up
+@media screen and (min-width: 768px) {
+  .carousel-caption {
+    top: 20px;
+    left: 15%;
+    right: 15%;
+    bottom: auto;
+
+    p {
+      text-align: left;
+      font-size: 18px;
+      text-indent: 36px;  
+    }
+  }
+}

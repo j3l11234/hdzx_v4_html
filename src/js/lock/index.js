@@ -34,16 +34,7 @@ class LockPage extends Component {
   }
 
   componentWillMount() {
-    this.doGetData();
-  }
-
-  componentDidMount() {
-    this.refs.query.onQeury();
-    this.refs.query.onFilterClick();
-  }
-
-  doGetData() {
-    return ServerApi.Data.getData('lock', this.props.type).then(data => {
+    ServerApi.Data.getData('lock', this.props.type).then(data => {
       let { room , tooltip } = data;
       this.store = update(this.store, {
         entities: {
@@ -55,6 +46,11 @@ class LockPage extends Component {
       this.setState(this.store);
       return data;
     });
+  }
+
+  componentDidMount() {
+    this.refs.query.onQeury();
+    this.refs.query.onFilterClick();
   }
 
   doGetLocks() {
