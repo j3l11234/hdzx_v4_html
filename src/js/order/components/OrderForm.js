@@ -187,7 +187,7 @@ class OrderForm extends Component {
 
     this.setState({alert: null});
     this.props.onSubmit(formData).then(null, data => {
-      this.updateCaptcha();
+      this.onCaptcha();
     });
   }
 
