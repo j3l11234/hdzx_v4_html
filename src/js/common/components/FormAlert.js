@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMixin';
 
-const FormAlert = (props) => {
+function FormAlert(props) {
   return <div className={'alert alert-'+props.style} role="alert">
     {props.text}
     {props.children}
