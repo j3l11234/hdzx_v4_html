@@ -128,6 +128,7 @@ class ApprovePage extends Component {
     );
   }
 }
+
 ReactDOM.render(
   <ApprovePage type={_Server_Data_.apprveType} />,
   document.getElementById('approve-page')

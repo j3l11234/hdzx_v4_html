@@ -56,14 +56,14 @@ class ApproveOrderItem extends Component {
 
     //操作按钮生成
     let operationBtns = [];
-    if(status == STATUS.STATUS_PENDING){
+    if (status == STATUS.STATUS_PENDING) {
       operationBtns.push((<button type="button" className="btn btn-block btn-success btn-sm" onClick={this.onOperationClick.bind(this,"approve")}>审批通过</button>));
       operationBtns.push((<button type="button" className="btn btn-block btn-danger btn-sm" onClick={this.onOperationClick.bind(this,"reject")}>审批驳回</button>));
-      conflict && operationBtns.push((<button type="button" className="btn btn-block btn-warning btn-sm" onClick={this.onConflictClick.bind(this)}>查看冲突预约</button>));
-    }else if(status == STATUS.STATUS_REJECTED || status == STATUS.STATUS_APPROVED){
+      conflict && operationBtns.push((<button type="button" className="btn btn-block btn-warning btn-sm" onClick={this.onConflictClick.bind(this)}>查看冲突申请</button>));
+    } else if (status == STATUS.STATUS_REJECTED || status == STATUS.STATUS_APPROVED){
       operationBtns.push((<button type="button" className="btn btn-block btn-warning btn-sm" onClick={this.onOperationClick.bind(this,"revoke")}>审批撤销</button>));
       operationBtns.push(null);
-      conflict && operationBtns.push((<button type="button" className="btn btn-block btn-warning btn-sm" onClick={this.onConflictClick.bind(this)}>查看冲突预约</button>));
+      conflict && operationBtns.push((<button type="button" className="btn btn-block btn-warning btn-sm" onClick={this.onConflictClick.bind(this)}>查看冲突申请</button>));
     }
 
     return (

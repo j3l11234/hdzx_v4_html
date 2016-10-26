@@ -45,7 +45,7 @@ class OrderPage extends Component {
   }
 
   doGetData() {
-    return ServerApi.Data.getData('order', 'user').then(data => {
+    return ServerApi.Data.getMetaData({room:1, dept:1, tooltip:'order'}).then(data => {
       let { room, dept, tooltip } = data;
       this.store = update(this.store, {
         entities: {

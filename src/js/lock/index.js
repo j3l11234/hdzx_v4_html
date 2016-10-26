@@ -34,7 +34,12 @@ class LockPage extends Component {
   }
 
   componentWillMount() {
-    ServerApi.Data.getData('lock', this.props.type).then(data => {
+    let req = {room:1};
+    if(this.props.type == 'user') {
+      req['tooltip'] = 'lock';
+    }
+
+    ServerApi.Data.getMetaData(req).then(data => {
       let { room , tooltip } = data;
       this.store = update(this.store, {
         entities: {

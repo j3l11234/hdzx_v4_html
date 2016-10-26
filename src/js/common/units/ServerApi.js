@@ -8,6 +8,9 @@ export const Data = {
     return ajaxGet(URL + 'data/getdata' +
       '?page=' + page +
       '&type=' + type);
+  },
+  getMetaData: function(data) {
+    return ajaxPost(URL + 'data/getmetadata',data);
   }
 };
 

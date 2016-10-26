@@ -17,7 +17,7 @@ class LoginPage extends Component {
   }
 
   componentWillMount() {
-    ServerApi.Data.getData('login', this.props.type).then(data => {
+    ServerApi.Data.getMetaData({tooltip:'login'}).then(data => {
       let {  tooltip } = data;
       this.store = update(this.store, {
         tooltip: {$set: tooltip}
