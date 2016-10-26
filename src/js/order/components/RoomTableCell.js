@@ -26,7 +26,6 @@ class RoomTableCell extends Component {
   }
 
   render() {
-    console.log('render RoomTableCell');
     let { hourTable, available, chksum } = this.props.roomTable;
     return hourTable ? (
       <div className={'rt-table-item '+ (available ? '' : 'disabled')} onClick={this.onCellClick.bind(this)} 

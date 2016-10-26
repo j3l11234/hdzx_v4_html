@@ -82,7 +82,6 @@ class OrderExtModal extends Component {
         alert: { style: 'success', text: data.message}
       });
     }, data => {
-      console.log(data);
       this.setState({
         loading: false,
         alert: { style: 'danger', text: data.message}
