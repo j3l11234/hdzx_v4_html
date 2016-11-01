@@ -36,10 +36,10 @@ function sendAjax(url, method, data) {
   return new Promise((resolve,reject) => {
     $.ajax(inputData)
     .done((data, textStatus, jqXHR) => {
-      if (data.error == 0) {
-        resolve(data);
+      if (data.success) {
+        resolve(data.data);
       } else {
-        reject(data);
+        reject(data.data);
       }
     })
     .fail((jqXHR, textStatus, errorThrown) => {
