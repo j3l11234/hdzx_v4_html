@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMixin';
 
 import FormAlert from '../../common/components/FormAlert';
-import FormValidator from '../../common/units/FormValidator';
+import FormValidator from '../../common/units/FormValidator_';
 import { STATUS } from '../../common/constants/OrderStatus';
 
 class ApproveQuery extends Component {
@@ -14,8 +14,14 @@ class ApproveQuery extends Component {
       alert: null,
       loading: false
     }
+  }
 
-    this.fv = new FormValidator({
+  componentWillMount() {
+    this.fv = new FormValidator((()=>{
+      return this.state;
+    }).bind(this),this.setState.bind(this));
+
+    this.fv.setInputs({
       start_date: {
         value: '',
         validator: (value) => {
@@ -32,43 +38,69 @@ class ApproveQuery extends Component {
           }
         }
       },
+      room_id: {
+        value: '0',
+        validator: (value) => {
+          return null;
+        }
+      },
+      status: {
+        value: 'pending',
+        validator: (value) => {
+          return null;
+        }
+      },
+      dept_id: {
+        value: '0',
+        validator: (value) => {
+          return null;
+        }
+      },
     });
   }
-  
+
   handleChange (name, event) {
     this.fv.handleChange(name, event);
-    this.forceUpdate();
   }
 
   onQeury(e) {
     e && e.preventDefault();
+    let fields = ['start_date','end_date','room_id', 'status', 'dept_id'];
+    let errors = this.fv.validateInputs(fields);
 
-    this.fv.validateAll();
-    let error = this.fv.getFirstError();
-    if(error) {
+    if(errors.length > 0) {
       this.setState({
         alert: {style: 'danger', text: error}
       });
       return;
     }
 
-    let formData = this.fv.getFormData();
-
-    this.setState({alert: null});
-    this.setState({loading: true});
-    this.props.onQeury(formData.start_date, formData.end_date).then(data => {
+    let formData = this.fv.getInputValues(fields);
+    if (formData.room_id == 0){
+      delete formData.room_id;
+    }
+    if (formData.status == 0){
+      delete formData.status;
+    }
+    if (formData.dept_id == 0){
+      delete formData.dept_id;
+    }
+    this.setState({
+      alert: null,
+      loading: true
+    });
+    this.props.onQeury(formData).then(data => {
       this.setState({loading: false});
       this.fv.setInputValues({
         start_date: data.start_date,
         end_date: data.end_date
       });
-      this.forceUpdate();
     }, data => {
       this.setState({
         loading: false,
         alert: { style: 'danger', text: data.message}
       });
-    });;
+    });
   }
 
   onFilterClick(e) {
@@ -86,7 +118,26 @@ class ApproveQuery extends Component {
   }
 
   render() {
-    let { } = this.props;
+    let {roomList, rooms, deptMap, depts} = this.props;
+    let deptElList = [];
+    let deptHasRendered = {};
+    function renderDepts(deptList, prefix) {
+      if (!deptList) {
+        return;
+      }
+      deptList.map(dept_id => {
+        if (deptHasRendered.dept_id) {
+          return;
+        }
+        let dept = depts[dept_id];
+        deptElList.push(<option key={dept_id} value={dept_id}>{prefix+dept.name}</option>);
+        if (deptMap[dept_id]){
+          renderDepts(deptMap[dept_id], prefix+'└');
+        }
+      })
+    }
+    renderDepts(deptMap[0],'');
+
     return (
       <form onSubmit={this.onQeury.bind(this)} >
         <div className="row">
@@ -105,6 +156,38 @@ class ApproveQuery extends Component {
             </div>
           </div>
           <div className="form-group col-sm-6 col-md-4">
+            <label className="control-label inline-label">申请房间</label>
+            <div className="inline-control">
+              <select ref="dept_id" className="form-control" onChange={this.handleChange.bind(this, 'room_id')} value={this.fv.getInputValue('room_id')}>
+                <option value="0">全部</option>
+                {roomList && roomList.map(room_id => {
+                  let room = rooms[room_id];
+                  return (<option key={room_id} value={room_id}>{room.name+'('+room.number+')'}</option>);
+                })}
+              </select>
+            </div>
+          </div>
+          <div className="form-group col-sm-6 col-md-4">
+            <label className="control-label inline-label">预约状态</label>
+            <div className="inline-control">
+              <select ref="status" className="form-control" onChange={this.handleChange.bind(this, 'status')} value={this.fv.getInputValue('status')}>
+                <option value="0">全部</option>
+                <option value="pending">待审批预约</option>
+                <option value="approved">已通过预约</option>
+                <option value="rejected">已驳回预约</option>
+              </select>
+            </div>
+          </div>
+          <div className="form-group col-sm-6 col-md-4">
+            <label className="control-label inline-label">社团单位</label>
+            <div className="inline-control">
+              <select ref="dept_id" className="form-control" onChange={this.handleChange.bind(this, 'dept_id')} value={this.fv.getInputValue('dept_id')}>
+                <option value="0">全部</option>
+                {deptElList}
+              </select>
+            </div>
+          </div>
+          <div className="form-group col-sm-6 col-md-4">
             <button type="submit" className="btn-block btn btn-primary" disabled={this.state.loading}>查找</button>
           </div>
           <div className="col-md-12">
@@ -113,26 +196,7 @@ class ApproveQuery extends Component {
           <div className="col-sm-12">
             <hr className="small" />
           </div> 
-          <div className="form-group col-sm-6 col-md-4">
-            <label className="control-label inline-label">预约状态</label>
-            <div className="inline-control">
-              <select ref="status" className="form-control" defaultValue="1">
-                <option value="0">全部</option>
-                <option value={STATUS.STATUS_PENDING}>待审批预约</option>
-                <option value={STATUS.STATUS_APPROVED}>已通过预约</option>
-                <option value={STATUS.STATUS_REJECTED}>已驳回预约</option>
-              </select>
-            </div>
-          </div>
-          <div className="form-group col-sm-6 col-md-4">
-            <label className="control-label inline-label">社团单位</label>
-            <div className="inline-control">
-              <select ref="dept_id" className="form-control" defaultValue="0">
-                <option value="0">全部</option>
-                
-              </select>
-            </div>
-          </div>
+ 
           <div className="form-group col-sm-6 col-md-4">
             <label className="control-label inline-label">每页显示</label>
             <div className="inline-control">

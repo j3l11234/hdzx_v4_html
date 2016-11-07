@@ -1,7 +1,9 @@
+import url from 'url';
 import { ajaxGet, ajaxPost } from './AjaxApi';
 // import urls from '../constants/Urls';
 
 const URL = _Server_Data_.BASE_URL;
+const urlObject = url.parse(_Server_Data_.BASE_URL);
 
 export const Data = {
   getData: function(page, type) {
@@ -74,11 +76,25 @@ export const User = {
 };
 
 export const Approve = {
-  getOrders: function(type, start_date, end_date) {
-    return ajaxGet(URL + 'approve/getorders' +
-      '?type=' + type +
-      '&start_date=' + start_date +
-      '&end_date=' + end_date);
+  getOrders: function(condition) {
+    let url = URL + 'approve/getorders' +
+      '?type=' + condition.type +
+      '&start_date=' + condition.start_date +
+      '&end_date=' + condition.end_date;
+    if (condition.status) {
+      url += '&status=' + condition.status;
+    }
+    if (condition.room_id) {
+      url += '&room_id=' + condition.room_id;
+    }
+    if (condition.dept_id) {
+      url += '&dept_id=' + condition.dept_id;
+    }
+    if (condition.conflict_id) {
+      url += '&conflict_id=' + condition.conflict_id;
+    }
+    
+    return ajaxGet(url);
   },
   approveOrder: function(type, order_id, data) {
     return ajaxPost(URL + 'approve/approveorder' +
