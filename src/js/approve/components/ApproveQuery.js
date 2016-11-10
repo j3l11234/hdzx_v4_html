@@ -91,10 +91,6 @@ class ApproveQuery extends Component {
     });
     this.props.onQeury(formData).then(data => {
       this.setState({loading: false});
-      this.fv.setInputValues({
-        start_date: data.start_date,
-        end_date: data.end_date
-      });
     }, data => {
       this.setState({
         loading: false,

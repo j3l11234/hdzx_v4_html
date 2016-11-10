@@ -76,25 +76,33 @@ export const User = {
 };
 
 export const Approve = {
-  getOrders: function(condition) {
+  getOrders: function(type, term) {
     let url = URL + 'approve/getorders' +
-      '?type=' + condition.type +
-      '&start_date=' + condition.start_date +
-      '&end_date=' + condition.end_date;
-    if (condition.status) {
-      url += '&status=' + condition.status;
+      '?type=' + type;
+    if (term.status) {
+      url += '&start_date=' + term.start_date;
     }
-    if (condition.room_id) {
-      url += '&room_id=' + condition.room_id;
+    if (term.status) {
+      url += '&end_date=' + term.end_date;
     }
-    if (condition.dept_id) {
-      url += '&dept_id=' + condition.dept_id;
+    if (term.status) {
+      url += '&status=' + term.status;
     }
-    if (condition.conflict_id) {
-      url += '&conflict_id=' + condition.conflict_id;
+    if (term.room_id) {
+      url += '&room_id=' + term.room_id;
     }
-    
+    if (term.dept_id) {
+      url += '&dept_id=' + term.dept_id;
+    }
+    if (term.conflict_id) {
+      url += '&conflict_id=' + term.conflict_id;
+    }
     return ajaxGet(url);
+  },
+  getConflictOrders: function(type, order_id) {
+    return ajaxGet(URL + 'approve/getconflictorders' +
+      '?type=' + type +
+      '&conflict_id=' + order_id);
   },
   approveOrder: function(type, order_id, data) {
     return ajaxPost(URL + 'approve/approveorder' +

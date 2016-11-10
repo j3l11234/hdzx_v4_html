@@ -28,7 +28,6 @@ class ApprovePage extends Component {
         operation: null,
       },
       search: {
-        type: this.props.type,
       },
       deptMap:[],
       roomList:[],
@@ -81,8 +80,14 @@ class ApprovePage extends Component {
   }
 
   doGetApproveOrders() {
-    return ServerApi.Approve.getOrders(this.store.search).then(respData => {
-      let { orders, orderList, roomTables, start_date, end_date } = respData;
+    let getOrders;
+    if (!this.store.search.conflict_id) {
+      getOrders = ServerApi.Approve.getOrders(this.props.type, this.store.search);
+    } else {
+      getOrders = ServerApi.Approve.getConflictOrders(this.props.type, this.store.search.conflict_id);
+    }
+    return getOrders.then(respData => {
+      let { orders, orderList} = respData;
 
       //计算chksum，分析冲突预约
       for (var order_id in orders) {
@@ -91,20 +96,16 @@ class ApprovePage extends Component {
       }
       this.store = update(this.store, {
         entities: {
-          orders: {$merge: orders},
+          orders: {$set: orders},
         },
         orderList: {$set: orderList},
-        search: {
-          start_date: {$set: start_date},
-          end_date: {$set: end_date},
-        },
       });
       this.setState(this.store);
 
       return respData;
     });
   }
-  
+
   onOperationClick(order_id, operation) {
     this.store = update(this.store, {
       approve: {
@@ -169,7 +170,6 @@ class ApprovePage extends Component {
         <hr />
         <List ref="list" type={type} orders={orders} orderList={orderList} conflict_id={conflict_id}
          onOperationClick={onOperationClick} onSetConflict={onSetConflict} />
-        }
         <Modal ref="modal" type={type} order={order} operation={operation} onSubmit={doOperateOrder} />
       </div>
     );

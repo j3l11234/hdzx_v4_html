@@ -16,7 +16,6 @@ class OrderList extends Component {
       filter: {
         perPage: 8,
         curPage: 1,
-        conflict_id: -1,
       },  
     };
   }
@@ -27,7 +26,6 @@ class OrderList extends Component {
 
   onConflictClick(order_id) {
     this.setFilter({
-      conflict_id: order_id,
       curPage: 1
     });
   }
