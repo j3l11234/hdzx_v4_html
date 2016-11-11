@@ -52,7 +52,8 @@ class ApproveOrderItem extends Component {
     let submit_time = order.submit_time ? new Date(order.submit_time*1000).Format('yyyy-MM-dd hh:mm:ss') : ' ';
     let issue_time = order.issue_time ? new Date(order.issue_time*1000).Format('yyyy-MM-dd hh:mm:ss') : '未发放'; 
     let status = getAbstractStatus(order.status, type);
-    let conflict = order.conflict ? true : false;
+    let conflict = order.conflict && (order.conflict.ordered || order.conflict.used || order.conflict.rejected) ? true : false;
+    let conflict_appove = order.conflict && order.conflict.ordered ? true : false;
 
     //操作按钮生成
     let operationBtns = [];
@@ -61,13 +62,17 @@ class ApproveOrderItem extends Component {
       operationBtns.push((<button type="button" className="btn btn-block btn-danger btn-sm" onClick={this.onOperationClick.bind(this,"reject")}>审批驳回</button>));
       conflict && operationBtns.push((<button type="button" className="btn btn-block btn-warning btn-sm" onClick={this.onConflictClick.bind(this)}>查看冲突申请</button>));
     } else if (status == STATUS.STATUS_REJECTED || status == STATUS.STATUS_APPROVED){
-      operationBtns.push((<button type="button" className="btn btn-block btn-warning btn-sm" onClick={this.onOperationClick.bind(this,"revoke")}>审批撤销</button>));
+      operationBtns.push((<button type="button" className="btn btn-block btn-warning btn-sm" onClick={this.onOperationClick.bind(this,"revoke")}>撤销审批</button>));
+      operationBtns.push(null);
+      conflict && operationBtns.push((<button type="button" className="btn btn-block btn-warning btn-sm" onClick={this.onConflictClick.bind(this)}>查看冲突申请</button>));
+    } else if (status == STATUS.STATUS_APPROVED_FIXED || status == STATUS.STATUS_REJECTED_FIXED) {
+      operationBtns.push(null);
       operationBtns.push(null);
       conflict && operationBtns.push((<button type="button" className="btn btn-block btn-warning btn-sm" onClick={this.onConflictClick.bind(this)}>查看冲突申请</button>));
     }
 
     return (
-      <div className={'panel ' + this.getPanelStyle(status,conflict)}>
+      <div className={'panel ' + this.getPanelStyle(status, conflict_appove)}>
         <div className="panel-heading">
           <h4 className="panel-title">
             <a data-toggle="collapse" href={'#collapse-order-'+order.id}>
@@ -109,7 +114,7 @@ class ApproveOrderItem extends Component {
             <div className="row">
               <hr className="small" />
               {
-                conflict && status == STATUS.STATUS_PENDING ? 
+                conflict_appove && status == STATUS.STATUS_PENDING ? 
                 <div className="col-sm-12 form-group">
                   <FormAlert style="danger" text="该申请和其他申请冲突，请谨慎审批"/>
                 </div>
