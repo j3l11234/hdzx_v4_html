@@ -32,6 +32,7 @@ class ApprovePage extends Component {
       deptMap:[],
       roomList:[],
       orderList: [],
+      page:{}
     };
     this.state = this.store;
 
@@ -39,8 +40,8 @@ class ApprovePage extends Component {
       onQeury: this.onQeury.bind(this),
       onOperationClick: this.onOperationClick.bind(this),
       doOperateOrder: this.doOperateOrder.bind(this),
-      onFilter: this.onFilter.bind(this),
       onSetConflict: this.onSetConflict.bind(this),
+      onPageClick: this.onPageClick.bind(this),
     }
   }
 
@@ -62,7 +63,6 @@ class ApprovePage extends Component {
 
   componentDidMount() {
     this.refs.query.onQeury();
-    this.refs.query.onFilterClick();
   }
 
   onQeury(condition) {
@@ -74,6 +74,9 @@ class ApprovePage extends Component {
         status: {$set: condition.status},
         dept_id: {$set: condition.dept_id},
       },
+      page: {
+        per_page: {$set: condition.per_page}
+      }
     });
     this.setState(this.store);
     return this.doGetApproveOrders();
@@ -82,12 +85,12 @@ class ApprovePage extends Component {
   doGetApproveOrders() {
     let getOrders;
     if (!this.store.search.conflict_id) {
-      getOrders = ServerApi.Approve.getOrders(this.props.type, this.store.search);
+      getOrders = ServerApi.Approve.getOrders(this.props.type, this.store.search, this.store.page);
     } else {
-      getOrders = ServerApi.Approve.getConflictOrders(this.props.type, this.store.search.conflict_id);
+      getOrders = ServerApi.Approve.getConflictOrders(this.props.type, this.store.search.conflict_id, this.store.page);
     }
     return getOrders.then(respData => {
-      let { orders, orderList} = respData;
+      let { orders, orderList, _page} = respData;
 
       //计算chksum，分析冲突预约
       for (var order_id in orders) {
@@ -96,9 +99,17 @@ class ApprovePage extends Component {
       }
       this.store = update(this.store, {
         entities: {
-          orders: {$set: orders},
+          orders: {$apply: old_orders => {
+            //保存上次操作的order信息，防止显示错误
+            let lastOrder_id = this.store.approve.order_id;
+            if(lastOrder_id && !orders[lastOrder_id] && old_orders[lastOrder_id]){
+              orders[lastOrder_id] = old_orders[lastOrder_id];
+            }
+            return orders;
+          }},
         },
         orderList: {$set: orderList},
+        page: {$set: _page}
       });
       this.setState(this.store);
 
@@ -149,27 +160,29 @@ class ApprovePage extends Component {
     return this.doGetApproveOrders();
   }
 
-  onFilter(status, perPage) {
-    this.refs.list.setFilter({
-      status,
-      perPage,
-      curPage: 1
+  onPageClick(page) {
+    this.store = update(this.store, {
+      page: {
+        cur_page: {$set: page},
+      },
     });
+    this.setState(this.store);
+    return this.doGetApproveOrders();
   }
 
   render() {
-    let {orderList, roomList, deptMap, search:{conflict_id}, entities: {depts, orders, rooms}, approve: {order_id, operation}} = this.state;
+    let {orderList, roomList, page, deptMap, search:{conflict_id}, entities: {depts, orders, rooms}, approve: {order_id, operation}} = this.state;
     let {type} = this.props;
-    let { onQeury, onOperationClick, doOperateOrder, onFilter, onSetConflict} = this.actions;
+    let { onQeury, onOperationClick, doOperateOrder, onSetConflict, onPageClick} = this.actions;
     let order = orders[order_id];
 
     return (
       <div>
         <Query ref="query" type={type} roomList={roomList} rooms={rooms} deptMap={deptMap} depts={depts}
-          onQeury={onQeury} onFilter={onFilter} />
+          onQeury={onQeury} />
         <hr />
-        <List ref="list" type={type} orders={orders} orderList={orderList} conflict_id={conflict_id}
-         onOperationClick={onOperationClick} onSetConflict={onSetConflict} />
+        <List ref="list" type={type} orders={orders} orderList={orderList} page={page} conflict_id={conflict_id}
+         onOperationClick={onOperationClick} onSetConflict={onSetConflict} onPageClick={onPageClick} />
         <Modal ref="modal" type={type} order={order} operation={operation} onSubmit={doOperateOrder} />
       </div>
     );

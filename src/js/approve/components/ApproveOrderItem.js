@@ -52,7 +52,7 @@ class ApproveOrderItem extends Component {
     let submit_time = order.submit_time ? new Date(order.submit_time*1000).Format('yyyy-MM-dd hh:mm:ss') : ' ';
     let issue_time = order.issue_time ? new Date(order.issue_time*1000).Format('yyyy-MM-dd hh:mm:ss') : '未发放'; 
     let status = getAbstractStatus(order.status, type);
-    let conflict = order.conflict ? order.conflict.length > 0 : false;
+    let conflict = order.conflict ? true : false;
 
     //操作按钮生成
     let operationBtns = [];

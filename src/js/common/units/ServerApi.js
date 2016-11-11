@@ -76,7 +76,7 @@ export const User = {
 };
 
 export const Approve = {
-  getOrders: function(type, term) {
+  getOrders: function(type, term, page) {
     let url = URL + 'approve/getorders' +
       '?type=' + type;
     if (term.status) {
@@ -94,15 +94,25 @@ export const Approve = {
     if (term.dept_id) {
       url += '&dept_id=' + term.dept_id;
     }
-    if (term.conflict_id) {
-      url += '&conflict_id=' + term.conflict_id;
+    if (page.per_page) {
+      url += '&per_page=' + page.per_page;
+    }
+    if (page.cur_page) {
+      url += '&cur_page=' + page.cur_page;
     }
     return ajaxGet(url);
   },
-  getConflictOrders: function(type, order_id) {
-    return ajaxGet(URL + 'approve/getconflictorders' +
+  getConflictOrders: function(type, order_id, page) {
+    let url = URL + 'approve/getconflictorders' +
       '?type=' + type +
-      '&conflict_id=' + order_id);
+      '&conflict_id=' + order_id;
+    if (page.per_page) {
+      url += '&per_page=' + page.per_page;
+    }
+    if (page.cur_page) {
+      url += '&cur_page=' + page.cur_page;
+    }
+    return ajaxGet(url);
   },
   approveOrder: function(type, order_id, data) {
     return ajaxPost(URL + 'approve/approveorder' +

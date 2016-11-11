@@ -12,38 +12,13 @@ class OrderList extends Component {
     super(props);
     this.shouldComponentUpdate = shouldComponentUpdate.bind(this);
 
-    this.state = {
-      filter: {
-        perPage: 8,
-        curPage: 1,
-      },  
+    this.state = { 
     };
   }
 
-  onPageClick(page) {
-    this.setFilter({curPage: page});
-  }
-
-  onConflictClick(order_id) {
-    this.setFilter({
-      curPage: 1
-    });
-  }
-
-  setFilter(filter) {
-    this.setState(state => {
-      state = update(state, {
-        filter: {$merge: filter}
-      });
-      return state;
-    });
-  }
-
   render() {
-    let { type, orders, orderList, conflict_id, onOperationClick, onSetConflict } = this.props;
-    let { curPage, perPage } = this.state.filter;
-
-    let { start, end } = Pagination.getLimit(curPage, orderList.length, perPage);
+    let {type, orders, orderList, conflict_id, page:{cur_page, per_page, total}, 
+      onOperationClick, onSetConflict, onPageClick} = this.props;
 
     return (
       <div>
@@ -53,7 +28,7 @@ class OrderList extends Component {
       }
       <br />
       {
-        orderList.slice(start, end).map(order_id => {
+        orderList.map(order_id => {
           let order = orders[order_id];
           return (
             <Item key={order_id} type={type} order={order} chksum={order.chksum} 
@@ -61,7 +36,7 @@ class OrderList extends Component {
           );
         })
       }
-      <Pagination ref="page" length={5} total={orderList.length} per={perPage} cur={curPage} onPageClick={this.onPageClick.bind(this)}/>
+      <Pagination ref="page" length={5} total={total} per={per_page} cur={cur_page} onPageClick={onPageClick}/>
       </div>
     );
   }

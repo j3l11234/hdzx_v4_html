@@ -56,6 +56,14 @@ class ApproveQuery extends Component {
           return null;
         }
       },
+      per_page: {
+        value: '8',
+        validator: (value) => {
+          if (value !== '' && parseInt(value) != value) {
+            return '请正确填写每页显示数';
+          }
+        }
+      },
     });
   }
 
@@ -65,12 +73,12 @@ class ApproveQuery extends Component {
 
   onQeury(e) {
     e && e.preventDefault();
-    let fields = ['start_date','end_date','room_id', 'status', 'dept_id'];
+    let fields = ['start_date','end_date','room_id', 'status', 'dept_id', 'per_page'];
     let errors = this.fv.validateInputs(fields);
 
     if(errors.length > 0) {
       this.setState({
-        alert: {style: 'danger', text: error}
+        alert: {style: 'danger', text: errors[0].error}
       });
       return;
     }
@@ -97,12 +105,6 @@ class ApproveQuery extends Component {
         alert: { style: 'danger', text: data.message}
       });
     });
-  }
-
-  onFilterClick(e) {
-    let status = parseInt(this.refs.status.value);
-    let perPage = parseInt(this.refs.perPage.value);
-    this.props.onFilter(status, perPage);
   }
 
   getBsStyle (name) {
@@ -183,24 +185,17 @@ class ApproveQuery extends Component {
               </select>
             </div>
           </div>
-          <div className="form-group col-sm-6 col-md-4">
+          <div className={'form-group col-sm-6 col-md-4 '+this.getBsStyle.call(this, 'per_page')}>
+            <label className="control-label inline-label">每页显示</label>
+            <div className="inline-control">
+              <input ref="perPage" type="text" placeholder="每页显示" className="form-control" onChange={this.handleChange.bind(this, 'per_page')} value={this.fv.getInputValue('per_page')}/>
+            </div>
+          </div>
+          <div className="form-group col-sm-6 col-md-4 col-sm-offset-6 col-md-offset-8">
             <button type="submit" className="btn-block btn btn-primary" disabled={this.state.loading}>查找</button>
           </div>
           <div className="col-md-12">
             {this.state.alert?(<FormAlert style={this.state.alert.style} text={this.state.alert.text}/>):null}
-          </div>
-          <div className="col-sm-12">
-            <hr className="small" />
-          </div> 
- 
-          <div className="form-group col-sm-6 col-md-4">
-            <label className="control-label inline-label">每页显示</label>
-            <div className="inline-control">
-              <input ref="perPage" type="text" placeholder="每页显示" className="form-control" defaultValue="8" />
-            </div>
-          </div>
-          <div className="form-group col-sm-6 col-md-4">
-            <button type="button" className="btn-block btn btn-success" onClick={this.onFilterClick.bind(this)}>筛选</button>
           </div>
         </div>
       </form>
