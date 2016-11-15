@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMixin';
 import update from 'react/lib/update';
 import ReactDOM from 'react-dom';
+import md5 from 'md5';
 
 import RoomTableQuery from './components/RoomTableQuery';
 import RoomTable from './components/RoomTable';
@@ -74,6 +75,11 @@ class OrderPage extends Component {
   doGetRoomTables(start_date, end_date) {
     return ServerApi.Order.getRoomTables(start_date, end_date).then(data => {
       let { roomList, dateList, roomTables} = data;
+      for (var dateRoom in roomTables) {
+        let roomTable = roomTables[dateRoom];
+        roomTable.chksum = md5(JSON.stringify(roomTable)).substr(0,6);
+      }
+
       this.store = update(this.store, {
         roomTable: {
           dateList: {$set: dateList},
