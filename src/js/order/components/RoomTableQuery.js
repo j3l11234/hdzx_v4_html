@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMixin';
 
 import FormAlert from '../../common/components/FormAlert';
-import FormValidator from '../../common/units/FormValidator';
+import FormValidator from '../../common/units/FormValidator_';
 
 class RoomTableQuery extends Component {
   constructor (props) {
@@ -12,8 +12,13 @@ class RoomTableQuery extends Component {
     this.state = {
       alert: null,
     }
-
-    this.fv = new FormValidator({
+  }
+  
+  componentWillMount() {
+    this.fv = new FormValidator((()=>{
+      return this.state;
+    }).bind(this),this.setState.bind(this));
+    this.fv.setInputs({
       start_date: {
         value: '',
         validator: (value) => {
@@ -32,42 +37,33 @@ class RoomTableQuery extends Component {
       },
     });
   }
-  
-  componentWillMount() {
-  }
 
   handleChange (name, event) {
     this.fv.handleChange(name, event);
-    this.forceUpdate();
   }
 
   onQeury (e) {
     e && e.preventDefault();
+    let fields = ['start_date', 'end_date'];
+    let errors = this.fv.validateInputs(fields);
 
-    this.fv.validateAll();
-    let error = this.fv.getFirstError();
-    if(error) {
+    if(errors.length > 0) {
       this.setState({
-        alert: {style: 'danger', text: error}
+        alert: {style: 'danger', text: errors[0].error}
       });
       return;
     }
 
-    let formData = this.fv.getFormData();
-
-    this.setState({alert: null});
-    this.setState({loading: true});
-
+    let formData = this.fv.getInputValues(fields);
+    this.setState({
+      alert: null,
+      loading: true
+    });
     this.props.onQeury(formData.start_date, formData.end_date).then(data => {
       this.setState({loading: false});
-      this.fv.setInputValues({
-        start_date: data.start_date,
-        end_date: data.end_date
-      });
-      this.forceUpdate();
     }, data => {
-      this.setState({loading: false});
       this.setState({
+        loading: false,
         alert: { style: 'danger', text: data.message}
       });
     })
