@@ -33,11 +33,11 @@ class OrderLockList extends Component {
 
             let {hours, title, loop_type, loop_day} = lock;
             let date;
-            if(loop_type == LOOP.DAY){
-              date = '每日';
-            }else if(loop_type == LOOP.WEEK){
+            if(loop_type == LOOP.DAY) {
+              date = lock.start_date == lock.end_date ? lock.start_date : '每日';
+            } else if(loop_type == LOOP.WEEK) {
               date = '每周'+WEEKDAY[loop_day]+'';
-            }else if(loop_type == LOOP.MONTH){
+            } else if(loop_type == LOOP.MONTH) {
               date = '每月'+loop_day+'日';
             }
             let startHour = parseInt(hours[0]);
