@@ -15,8 +15,18 @@ class OrderModal extends Component {
     this.state = {
       loading: false,
       tab: '',
-      alert: null
+      alert: null,
+      countdownText: '尚未开放'
     }
+
+    this.actions = {
+      onSubmitClick: this.onSubmitClick.bind(this),
+      onFormAlert: this.onFormAlert.bind(this),
+      onSubmit: this.onSubmit.bind(this),
+      updateCountDown: this.updateCountDown.bind(this),
+    };
+
+    this.countdownTimer;
   }
 
   componentDidMount() {
@@ -40,11 +50,12 @@ class OrderModal extends Component {
     
     
     setTimeout(()=>{
-      let { rooms, user } = this.props;
-      let { room_id, date } = this.props.modal;
-      let roomTable = this.props.roomTables[date+'_'+room_id];
-      let room = rooms[room_id];
+      let { roomTable, room, user } = this.props;
 
+      if (roomTable.status == 'UPCOMING'){
+        this.countdownTimer = setInterval(this.actions.updateCountDown, 1000);
+      }
+      
       this.refs.form.reset();
       this.refs.form.setValues({
         name: user.alias,
@@ -53,11 +64,7 @@ class OrderModal extends Component {
       });
 
       
-      if (roomTable && roomTable.available) {
-        $(this.refs.label_order).tab('show');
-      } else {
-        $(this.refs.label_use).tab('show');
-      }
+      $(this.refs.label_order).tab('show');
       $(this.refs.modal).modal('show');
     }, 0);
 
@@ -90,22 +97,53 @@ class OrderModal extends Component {
     this.setState({alert});
   }
 
+  updateCountDown() {
+    let { roomTable, timeOffset } = this.props;
+    if (!roomTable || roomTable.status != 'UPCOMING') {
+      clearTimeout(this.countdownTimer);
+      this.countdownTimer = null;
+      return;
+    }
+
+    let now = Math.floor((new Date().getTime() + timeOffset) / 1000);
+    let diff = roomTable.period.start - now;
+    let countdownText = '';
+    if (diff < 86400) {
+      let hours = Math.floor(diff/3600);
+      let minutes = Math.floor(diff/60) % 60;
+      let seconds = Math.floor(diff) % 60;
+      hours = hours >= 10 ? hours : '0'+hours;
+      minutes = minutes >= 10 ? minutes : '0'+minutes;
+      seconds = seconds >= 10 ? seconds : '0'+seconds;
+
+      countdownText = `${hours}:${minutes}:${seconds}`;
+    } else {
+      countdownText = "尚未开放";
+    }
+    this.setState({countdownText});
+  }
+
   render () {
-    let { roomTables, rooms, locks, orders, usage, depts, deptMap} = this.props;
+    let { roomTable, room, locks, orders, usage, depts, deptMap} = this.props;
+    let { onSubmitClick, onSubmit, onFormAlert } = this.actions;
     let { onCaptcha } = this.props;
     let { room_id, date } = this.props.modal;
-    let { loading, tab, alert } = this.state;
+    let { loading, tab, alert,countdownText } = this.state;
 
-    let roomTable;
-    let room;
-    if (roomTables && room_id && date) {
-      roomTable = roomTables[date+'_'+room_id];
-      room = rooms[room_id]; 
-    } else {
-      roomTable = {};
-      room = {};
+    roomTable = roomTable ? roomTable : {};
+    room = room ? room : {};
+
+    let {ordered, used, locked, status} = roomTable;
+
+    let submitBtn;
+    if (status == 'ACTIVE') {
+      submitBtn = (<button type="button" className="btn btn-primary" disabled={loading} onClick={onSubmitClick}>提交</button>);
+    } else if (status == 'UPCOMING') {
+        submitBtn = (<button type="button" className="btn btn-primary" disabled={true}>{countdownText}</button>);
+    } else if(status == 'MISSED') {
+        submitBtn = (<button type="button" className="btn btn-primary" disabled={true}>不可申请</button>);
     }
-    let {ordered, used, locked, available} = roomTable;
+
 
     return (
       <div className="modal" ref="modal" data-backdrop="static">
@@ -114,7 +152,7 @@ class OrderModal extends Component {
             <div className="modal-body">
               <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
               <ul className="nav nav-tabs" role="tablist">
-                <li role="presentation" style={!available ? {display: 'none'} : null}>
+                <li role="presentation">
                   <a ref="label_order" href="#model-order" aria-controls="model-order" role="tab" data-toggle="tab">房间预约</a>
                 </li>
                 <li role="presentation">
@@ -125,9 +163,9 @@ class OrderModal extends Component {
                 </li>
               </ul>
               <div className="tab-content">
-                <div role="tabpanel" className="tab-pane" id="model-order" style={!available ? {display: 'none'} : null}>
+                <div role="tabpanel" className="tab-pane" id="model-order" >
                   <Form ref="form" date={date} room={room} hourTable={roomTable.hourTable} depts={depts} deptMap={deptMap}
-                    onAlert={this.onFormAlert.bind(this)} onSubmit={this.onSubmit.bind(this)} onCaptcha={onCaptcha} />
+                    onAlert={onFormAlert} onSubmit={onSubmit} onCaptcha={onCaptcha} />
                 </div>
                 <div role="tabpanel" className="tab-pane" id="model-use">
                   <OrderList orders={orders} ordered={ordered} used={used} />
@@ -142,7 +180,7 @@ class OrderModal extends Component {
             {tab === 'order' ? 
               <div className="modal-footer">
                 <button type="button" className="btn btn-default" data-dismiss="modal">取消</button>
-                <button type="button" className="btn btn-primary" disabled={loading} onClick={this.onSubmitClick.bind(this)}>提交</button>
+                {submitBtn}
               </div> : 
               <div className="modal-footer">
                 <button type="button" className="btn btn-primary" data-dismiss="modal">确定</button>

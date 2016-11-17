@@ -155,27 +155,59 @@ hr.small{
       @include rt-right;
     }
 
-    &-row{
+    &-row {
       height: 90px;
       white-space:nowrap; 
       @include striped(auto, #f3f3f3);
     }
 
-    &-item {
+    &-cell {
       display: inline-block;
+      position: relative;
       width: 84px;
       height: 84px;
       padding: 2px;
       margin: 3px;
       line-height: 20px;
       border-radius: 4px;
-      cursor: pointer;
+      
+      &:not(.disabled) {
+        cursor: pointer;
+      }
 
-      &:hover {
+      &:not(.disabled):hover {
         background-color: #c4c4c4;
       }
 
-      &>div {
+      .content {
+        width: 100%;
+        height: 100%;
+      }
+
+      .caption {
+        position: absolute;
+        display:table;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background-color: rgba(255, 0, 0, 0.30);
+        &>.text{
+          display: table-cell;
+          text-shadow:2px 2px 8px #000000;
+          white-space: normal;
+          vertical-align:middle; 
+          color: white;
+          font-size: 13px;
+          line-height: 16px;
+          text-align: center;
+        }
+      }
+
+      .cell {
         float: left;
         width: 18px;
         height: 18px;
@@ -184,14 +216,6 @@ hr.small{
         border-radius: 3px;
         text-align: center;
         font-size: 12px;
-      }
-
-      &.disabled{
-        background-color: #FBDEDE;
-      }
-
-      &.disabled:hover{
-        background-color: #c4c4c4;
       }
 
     }
