@@ -24,9 +24,8 @@ class OrderList extends Component {
       <div>
       { 
         conflict_id ? 
-        <button type="button" className="btn-block btn btn-success" onClick={onSetConflict.bind(this, null)}>显示所有申请</button> : null
+        [<button key='btn' type="button" className="btn-block btn btn-success" onClick={onSetConflict.bind(this, null)}>显示所有申请</button>,<br key='br' />] : null
       }
-      <br />
       {
         orderList.map(order_id => {
           let order = orders[order_id];
