@@ -176,23 +176,23 @@ class OrderPage extends Component {
   updatePeriod(roomTables) {
     clearTimeout(this.updatePeriod_id);
 
-    if(!roomTables){
+    if (!roomTables) {
       roomTables = this.store.roomTable.roomTables;
     }
 
     let now = Math.floor((new Date().getTime() + this.store.timeOffset) / 1000);
-    let offset = 999999;
+    let expire = 600;
     let updateSpec = {};
     for (var dateRoom in roomTables) {
       let roomTable = roomTables[dateRoom];
       let status;
-      let offset_ = 0;
+      let expire_ = 0;
       if (now >= roomTable.period.start && now < roomTable.period.end) {
         status = 'ACTIVE';
-        offset_ = roomTable.period.end - now;
+        expire_ = roomTable.period.end - now;
       } else if (now < roomTable.period.start) {
         status = 'UPCOMING';
-        offset_ = roomTable.period.start - now;
+        expire_ = roomTable.period.start - now;
       } else if(now >= roomTable.period.end) {
         status = 'MISSED';
       }
@@ -200,8 +200,8 @@ class OrderPage extends Component {
       if (roomTable.status != status){
         updateSpec[dateRoom] = {status:{$set: status}};
       }
-      if (offset_ != 0 && offset_ < offset){
-        offset = offset_;
+      if (expire_ != 0 && expire_ < expire){
+        expire = expire_;
       }
     }
     this.store = update(this.store, {
@@ -210,7 +210,7 @@ class OrderPage extends Component {
       }
     });
     this.setState(this.store);
-    this.updatePeriod_id = setTimeout(this.action.updatePeriod, (offset)*1000);
+    this.updatePeriod_id = setTimeout(this.action.updatePeriod, (expire)*1000);
   }
 
   render() {

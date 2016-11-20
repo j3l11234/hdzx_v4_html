@@ -244,6 +244,16 @@ hr.small{
   }
 }
 
+//申请模态框-倒计时
+.modal-footer {
+  position: relative;
+}
+.modal-countDown{
+  position: absolute;
+  left: 15px;
+  bottom: 15px;
+}
+
 //小时指示
 .note {
   width: 230px;

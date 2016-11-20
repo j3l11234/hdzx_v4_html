@@ -13,10 +13,11 @@ class OrderModal extends Component {
     this.shouldComponentUpdate = shouldComponentUpdate.bind(this);
 
     this.state = {
+      show: false,
       loading: false,
       tab: '',
       alert: null,
-      countdownText: '尚未开放'
+      countdownText: ''
     }
 
     this.actions = {
@@ -27,6 +28,7 @@ class OrderModal extends Component {
     };
 
     this.countdownTimer;
+    this.$modal;
   }
 
   componentDidMount() {
@@ -40,10 +42,26 @@ class OrderModal extends Component {
         this.setState({tab: 'usage'});
       }
     });
+
+    this.$modal = $(this.refs.modal);
+    this.$modal.on('hidden.bs.modal', (e) => {
+      if(this.state.show) {
+        this.setState({show: false});
+      }
+    });
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    if (nextState.show && !this.state.show) {
+      this.$modal.modal('show');
+    }else if (!nextState.show && this.state.show) {
+      this.$modal.modal('hide');
+    }
   }
 
   showModal() {
     this.setState({
+      show:true,
       loading: false,
       alert: null,
     });
@@ -52,7 +70,8 @@ class OrderModal extends Component {
     setTimeout(()=>{
       let { roomTable, room, user } = this.props;
 
-      if (roomTable.status == 'UPCOMING'){
+      if (roomTable.status == 'UPCOMING') {
+        clearInterval(this.countdownTimer);
         this.countdownTimer = setInterval(this.actions.updateCountDown, 1000);
       }
       
@@ -65,7 +84,7 @@ class OrderModal extends Component {
 
       
       $(this.refs.label_order).tab('show');
-      $(this.refs.modal).modal('show');
+      
     }, 0);
 
   }
@@ -99,16 +118,16 @@ class OrderModal extends Component {
 
   updateCountDown() {
     let { roomTable, timeOffset } = this.props;
-    if (!roomTable || roomTable.status != 'UPCOMING') {
+    if (!this.state.show || !roomTable || roomTable.status != 'UPCOMING') {
+      this.setState({countdownText:''});
       clearTimeout(this.countdownTimer);
-      this.countdownTimer = null;
       return;
     }
 
     let now = Math.floor((new Date().getTime() + timeOffset) / 1000);
     let diff = roomTable.period.start - now;
     let countdownText = '';
-    if (diff < 86400) {
+    if (diff >=0 && diff < 86400) {
       let hours = Math.floor(diff/3600);
       let minutes = Math.floor(diff/60) % 60;
       let seconds = Math.floor(diff) % 60;
@@ -116,9 +135,9 @@ class OrderModal extends Component {
       minutes = minutes >= 10 ? minutes : '0'+minutes;
       seconds = seconds >= 10 ? seconds : '0'+seconds;
 
-      countdownText = `${hours}:${minutes}:${seconds}`;
+      countdownText = `${hours}:${minutes}:${seconds}后开放申请`;
     } else {
-      countdownText = "尚未开放";
+      countdownText = "";
     }
     this.setState({countdownText});
   }
@@ -139,7 +158,7 @@ class OrderModal extends Component {
     if (status == 'ACTIVE') {
       submitBtn = (<button type="button" className="btn btn-primary" disabled={loading} onClick={onSubmitClick}>提交</button>);
     } else if (status == 'UPCOMING') {
-        submitBtn = (<button type="button" className="btn btn-primary" disabled={true}>{countdownText}</button>);
+        submitBtn = (<button type="button" className="btn btn-primary" disabled={true}>尚未开放</button>);
     } else if(status == 'MISSED') {
         submitBtn = (<button type="button" className="btn btn-primary" disabled={true}>不可申请</button>);
     }
@@ -179,6 +198,7 @@ class OrderModal extends Component {
             </div>
             {tab === 'order' ? 
               <div className="modal-footer">
+                <span className="modal-countDown">{countdownText}</span>
                 <button type="button" className="btn btn-default" data-dismiss="modal">取消</button>
                 {submitBtn}
               </div> : 
