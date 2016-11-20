@@ -46,7 +46,7 @@ class ApprovePage extends Component {
   }
 
   componentWillMount() {
-    ServerApi.Data.getMetaData({room:1, dept:1}).then(data => {
+    ServerApi.Data.getData('approve', 'admin').then(data => {
       let { room, dept } = data;
       this.store = update(this.store, {
         entities: {
