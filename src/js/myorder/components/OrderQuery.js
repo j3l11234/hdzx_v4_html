@@ -60,11 +60,6 @@ class OrderQuery extends Component {
     });
     this.props.onQeury(formData.start_date, formData.end_date).then(data => {
       this.setState({loading: false});
-      this.fv.setInputValues({
-        start_date: data.start_date,
-        end_date: data.end_date
-      });
-      this.forceUpdate();
     }, data => {
       this.setState({
         loading: false,
