@@ -1,4 +1,5 @@
 var webpack = require('webpack');
+var path= require('path');
 
 module.exports = {
   entry: {
@@ -16,7 +17,7 @@ module.exports = {
     lock: __dirname + '/src/js/lock/index.js',
   },
   output: {
-    path: '/dist/js',
+    path: __dirname + '/dist/js',
     filename: '[name].js',
     publicPath: "/js",
   },
@@ -38,13 +39,16 @@ module.exports = {
     })
   ]),
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.jsx?$/,
-        exclude: /(node_modules|bower_components)/,
-        loader: 'babel',
-        query: {
-          presets: ['react', 'es2015']
+        loader: 'babel-loader',
+        exclude: /node_modules/,
+        options: {
+          'presets': [
+            ['es2015', {modules: false}],
+            'react'
+          ]
         }
       }
     ]

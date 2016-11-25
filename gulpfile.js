@@ -50,14 +50,14 @@ gulp.task('style', function() {
 gulp.task('webpack-watch', function() {
   gulp.src('./src/js/**/*.js')
     .pipe(plumber())
-    .pipe(webpack(Object.assign(require('./webpack.config.js'),{watch:true})))
+    .pipe(webpack(Object.assign(require('./webpack.config.js'),{watch:true}),require('webpack')))
     .pipe(gulp.dest(DIST + '/js'));
 });
 
 gulp.task('webpack', function() {
   gulp.src('./src/js/**/*.js')
     .pipe(plumber())
-    .pipe(webpack(require('./webpack.config.js')))
+    .pipe(webpack(require('./webpack.config.js'),require('webpack')))
     .pipe(gulp.dest(DIST + '/js'));
 });
 
