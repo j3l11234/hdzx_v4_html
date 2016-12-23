@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { STATUS } from '../../common/constants/OrderStatus';
+import { STATUS } from '../../common/constants/Order';
 
 function StatusLabel(props) {
   let { status, type } = props;

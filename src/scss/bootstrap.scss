@@ -1,0 +1,134 @@
+/*$navbar-default-bg: #fff;
+$navbar-default-brand-color: #000;
+$navbar-default-link-color: #000;
+$navbar-default-link-active-color: #000;
+$navbar-default-link-active-bg: #fff;*/
+
+$alert-success-border: transparent;
+$alert-info-border: transparent;
+$alert-warning-border: transparent;
+$alert-danger-border: transparent;
+$alert-border-radius: 0;
+$form-group-margin-bottom: 10px;
+
+@import "./node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+
+.container {
+  @include container-fixed;
+
+  @media (min-width: $screen-sm-min) {
+    width: auto;
+    margin-right: 30px;
+    margin-left: 30px;
+  }
+  @media (min-width: $screen-md-min) {
+    width: auto;
+    margin-right: 45px;
+    margin-left: 45px;
+  }
+  @media (min-width: $screen-lg-min) {
+    width: auto;
+    margin-right: 60px;
+    margin-left: 60px;
+  }
+}
+
+.nav {
+  > li {
+    > a {
+      color: #000;
+      &:hover,
+      &:focus {
+        color: $brand-primary;
+        background-color: transparent;
+      }
+    }
+  }
+}
+
+.navbar {
+  margin-bottom: 09px;
+}
+
+.nav-tabs {
+  > li {
+    > a {
+      border-radius: 0;
+
+      &:hover {
+        border-color: transparent;
+      }
+    }
+
+    &.active > a {
+      &,
+      &:hover,
+      &:focus {
+        color: $brand-primary;
+      }
+    }
+  }
+}
+
+.navbar-default {
+  background-color: #fff;
+  border: none;
+  border-bottom: 1px solid rgba(0,0,0,0.075);
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+
+  .navbar-brand {
+    color: #000;
+    &:hover,
+    &:focus {
+      color: $brand-primary;
+      background-color: #fff;
+    }
+  }
+
+  .navbar-nav {
+    > li > a {
+      color: #000;
+
+      &:hover,
+      &:focus {
+        color: $brand-primary;
+      }
+    }
+    > .active > a {
+      &,
+      &:hover,
+      &:focus {
+        color: $brand-primary;
+        background-color: #fff;
+        padding-bottom: 12px;
+        border-bottom: 3px solid $brand-primary;
+      }
+    }
+  }
+}
+
+.dropdown-menu > li > a {
+  &:hover,
+  &:focus {
+    color: #fff;
+    background-color: $brand-primary;
+  }
+}
+
+.form-control {
+  background-color: #fafafa;
+
+  &:focus {
+    background-color: #fff;
+  }
+}
+select.form-control{
+  background-color: #fff;
+}
+
+.alert {
+  margin-bottom: 5px;
+}
+
+
+

@@ -4,7 +4,7 @@ import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMix
 import RoomSelect from './LockRoomSelect';
 import FormAlert from '../../common/components/FormAlert';
 import FormValidator from '../../common/units/FormValidator';
-import { STATUS, LOOP, WEEKDAY } from '../../common/constants/LockStatus';
+import { STATUS, LOOP, WEEKDAY } from '../../common/constants/Lock';
 import { range2Hours, hours2Range } from '../../common/units/Helpers';
 
 class LockModal extends Component {

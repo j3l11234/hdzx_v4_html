@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 export function ajaxGet(url) {
   if (url.indexOf('?') === -1 ){
     url += '?r='+Math.random();
@@ -10,7 +12,6 @@ export function ajaxGet(url) {
 export function ajaxPost(url, data) {
  return sendAjax(url, 'POST', data);
 }
-
 
 export function ajaxPut(url, data) {
   return sendAjax(url, 'PUT', data);

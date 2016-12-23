@@ -1,4 +1,4 @@
-import {STATUS} from '../constants/OrderStatus';
+import { STATUS } from '../constants/Order';
 
 export function getListFormTable(table, hours) {
   var ids = {};
@@ -17,6 +17,34 @@ export function getListFormTable(table, hours) {
   return idList;
 }
 
+export function getPageLimit(cur, total, per) {
+  let start = (cur-1) * per;
+  start = Math.max(0, start);
+  let end = start+per;
+  end = Math.min(total, end)
+  return { start,end };
+}
+
+export function echoAjax(promise, echoSuccess, echoFail) {
+  typeof echoSuccess === 'undefined' && (echoSuccess = true);
+  typeof echoFail === 'undefined' && (echoFail = true);
+
+  if(!echoSuccess && !echoFail) {
+    return promise;
+  }
+
+  return promise.then(data => {
+    echoSuccess && data.message && stickAlert('success', data.message);
+    return data;
+  }, data => {
+    echoFail && data.message && stickAlert('danger', data.message);
+    throw data;
+  });
+}
+
+export function stickAlert(style, text) {
+  window.stickAlert && window.stickAlert(style, text);
+}
 /*
 export function getDateRange(max_before, min_before, by_week, now) {
   max_before = parseInt(max_before);
@@ -58,7 +86,7 @@ export function checkPrivilege(userPriv, priv){
 
 
 
-export function getAbstractStatus(status, type) {
+export function getOrderAbsStatus(status, type) {
   if (status == STATUS.CANCELED) {
     return STATUS.STATUS_CANCELED;
   }
@@ -116,19 +144,19 @@ export function range2Hours(start_hour, end_hour) {
 
 export function hours2Range(hours) {
 
-  let start_hour = 0;
-  let end_hour = 0;
+  let start_hour = null;
+  let end_hour = null;
   hours && hours.forEach(hour => {
-    if (start_hour === 0 || start_hour > hour) {
+    if (start_hour === null || start_hour > hour) {
       start_hour = hour;
     }
-    if (end_hour === 0 || end_hour < hour) {
+    if (end_hour === null || end_hour < hour) {
       end_hour = hour;
     }
   });
   
   return {
     start_hour: start_hour,
-    end_hour: end_hour + 1
+    end_hour: end_hour ? end_hour + 1 : end_hour
   };
 }

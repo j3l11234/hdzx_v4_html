@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMixin';
 
 import { getListFormTable } from '../../common/units/Helpers';
-import { LOOP, WEEKDAY } from '../../common/constants/LockStatus';
+import { LOOP, WEEKDAY } from '../../common/constants/Lock';
 
 class OrderLockList extends Component {
   constructor(props) {

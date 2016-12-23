@@ -3,7 +3,7 @@ import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMix
 
 import FormAlert from '../../common/components/FormAlert';
 import FormValidator from '../../common/units/FormValidator';
-import { STATUS } from '../../common/constants/OrderStatus';
+import { STATUS } from '../../common/constants/Order';
 
 class OrderQuery extends Component {
   constructor (props) {

@@ -5,8 +5,8 @@ import Header from './RoomTableHeader';
 import Cell from './RoomTableCell';
 import Pagination from '../../common/components/Pagination';
 import { checkPrivilege } from '../../common/units/Helpers';
-import { TYPE as ROOM_TYPE } from '../../common/constants/RoomStatus';
-import { PRIV as USER_PRIV } from '../../common/constants/UserStatus';
+import { TYPE as ROOM_TYPE } from '../../common/constants/Room';
+import { PRIV as USER_PRIV } from '../../common/constants/User';
 
 class RoomTable extends Component {
   constructor (props) {

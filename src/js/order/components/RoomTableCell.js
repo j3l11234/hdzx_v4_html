@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { statusClass } from '../../common/constants/RoomTableStatus';
+import { statusClass } from '../../common/constants/RoomTable';
 
 class RoomTableCell extends Component {
   constructor(props) {

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMixin';
 
 import FormAlert from '../../common/components/FormAlert';
-import { STATUS } from '../../common/constants/LockStatus';
+import { STATUS } from '../../common/constants/Lock';
 
 class LockQuery extends Component {
   constructor (props) {

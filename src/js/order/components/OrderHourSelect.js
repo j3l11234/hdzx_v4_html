@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMixin';
 
-import { STATUS, statusClass } from '../../common/constants/RoomTableStatus';
+import { STATUS, statusClass } from '../../common/constants/RoomTable';
 
 class OrderHourSelect extends Component {
   constructor(props) {

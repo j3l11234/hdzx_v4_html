@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMixin';
 
 import Prop from '../../common/components/PropGroup';
-import { STATUS, LOOP, WEEKDAY } from '../../common/constants/LockStatus';
+import { STATUS, LOOP, WEEKDAY } from '../../common/constants/Lock';
 import { range2Hours, hours2Range } from '../../common/units/Helpers';
 
 class LockItem extends Component {

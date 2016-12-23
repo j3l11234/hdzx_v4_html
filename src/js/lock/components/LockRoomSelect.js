@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMixin';
 
 import FormAlert from '../../common/components/FormAlert';
-import { STATUS, LOOP, WEEKDAY } from '../../common/constants/LockStatus';
+import { STATUS, LOOP, WEEKDAY } from '../../common/constants/Lock';
 
 class LockRoomSelect extends Component {
   constructor(props) {

@@ -4,8 +4,8 @@ import update from 'react/lib/update';
 
 import Item from './ApproveOrderItem';
 import Pagination from '../../common/components/Pagination';
-import { getAbstractStatus } from '../../common/units/Helpers';
-import { STATUS } from '../../common/constants/OrderStatus';
+import { getOrderAbsStatus } from '../../common/units/Helpers';
+import { STATUS } from '../../common/constants/Order';
 
 class OrderList extends Component {
   constructor (props) {

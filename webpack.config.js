@@ -3,55 +3,92 @@ var path= require('path');
 
 module.exports = {
   entry: {
-    common: [
+    react_common: [
       'md5',
       'react',
       'react-dom',
       'react/lib/ReactComponentWithPureRenderMixin.js'
     ],
-    approve: __dirname + '/src/js/approve/index.js',
-    issue: __dirname + '/src/js/issue/index.js',
-    login: __dirname + '/src/js/login/index.js',
-    myorder: __dirname + '/src/js/myorder/index.js',
-    order: __dirname + '/src/js/order/index.js',
-    lock: __dirname + '/src/js/lock/index.js',
+    vue_common: [
+      'md5',
+      'vue',
+      'vue-router',
+      'vuex'
+    ],
+    react_approve: './src/js/approve/index.js',
+    react_issue: './src/js/issue/index.js',
+    react_login: './src/js/login/index.js',
+    react_myorder: './src/js/myorder/index.js',
+    // react_order: './src/js/order/index.js',
+    react_lock: './src/js/lock/index.js',
+    vue_apply: './src/js/vue_apply/main.js',
+    function: './src/js/common/function.js'
   },
   output: {
-    path: __dirname + '/dist/js',
+    path: path.resolve(__dirname, './dist/js'),
     filename: '[name].js',
     publicPath: "/js",
   },
-  plugins: [
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'common',
-      minChunks: Infinity
-    }),
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify(process.env.NODE_ENV)
-      }
-    }),
-  ].concat(process.env.NODE_ENV !== 'production' ? [] : [
-     new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
-      }
-    })
-  ]),
+  externals: {
+    jquery: 'jQuery.noConflict()'
+  },
   module: {
     rules: [
       {
+        test: /\.vue$/,
+        loader: 'vue-loader',
+        options: {
+          // vue-loader options go here
+        }
+      },
+      {
         test: /\.jsx?$/,
         loader: 'babel-loader',
-        exclude: /node_modules/,
+        exclude: /node_modules/
+      },
+      {
+        test: /\.(png|jpg|gif|svg)$/,
+        loader: 'file-loader',
         options: {
-          'presets': [
-            ['es2015', {modules: false}],
-            'react'
-          ]
+          name: '[name].[ext]?[hash]'
         }
       }
     ]
   },
-  devtool: process.env.NODE_ENV !== 'production' ? 'source-map' : ''
+  plugins: [
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'react_common',
+      minChunks: 3,
+      chunks: ['react_approve', 'react_issue', 'react_login', 'react_myorder', 'react_lock'],
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vue_common',
+      minChunks: Infinity,
+      chunks: ['vue_apply']
+    }),
+    
+  ],
+  //devtool: '#eval-source-map'
+  devtool: '#source-map'
 };
+
+if (process.env.NODE_ENV === 'production') {
+  module.exports.devtool = '#source-map'
+  // http://vue-loader.vuejs.org/en/workflow/production.html
+  module.exports.plugins = (module.exports.plugins || []).concat([
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: '"production"'
+      }
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      sourceMap: true,
+      compress: {
+        warnings: false
+      }
+    }),
+    new webpack.LoaderOptionsPlugin({
+      minimize: true
+    })
+  ])
+}

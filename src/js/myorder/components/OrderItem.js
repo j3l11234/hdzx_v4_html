@@ -4,9 +4,9 @@ import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMix
 import Prop from '../../common/components/PropGroup';
 import StatusLabel from '../../common/components/StatusLabel';
 import FormAlert from '../../common/components/FormAlert';
-import { STATUS } from '../../common/constants/OrderStatus';
+import { STATUS } from '../../common/constants/Order';
 import { TYPE_NAME } from '../../common/constants/OperationTypes';
-import { getAbstractStatus, hours2Range } from '../../common/units/Helpers';
+import { getOrderAbsStatus, hours2Range } from '../../common/units/Helpers';
 
 
 class ApproveOrderItem extends Component {
@@ -60,7 +60,7 @@ class ApproveOrderItem extends Component {
     let { start_hour, end_hour } = hours2Range(order.hours);
     let submit_time = order.submit_time ? new Date(order.submit_time*1000).Format('yyyy-MM-dd hh:mm:ss') : ' ';
     let issue_time = order.issue_time ? new Date(order.issue_time*1000).Format('yyyy-MM-dd hh:mm:ss') : '未发放'; 
-    let status = getAbstractStatus(order.status);
+    let status = getOrderAbsStatus(order.status);
 
     return (
       <div className={'panel ' + this.getPanelStyle(status)}>
