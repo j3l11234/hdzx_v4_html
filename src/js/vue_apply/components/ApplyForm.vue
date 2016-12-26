@@ -136,7 +136,6 @@
           <button v-else type="button" class="btn" disabled>不可申请</button>
           <button type="button" class="btn btn-default" @click="onSave">暂存</button>
           <button type="button" class="btn btn-default" @click="onLoad">读取</button>
-          <button type="button" class="btn btn-default" @click="onReset">重置</button>
         </div>
         <div v-if="roomTable.status=='UPCOMING' && countDownText" class="alert alert-info" role="alert">
           {{countDownText}}
