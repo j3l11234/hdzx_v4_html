@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { shouldComponentUpdate } from 'react/lib/ReactComponentWithPureRenderMixin';
+import $ from 'jquery';
 
 import RoomSelect from './LockRoomSelect';
 import FormAlert from '../../common/components/FormAlert';
