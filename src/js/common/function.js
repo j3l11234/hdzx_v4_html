@@ -7,5 +7,10 @@ window.stickAlert = function(style, content) {
 ' + content + '\
 </div>';
 
-  $('#stick-alert').append($(templete));
+  let $alert = $(templete);
+  $('#stick-alert').append($alert);
+  setTimeout(()=>{
+    $alert.remove();
+  },5000);
+  
 }
