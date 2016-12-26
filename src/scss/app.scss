@@ -150,6 +150,9 @@ body {
 
 //同行属性
 .prop{
+  &-group {
+    margin-bottom: 5px;
+  }
   &-label{
     float: left;
     min-width: 60px;

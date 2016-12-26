@@ -5,7 +5,7 @@ function PropGroup(props) {
   groupClassName = groupClassName ? groupClassName : '';
 
   return (
-    <div className={'form-group ' + groupClassName}>
+    <div className={'prop-group ' + groupClassName}>
       <label className="prop-label">{label}</label>
       <span className="prop-content">{content}</span>
     </div>
