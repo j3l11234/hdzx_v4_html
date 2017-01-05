@@ -4,7 +4,7 @@ import Vuex from 'vuex'
 import * as ServerApi from '../../common/units/ServerApi';
 import * as types from './mutation-types'
 
-import roomTable from './modules/roomTable';
+import roomTable from './modules/roomtable';
 import entity from './modules/entity';
 import apply from './modules/apply';
 
