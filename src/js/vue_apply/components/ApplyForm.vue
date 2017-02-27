@@ -331,7 +331,7 @@ export default {
       return {};
     },
     isLogined() {
-      return this.$store.state.user == true;
+      return this.$store.state.user ? true : false;
     }
   },
   components: {
