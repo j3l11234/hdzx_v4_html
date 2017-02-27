@@ -14,6 +14,7 @@ const debug = process.env.NODE_ENV !== 'production'
 
 const state = {
   timeOffset: 0,
+  user: null,
 }
 
 const actions = {
@@ -23,6 +24,13 @@ const actions = {
       room && commit(types.ENTITY_UPDATE_ROOMS, { rooms: room.rooms });
       dept && commit(types.ENTITY_UPDATE_DEPTS, { depts: dept.depts });
       commit(types.APPLY_UPDATE_META, { roomList: room.roomList, deptMap: dept.deptMap });
+      return data;
+    });
+  },
+  getLogin({ commit }) {
+    return ServerApi.User.getLogin().then(data => {
+      let { user } = data;
+      user && commit(types.UPDATE_USER, { user });
       return data;
     });
   }
@@ -36,6 +44,9 @@ const mutations = {
   [types.UPDATE_SERVERTIME] (state, { serverTime }) {
     let timeOffset = serverTime*1000 - new Date().getTime();
     state.timeOffset = timeOffset;
+  },
+  [types.UPDATE_USER] (state, { user }) {
+    state.user = user;
   }
 }
 

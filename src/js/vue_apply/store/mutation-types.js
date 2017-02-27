@@ -10,7 +10,7 @@ export const APPLY_UPDATE_CAPTCHA = 'ORDER_UPDATE_CAPTCHA';
 export const UPDATE_SERVERTIME = 'UPDATE_SERVERTIME';
 export const UPDATE_META = 'UPDATE_META';
 export const UPDATE_ONE_ROOMUSE = 'UPDATE_ONE_ROOMUSE';
-
+export const UPDATE_USER = 'UPDATE_USER';
 
 
 //roomtable

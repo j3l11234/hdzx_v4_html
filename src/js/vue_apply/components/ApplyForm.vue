@@ -132,13 +132,16 @@
             :value="form.captcha" @input="updateFormValue('captcha',$event.target.value)">
         </div>
         <div class="form-group">
-          <button v-if="roomTable.status == 'ACTIVE'" type="submit" class="btn btn-primary btn-submit">提交</button>
+          <button v-if="roomTable.status == 'ACTIVE'" type="submit" :disabled="!isLogined" class="btn btn-primary btn-submit">提交</button>
           <button v-else type="button" class="btn" disabled>不可申请</button>
           <button type="button" class="btn btn-default" @click="onSave">暂存</button>
           <button type="button" class="btn btn-default" @click="onLoad">读取</button>
         </div>
         <div v-if="roomTable.status=='UPCOMING' && countDownText" class="alert alert-info" role="alert">
           {{countDownText}}
+        </div>
+        <div v-if="!isLogined" class="alert alert-warning" role="alert">
+          请先登录
         </div>
       </form>
     </div>
@@ -326,6 +329,9 @@ export default {
         return rooms[room_id];
       }
       return {};
+    },
+    isLogined() {
+      return this.$store.state.user == true;
     }
   },
   components: {

@@ -17,11 +17,15 @@ export default {
   components: {
   },
   created () {
-    this.$store.dispatch('getMetaData',{page:'order'});
-    setInterval(()=>{
+    this.$store.dispatch('getMetaData', {page:'order'});
+    this.$store.dispatch('getLogin').then(({ user }) => {
+      if (!user) {
+        stickAlert('warning', '您尚未登录，请先登录');
+      }
+    });
+    setInterval(() => {
       this.$store.dispatch('roomtable_refreshTime');
     },1000);
-    
   }
 }
 </script>
