@@ -495,7 +495,7 @@ hr.small{
 .roomtable {
   position: relative;
   padding-left: 90px;
-  padding-top: 46px;
+  padding-top: 36px;
 
   .date {
     &-list {
@@ -504,7 +504,7 @@ hr.small{
       top: 0;
       left: 90px;
       right: 0;
-      height: 40px;
+      min-height: 20px;
       padding: 2px 0;
       list-style-type: none;
       white-space: nowrap;
