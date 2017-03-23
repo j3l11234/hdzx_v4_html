@@ -75,7 +75,7 @@
         </div>
         <div :class="'form-group' + getFromStyle('number')">
           <label class="control-label" for="form-secure">活动人数</label>
-          <select class="form-control" :value="form.number" @input="updateFormValue('number',$event.target.value)">
+          <select class="form-control" :value="form.number" @change="updateFormValue('number', $event.target.value)">
             <option value="0">请选择</option>
             <option value="<5">&lt;5</option>
             <option value="5-10">5-10</option>
@@ -343,6 +343,7 @@ export default {
       this.$store.dispatch('apply_updateCaptcha');
     },
     updateFormValue(name, value) {
+      console.log(name, value);
       if (name == 'date') {
         value != '' && this.$store.dispatch('apply_chooseDateRoom', { date: value, room_id: this.detail.room_id});
       } else if (name == 'room_id') {

@@ -147,13 +147,30 @@ export default {
   components: {
     Cell,
   },
+  created () {
+    this.scroll = {
+      lastEl: '',
+      lastTime: 0,
+    }
+  },
   methods: {
     onScroll(e) {
       let { content, header } = this.$refs;
+      let time = new Date().getTime();
       if(e.target === content) {
+        if (this.scroll.lastEl != 'content' && time - this.scroll.lastTime < 200) {
+          return;
+        }
         header.scrollLeft  = e.target.scrollLeft;
+        this.scroll.lastEl = 'content';
+        this.scroll.lastTime = time;
       } else if(e.target === header) {
+        if (this.scroll.lastEl != 'header' && time - this.scroll.lastTime < 200) {
+          return;
+        }
         content.scrollLeft  = e.target.scrollLeft;
+        this.scroll.lastEl = 'header';
+        this.scroll.lastTime = time;
       }
     },
     onCellClick(date, room_id, e) {
