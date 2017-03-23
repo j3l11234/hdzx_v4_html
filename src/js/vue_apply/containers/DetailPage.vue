@@ -1,5 +1,5 @@
 <template>
- <div>
+  <div>
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
       <li role="presentation"><a href="javascript:void(0)" @click="goToListPage">&lt;房间浏览</a></li>
@@ -15,6 +15,7 @@
       <div role="tabpanel" class="tab-pane" id="tab-usage">
         <RoomUsage />
       </div>
+    </div>
   </div>
 </template>
 

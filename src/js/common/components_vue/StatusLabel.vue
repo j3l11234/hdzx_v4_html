@@ -1,5 +1,5 @@
 <template>
-  <span :class="'label '+ style.className">{{style.text}}</span>);
+  <span :class="'label '+ style.className">{{style.text}}</span>
 </template>
 
 <script>
