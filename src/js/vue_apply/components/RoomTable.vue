@@ -35,6 +35,42 @@
 import { STATUS, COLOR } from '../../common/constants/RoomTable.js';
 import { getPageLimit } from '../../common/units/Helpers';
 
+Object.defineProperty(SVGElement.prototype, 'innerHTML', {
+  get: function() {
+    var $child, $node, $temp, _i, _len, _ref;
+    $temp = document.createElement('div');
+    $node = this.cloneNode(true);
+    _ref = $node.children;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      $child = _ref[_i];
+      $temp.appendChild($child);
+    }
+    return $temp.innerHTML;
+  },
+  set: function(markup) {
+    var $div, $element, $svg, _i, _len, _ref, _results;
+    while (this.firstChild) {
+      this.firstChild.parentNode.removeChild(this.firstChild);
+    }
+    markup = "<svg id='wrapper' xmlns='http://www.w3.org/2000/svg'>" + markup + "</svg>";
+    $div = document.createElement('div');
+    $div.innerHTML = markup;
+    $svg = $div.querySelector('svg#wrapper');
+    _ref = Array.prototype.slice.call($svg.childNodes);
+    _results = [];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      $element = _ref[_i];
+      if (!$element) {
+        break;
+      }
+      _results.push(this.appendChild($element));
+    }
+    return _results;
+  },
+  enumerable: false,
+  configurable: true
+});
+
 /*
 let _hourCellPos = (function(parentPadding, margin, sideLength){
   let pos = {};
@@ -64,7 +100,7 @@ const Cell = {
       let startTime = new Date(period.start*1000);
       caption = '\
 <circle cx="45" cy="45" r="40" fill="rgba(255, 0, 0, 0.3)" />\
-<text x="45" y="45" font-size="13" fill="#fff" text-anchor="middle" dominant-baseline="central"  filter="url(#f1)">\
+<text x="45" y="45" font-size="13" fill="#fff" text-anchor="middle" dy="4.5"  filter="url(#f1)">\
   <tspan x="45" y="33">'+startTime.Format('yyyy-MM-dd')+'</tspan>\
   <tspan x="45" dy="16">'+startTime.Format('hh:mm:ss')+'</tspan>\
   <tspan x="45" dy="16">开放申请</tspan>\
@@ -73,7 +109,7 @@ const Cell = {
       isActive = true;
       caption = '\
 <circle cx="45" cy="45" r="40" fill="rgba(255, 0, 0, 0.3)" />\
-<text x="45" y="45" font-size="13" fill="#fff" text-anchor="middle" dominant-baseline="central"  filter="url(#f1)">\
+<text x="45" y="45" font-size="13" fill="#fff" text-anchor="middle" dy="4.5"  filter="url(#f1)">\
   <tspan x="45" y="35">该时段</tspan>\
   <tspan x="45" dy="20">不可申请</tspan>\
 </text>';
@@ -81,33 +117,33 @@ const Cell = {
     let html = '\
 <rect class="choosen" x="3" y="3" width="84" height="84" rx="3" ry="3" fill="transparent"></rect>\
 <rect x="6" y="6" width="18" height="18" rx="3" ry="3" fill="'+COLOR[hourTable[8]].bgColor+'"></rect>\
-<text x="15" y="15" font-size="12" fill="'+COLOR[hourTable[8]].textColor+'" text-anchor="middle" dominant-baseline="central">8</text>\
+<text x="15" y="15" font-size="12" fill="'+COLOR[hourTable[8]].textColor+'" text-anchor="middle" dy="4.5">8</text>\
 <rect x="26" y="6" width="18" height="18" rx="3" ry="3" fill="'+COLOR[hourTable[9]].bgColor+'"></rect>\
-<text x="35" y="15" font-size="12" fill="'+COLOR[hourTable[9]].textColor+'" text-anchor="middle" dominant-baseline="central">9</text>\
+<text x="35" y="15" font-size="12" fill="'+COLOR[hourTable[9]].textColor+'" text-anchor="middle" dy="4.5">9</text>\
 <rect x="46" y="6" width="18" height="18" rx="3" ry="3" fill="'+COLOR[hourTable[10]].bgColor+'"></rect>\
-<text x="55" y="15" font-size="12" fill="'+COLOR[hourTable[10]].textColor+'" text-anchor="middle" dominant-baseline="central">10</text>\
+<text x="55" y="15" font-size="12" fill="'+COLOR[hourTable[10]].textColor+'" text-anchor="middle" dy="4.5">10</text>\
 <rect x="66" y="6" width="18" height="18" rx="3" ry="3" fill="'+COLOR[hourTable[11]].bgColor+'"></rect>\
-<text x="75" y="15" font-size="12" fill="'+COLOR[hourTable[11]].textColor+'" text-anchor="middle" dominant-baseline="central">11</text>\
+<text x="75" y="15" font-size="12" fill="'+COLOR[hourTable[11]].textColor+'" text-anchor="middle" dy="4.5">11</text>\
 <rect x="6" y="26" width="18" height="18" rx="3" ry="3" fill="'+COLOR[hourTable[12]].bgColor+'"></rect>\
-<text x="15" y="35" font-size="12" fill="'+COLOR[hourTable[12]].textColor+'" text-anchor="middle" dominant-baseline="central">12</text>\
+<text x="15" y="35" font-size="12" fill="'+COLOR[hourTable[12]].textColor+'" text-anchor="middle" dy="4.5">12</text>\
 <rect x="26" y="26" width="18" height="18" rx="3" ry="3" fill="'+COLOR[hourTable[13]].bgColor+'"></rect>\
-<text x="35" y="35" font-size="12" fill="'+COLOR[hourTable[13]].textColor+'" text-anchor="middle" dominant-baseline="central">13</text>\
+<text x="35" y="35" font-size="12" fill="'+COLOR[hourTable[13]].textColor+'" text-anchor="middle" dy="4.5">13</text>\
 <rect x="46" y="26" width="18" height="18" rx="3" ry="3" fill="'+COLOR[hourTable[14]].bgColor+'"></rect>\
-<text x="55" y="35" font-size="12" fill="'+COLOR[hourTable[14]].textColor+'" text-anchor="middle" dominant-baseline="central">14</text>\
+<text x="55" y="35" font-size="12" fill="'+COLOR[hourTable[14]].textColor+'" text-anchor="middle" dy="4.5">14</text>\
 <rect x="6" y="46" width="18" height="18" rx="3" ry="3" fill="'+COLOR[hourTable[15]].bgColor+'"></rect>\
-<text x="15" y="55" font-size="12" fill="'+COLOR[hourTable[15]].textColor+'" text-anchor="middle" dominant-baseline="central">15</text>\
+<text x="15" y="55" font-size="12" fill="'+COLOR[hourTable[15]].textColor+'" text-anchor="middle" dy="4.5">15</text>\
 <rect x="26" y="46" width="18" height="18" rx="3" ry="3" fill="'+COLOR[hourTable[16]].bgColor+'"></rect>\
-<text x="35" y="55" font-size="12" fill="'+COLOR[hourTable[16]].textColor+'" text-anchor="middle" dominant-baseline="central">16</text>\
+<text x="35" y="55" font-size="12" fill="'+COLOR[hourTable[16]].textColor+'" text-anchor="middle" dy="4.5">16</text>\
 <rect x="46" y="46" width="18" height="18" rx="3" ry="3" fill="'+COLOR[hourTable[17]].bgColor+'"></rect>\
-<text x="55" y="55" font-size="12" fill="'+COLOR[hourTable[17]].textColor+'" text-anchor="middle" dominant-baseline="central">17</text>\
+<text x="55" y="55" font-size="12" fill="'+COLOR[hourTable[17]].textColor+'" text-anchor="middle" dy="4.5">17</text>\
 <rect x="66" y="46" width="18" height="18" rx="3" ry="3" fill="'+COLOR[hourTable[18]].bgColor+'"></rect>\
-<text x="75" y="55" font-size="12" fill="'+COLOR[hourTable[18]].textColor+'" text-anchor="middle" dominant-baseline="central">18</text>\
+<text x="75" y="55" font-size="12" fill="'+COLOR[hourTable[18]].textColor+'" text-anchor="middle" dy="4.5">18</text>\
 <rect x="6" y="66" width="18" height="18" rx="3" ry="3" fill="'+COLOR[hourTable[19]].bgColor+'"></rect>\
-<text x="15" y="75" font-size="12" fill="'+COLOR[hourTable[19]].textColor+'" text-anchor="middle" dominant-baseline="central">19</text>\
+<text x="15" y="75" font-size="12" fill="'+COLOR[hourTable[19]].textColor+'" text-anchor="middle" dy="4.5">19</text>\
 <rect x="26" y="66" width="18" height="18" rx="3" ry="3" fill="'+COLOR[hourTable[20]].bgColor+'"></rect>\
-<text x="35" y="75" font-size="12" fill="'+COLOR[hourTable[20]].textColor+'" text-anchor="middle" dominant-baseline="central">20</text>\
+<text x="35" y="75" font-size="12" fill="'+COLOR[hourTable[20]].textColor+'" text-anchor="middle" dy="4.5">20</text>\
 <rect x="46" y="66" width="18" height="18" rx="3" ry="3" fill="'+COLOR[hourTable[21]].bgColor+'"></rect>\
-<text x="55" y="75" font-size="12" fill="'+COLOR[hourTable[21]].textColor+'" text-anchor="middle" dominant-baseline="central">21</text>'
+<text x="55" y="75" font-size="12" fill="'+COLOR[hourTable[21]].textColor+'" text-anchor="middle" dy="4.5">21</text>'
 + caption;
     return createElement(
       'g',
