@@ -510,11 +510,11 @@ hr.small{
       white-space: nowrap;
       overflow-x: scroll;
       background-color: #337ab7;
-      text-align: center;
       color: #fff;
     }
     &-item {
       display: inline-block;
+      text-align: center;
       width: 90px;
     }
   }
