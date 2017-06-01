@@ -89,7 +89,6 @@ gulp.task('webpack-watch', function() {
 
 gulp.task('webpack', function() {
   gulp.src('./src/js/**/*.js')
-    .pipe(plumber())
     .pipe(webpack(require('./webpack.config.js'),require('webpack')))
     .pipe(gulp.dest(DIST + '/js'));
 });
