@@ -56,6 +56,13 @@ export default {
       }
       this.dept_id = value;
       this.$emit('input', Number(this.dept_id));
+    },
+    validate(dept_id) {
+      let isValid = false;
+      if (this.depts[dept_id] && this.depts[dept_id].choose == 1) {
+        isValid = true;
+      }
+      return isValid;
     }
   },
   watch: {

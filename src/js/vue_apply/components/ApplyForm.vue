@@ -59,7 +59,7 @@
         </div>
         <div :class="'form-group' + getFromStyle('dept_id')">
           <label class="control-label" for="form-dept">社团单位</label>
-          <DeptSelect :value="form.dept_id" :depts="entity.depts" :deptMap="deptMap" @input="updateFormValue('dept_id', arguments[0])" />
+          <DeptSelect ref="deptSelect" :value="form.dept_id" :depts="entity.depts" :deptMap="deptMap" @input="updateFormValue('dept_id', arguments[0])" />
         </div>
 
         <h2 id="form-header-3" class="page-header">填写申请详情</h2>
@@ -156,6 +156,7 @@ import { stickAlert } from '../../common/units/Helpers';
 
 const Validators = {
   hours: function(value) {
+    console.log('hours',this);
     if (!value || value.length < 1) {
       return '请选择申请时段';
     }
@@ -164,23 +165,27 @@ const Validators = {
     }
   },
   name: (value) => {
-    if(!value || value.length < 2 || !/[\u4e00-\u9fa5]{2,}|[A-Za-z\s]{5,}/.test(value)) {
+    if (!value || value.length < 2 || !/[\u4e00-\u9fa5]{2,}|[A-Za-z\s]{5,}/.test(value)) {
       return  '请正确填写姓名';
     }
   }
   ,
   student_no: (value) => {
-    if(!/^\d{8}$/.test(value)) {
+    if (!/^\d{8}$/.test(value)) {
       return  '请正确填写学号';
     }
   },
   phone: (value) => {
-    if(!/^\d{11}$/.test(value)) {
+    if (!/^\d{11}$/.test(value)) {
       return  '请正确填写联系方式';
     }
   },
-  dept_id: (value) => {
-    if(!value || value == 0) {
+  dept_id: function(value) {
+    console.log('dept_id',this);
+    if (!value || value == 0) {
+      return '请选择社团单位';
+    }
+    if (this.$refs.deptSelect && !this.$refs.deptSelect.validate(value)) {
       return '请选择社团单位';
     }
   },
